@@ -29,6 +29,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // 音乐列表
         const playlist = [
             {
+                title: 'Stephen Sanchez - Until I Found You',
+                src: '/nice2meetyou/music/UntilIFoundYou.mp3'
+            },
+            {
                 title: 'Pretty Boy',
                 src: '/nice2meetyou/music/PrettyBoy.mp3'
             },
