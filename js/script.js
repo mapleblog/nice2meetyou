@@ -29,17 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // 音乐列表
         const playlist = [
             {
-                title: 'Stephen Sanchez - Until I Found You',
-                src: '/nice2meetyou/music/UntilIFoundYou.mp3'
-            },
-            {
-                title: 'Pretty Boy',
-                src: '/nice2meetyou/music/PrettyBoy.mp3'
-            },
-            {
-                title: '去追风吧',
-                src: '/nice2meetyou/music/dream.mp3'
-            },
+                title: '赤壁Online - 登入畫面',
+                src: 'music/bgm.mp4'
+            }
             // 可以根据需要添加更多音乐
         ];
         

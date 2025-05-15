@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Friendship</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/features.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -132,6 +133,104 @@
             </div>
         </section>
         
+        <!-- 新增功能区域 -->
+        <section class="features-section">
+            <div class="features-tabs">
+                <div class="feature-tab active" data-target="message-board-content">互动留言板</div>
+                <div class="feature-tab" data-target="mood-diary-content">心情日记</div>
+                <div class="feature-tab" data-target="wish-list-content">愿望清单</div>
+            </div>
+            
+            <!-- 互动留言板 -->
+            <div id="message-board-content" class="feature-content active">
+                <div class="message-board">
+                    <form id="message-form" class="message-form">
+                        <div class="form-group">
+                            <label for="name-input">你的名字</label>
+                            <input type="text" id="name-input" class="form-control" placeholder="匿名">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-input">留言内容</label>
+                            <textarea id="message-input" class="form-control" rows="3" placeholder="写下你想说的话..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <div class="emoji-container">
+                                <button id="emoji-button" class="emoji-button"><i class="far fa-smile"></i> 表情</button>
+                                <div id="emoji-picker" class="emoji-picker">
+                                    <span class="emoji">😊</span>
+                                    <span class="emoji">😂</span>
+                                    <span class="emoji">❤️</span>
+                                    <span class="emoji">👍</span>
+                                    <span class="emoji">🎉</span>
+                                    <span class="emoji">🌸</span>
+                                    <span class="emoji">✨</span>
+                                    <span class="emoji">🥰</span>
+                                </div>
+                            </div>
+                            <button type="submit" class="submit-button">发送留言</button>
+                        </div>
+                    </form>
+                    <div id="message-list" class="message-list"></div>
+                </div>
+            </div>
+            
+            <!-- 心情日记 -->
+            <div id="mood-diary-content" class="feature-content">
+                <div class="mood-diary">
+                    <form id="mood-form" class="mood-form">
+                        <div class="form-group">
+                            <label>今天的心情</label>
+                            <div class="mood-icons">
+                                <div class="mood-icon" data-mood="happy"><i class="fas fa-smile"></i></div>
+                                <div class="mood-icon" data-mood="sad"><i class="fas fa-frown"></i></div>
+                                <div class="mood-icon" data-mood="angry"><i class="fas fa-angry"></i></div>
+                                <div class="mood-icon" data-mood="surprised"><i class="fas fa-surprise"></i></div>
+                                <div class="mood-icon" data-mood="neutral"><i class="fas fa-meh"></i></div>
+                                <div class="mood-icon" data-mood="love"><i class="fas fa-heart"></i></div>
+                                <div class="mood-icon" data-mood="tired"><i class="fas fa-tired"></i></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mood-text">心情描述</label>
+                            <textarea id="mood-text" class="form-control" rows="3" placeholder="今天发生了什么..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="submit-button">记录心情</button>
+                        </div>
+                    </form>
+                    <div id="mood-list" class="mood-list"></div>
+                </div>
+            </div>
+            
+            <!-- 愿望清单 -->
+            <div id="wish-list-content" class="feature-content">
+                <div class="wish-list-container">
+                    <form id="wish-form" class="wish-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="wish-text">愿望内容</label>
+                                <input type="text" id="wish-text" class="form-control" placeholder="添加一个新愿望...">
+                            </div>
+                            <div class="form-group">
+                                <label for="wish-category">分类</label>
+                                <select id="wish-category" class="form-control">
+                                    <option value="旅行">旅行</option>
+                                    <option value="美食">美食</option>
+                                    <option value="活动">活动</option>
+                                    <option value="购物">购物</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="submit-button">添加愿望</button>
+                        </div>
+                    </form>
+                    <div id="wish-list" class="wish-list"></div>
+                </div>
+            </div>
+        </section>
+        
         <footer class="footer">
             <p id="saved-message"></p>
             <p>Friendship is a single soul dwelling in two bodies. <i class="fas fa-heart"></i></p>
@@ -140,7 +239,13 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
     <script src="js/script.js?v=1.0.2"></script>
     <script src="js/ocean.js"></script>
+    <script src="js/features.js"></script>
 </body>
 </html>
