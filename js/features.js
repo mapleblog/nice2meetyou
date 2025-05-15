@@ -282,12 +282,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const messages = [];
             
             messageElements.forEach(el => {
+                // 检查是否有图片
+                let imageData = null;
+                const imageElement = el.querySelector('.message-image');
+                if (imageElement) {
+                    imageData = imageElement.src;
+                }
+                
                 messages.push({
                     id: el.dataset.id,
                     name: el.querySelector('.message-name').textContent,
                     content: el.querySelector('.message-content').innerHTML,
                     time: el.querySelector('.message-time').textContent,
-                    likes: parseInt(el.querySelector('.like-count').textContent)
+                    likes: parseInt(el.querySelector('.like-count').textContent),
+                    image: imageData // 添加图片数据
                 });
             });
             
@@ -559,12 +567,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 const iconElement = el.querySelector('.mood-icon-display i');
                 const moodType = getMoodTypeFromClass(iconElement.className);
                 
+                // 检查是否有图片
+                let imageData = null;
+                const imageElement = el.querySelector('.mood-image');
+                if (imageElement) {
+                    imageData = imageElement.src;
+                }
+                
                 moods.push({
                     id: el.dataset.id,
                     date: el.querySelector('.mood-date').textContent,
                     mood: moodType,
                     text: el.querySelector('.mood-content').textContent,
-                    time: el.querySelector('.mood-time').textContent
+                    time: el.querySelector('.mood-time').textContent,
+                    image: imageData // 添加图片数据
                 });
             });
             
