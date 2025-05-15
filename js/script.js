@@ -7,13 +7,123 @@ document.addEventListener('DOMContentLoaded', function() {
     const avatar1Img = document.getElementById('avatar1-img');
     const avatar2Img = document.getElementById('avatar2-img');
     
+    // 音乐播放器元素
+    const audioPlayer = document.getElementById('audio-player');
+    const playBtn = document.getElementById('play-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const volumeSlider = document.getElementById('volume-slider');
+    const songTitle = document.getElementById('song-title');
+    
     // 初始化
     updateCounter();
     setInterval(updateCounter, 1000);
     initFriendshipGradients();
+    initMusicPlayer();
     
     // 添加鼠标悬停效果
     addHoverEffects();
+    
+    // 初始化音乐播放器
+    function initMusicPlayer() {
+        // 音乐列表
+        const playlist = [
+            {
+                title: '赤壁Online - 登入畫面',
+                src: 'music/bgm.mp4'
+            }
+            // 可以根据需要添加更多音乐
+        ];
+        
+        let currentTrack = 0;
+        let isPlaying = false;
+        
+        // 设置初始音乐
+        try {
+            console.log('加载音乐:', playlist[currentTrack]);
+            audioPlayer.src = playlist[currentTrack].src;
+            songTitle.textContent = playlist[currentTrack].title;
+            
+            // 添加错误处理
+            audioPlayer.addEventListener('error', function(e) {
+                console.error('音频加载错误:', e);
+                console.error('错误代码:', audioPlayer.error.code);
+                console.error('错误信息:', audioPlayer.error.message);
+                alert('音频加载失败\n请检查文件路径和格式\n错误代码: ' + audioPlayer.error.code);
+            });
+            
+            // 添加调试信息
+            audioPlayer.addEventListener('canplay', function() {
+                console.log('音频已准备好可以播放');
+            });
+        } catch (err) {
+            console.error('设置音乐源时出错:', err);
+        }
+        
+        // 播放/暂停按钮
+        playBtn.addEventListener('click', function() {
+            if (isPlaying) {
+                audioPlayer.pause();
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            } else {
+                // 尝试播放并捕获错误
+                const playPromise = audioPlayer.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        // 播放成功
+                        console.log('音乐开始播放');
+                        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                        isPlaying = true;
+                    }).catch(error => {
+                        // 播放失败
+                        console.error('播放失败:', error);
+                        alert('播放失败: ' + error.message);
+                        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                        isPlaying = false;
+                    });
+                }
+            }
+            isPlaying = !isPlaying;
+        });
+        
+        // 上一首按钮
+        prevBtn.addEventListener('click', function() {
+            currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+            changeSong(currentTrack);
+        });
+        
+        // 下一首按钮
+        nextBtn.addEventListener('click', function() {
+            currentTrack = (currentTrack + 1) % playlist.length;
+            changeSong(currentTrack);
+        });
+        
+        // 音量控制
+        volumeSlider.addEventListener('input', function() {
+            audioPlayer.volume = this.value / 100;
+        });
+        
+        // 音乐结束时自动播放下一首
+        audioPlayer.addEventListener('ended', function() {
+            currentTrack = (currentTrack + 1) % playlist.length;
+            changeSong(currentTrack);
+        });
+        
+        // 切换歌曲
+        function changeSong(index) {
+            audioPlayer.src = playlist[index].src;
+            songTitle.textContent = playlist[index].title;
+            
+            if (isPlaying) {
+                audioPlayer.play();
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+        }
+        
+        // 设置初始音量
+        audioPlayer.volume = volumeSlider.value / 100;
+    }
     
     // 加载保存的数据
     function loadData() {

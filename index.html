@@ -18,6 +18,23 @@
             <h1>CAMARADERIE</h1>
         </header>
         
+        <div class="music-player">
+            <div class="music-info">
+                <div class="music-title">正在播放: <span id="song-title">海浪声</span></div>
+                <div class="music-controls">
+                    <button id="prev-btn" class="control-btn"><i class="fas fa-step-backward"></i></button>
+                    <button id="play-btn" class="control-btn"><i class="fas fa-play"></i></button>
+                    <button id="next-btn" class="control-btn"><i class="fas fa-step-forward"></i></button>
+                </div>
+            </div>
+            <div class="volume-control">
+                <i class="fas fa-volume-down"></i>
+                <input type="range" id="volume-slider" min="0" max="100" value="50">
+                <i class="fas fa-volume-up"></i>
+            </div>
+            <audio id="audio-player" preload="auto" controls style="display: none;"></audio>
+        </div>
+        
         <section class="friendship-section">
             <div class="avatars">
                 <div class="avatar-container">
@@ -58,7 +75,7 @@
                 
                 <div class="avatar-container">
                     <div class="avatar" id="avatar2">
-                        <img src="img/profile2.jpg" alt="头像2" id="avatar2-img">
+                        <img src="img/profile2.png" alt="头像2" id="avatar2-img">
                     </div>
                     <div class="name-display">啊庄</div>
                     <div class="profile-canvas">
