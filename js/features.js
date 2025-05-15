@@ -1,5 +1,8 @@
 // 功能模块：互动留言板、心情日记和愿望清单
 document.addEventListener('DOMContentLoaded', function() {
+    // 初始化图片模态框
+    initImageModal();
+    
     // Firebase 配置
     const firebaseConfig = {
         apiKey: "AIzaSyCxtfRwm3cGObl3D2lbAkwUeGR2LhGT3FQ",
@@ -63,6 +66,51 @@ document.addEventListener('DOMContentLoaded', function() {
         const messageList = document.getElementById('message-list');
         const emojiPicker = document.getElementById('emoji-picker');
         const emojiButton = document.getElementById('emoji-button');
+        const messageImageInput = document.getElementById('message-image');
+        const messageImagePreview = document.getElementById('message-image-preview');
+        let messageImageData = null; // 用于存储图片的 base64 数据
+        
+        // 图片上传和预览
+        messageImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // 检查文件类型和大小
+            if (!file.type.match('image.*')) {
+                alert('请选择图片文件');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) { // 5MB 限制
+                alert('图片大小不能超过 5MB');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                messageImageData = e.target.result;
+                
+                // 创建预览
+                messageImagePreview.innerHTML = `
+                    <div class="preview-container">
+                        <img src="${messageImageData}" class="preview-image" alt="预览">
+                        <button type="button" class="remove-image" title="移除图片">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                
+                // 添加移除图片的功能
+                const removeButton = messageImagePreview.querySelector('.remove-image');
+                removeButton.addEventListener('click', function() {
+                    messageImagePreview.innerHTML = '';
+                    messageImageData = null;
+                    messageImageInput.value = ''; // 重置文件输入
+                });
+            };
+            
+            reader.readAsDataURL(file);
+        });
         
         // 加载保存的留言
         loadMessages();
@@ -91,20 +139,27 @@ document.addEventListener('DOMContentLoaded', function() {
             const messageInput = document.getElementById('message-input');
             const nameInput = document.getElementById('name-input');
             
-            if (messageInput.value.trim() === '') return;
+            if (messageInput.value.trim() === '' && !messageImageData) {
+                alert('请输入留言内容或添加图片');
+                return;
+            }
             
             const message = {
                 id: Date.now(),
                 name: nameInput.value.trim() || '匿名',
                 content: messageInput.value,
                 time: new Date().toLocaleString(),
-                likes: 0
+                likes: 0,
+                image: messageImageData // 添加图片数据
             };
             
             addMessage(message);
             saveMessages();
             
+            // 重置表单
             messageInput.value = '';
+            messageImageData = null;
+            messageImagePreview.innerHTML = '';
         });
         
         // 添加留言到列表
@@ -113,12 +168,26 @@ document.addEventListener('DOMContentLoaded', function() {
             messageElement.classList.add('message-item');
             messageElement.dataset.id = message.id;
             
+            // 构建图片HTML（如果有图片）
+            let imageHtml = '';
+            if (message.image) {
+                imageHtml = `
+                    <div class="message-images-wrapper">
+                        <div class="message-image-container">
+                            <img src="${message.image}" class="message-image" alt="留言图片" data-action="view-image">
+                            <div class="image-expand-icon"><i class="fas fa-expand"></i></div>
+                        </div>
+                    </div>
+                `;
+            }
+            
             messageElement.innerHTML = `
                 <div class="message-header">
                     <span class="message-name">${escapeHtml(message.name)}</span>
                     <span class="message-time">${message.time}</span>
                 </div>
                 <div class="message-content">${formatMessage(message.content)}</div>
+                ${imageHtml}
                 <div class="message-actions">
                     <button class="like-button" title="点赞">
                         <i class="fas fa-heart"></i> <span class="like-count">${message.likes}</span>
@@ -263,7 +332,52 @@ document.addEventListener('DOMContentLoaded', function() {
         const moodForm = document.getElementById('mood-form');
         const moodList = document.getElementById('mood-list');
         const moodIcons = document.querySelectorAll('.mood-icon');
+        const moodImageInput = document.getElementById('mood-image');
+        const moodImagePreview = document.getElementById('mood-image-preview');
         let selectedMood = '';
+        let moodImageData = null; // 用于存储图片的 base64 数据
+        
+        // 图片上传和预览
+        moodImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // 检查文件类型和大小
+            if (!file.type.match('image.*')) {
+                alert('请选择图片文件');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) { // 5MB 限制
+                alert('图片大小不能超过 5MB');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                moodImageData = e.target.result;
+                
+                // 创建预览
+                moodImagePreview.innerHTML = `
+                    <div class="preview-container">
+                        <img src="${moodImageData}" class="preview-image" alt="预览">
+                        <button type="button" class="remove-image" title="移除图片">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                
+                // 添加移除图片的功能
+                const removeButton = moodImagePreview.querySelector('.remove-image');
+                removeButton.addEventListener('click', function() {
+                    moodImagePreview.innerHTML = '';
+                    moodImageData = null;
+                    moodImageInput.value = ''; // 重置文件输入
+                });
+            };
+            
+            reader.readAsDataURL(file);
+        });
         
         // 加载保存的心情记录
         loadMoods();
@@ -289,12 +403,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
+            // 允许空文本，只要有图片
+            if (moodText.trim() === '' && !moodImageData) {
+                alert('请输入心情描述或添加图片');
+                return;
+            }
+            
             const mood = {
                 id: Date.now(),
                 date: today,
                 mood: selectedMood,
                 text: moodText,
-                time: new Date().toLocaleString()
+                time: new Date().toLocaleString(),
+                image: moodImageData // 添加图片数据
             };
             
             addMood(mood);
@@ -304,6 +425,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('mood-text').value = '';
             moodIcons.forEach(i => i.classList.remove('selected'));
             selectedMood = '';
+            moodImageData = null;
+            moodImagePreview.innerHTML = '';
         });
         
         // 添加心情记录到列表
@@ -314,20 +437,38 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 获取心情图标
             const moodIconClass = getMoodIconClass(mood.mood);
+            const moodColor = getMoodColor(mood.mood);
+            
+            // 构建图片HTML（如果有图片）
+            let imageHtml = '';
+            if (mood.image) {
+                imageHtml = `
+                    <div class="mood-image-container">
+                        <img src="${mood.image}" class="mood-image" alt="心情图片" data-action="view-image">
+                    </div>
+                `;
+            }
             
             moodElement.innerHTML = `
                 <div class="mood-header">
                     <span class="mood-date">${mood.date}</span>
-                    <span class="mood-icon-display"><i class="${moodIconClass}"></i></span>
+                    <span class="mood-icon-display" style="${moodColor}">
+                        <i class="${moodIconClass}"></i>
+                    </span>
                     <span class="mood-time">${mood.time}</span>
                 </div>
                 <div class="mood-content">${escapeHtml(mood.text)}</div>
+                ${imageHtml}
                 <div class="mood-actions">
                     <button class="delete-mood-button" title="删除">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
             `;
+            
+            // 添加动态效果
+            const iconDisplay = moodElement.querySelector('.mood-icon-display');
+            iconDisplay.classList.add('animated-mood-icon');
             
             // 添加删除功能
             const deleteButton = moodElement.querySelector('.delete-mood-button');
@@ -356,6 +497,21 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             
             return moodIcons[mood] || 'fas fa-question';
+        }
+        
+        // 获取心情颜色样式
+        function getMoodColor(mood) {
+            const moodColors = {
+                'happy': 'background: linear-gradient(135deg, #fdcb6e, #e17055); color: #fff; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;',
+                'sad': 'background: linear-gradient(135deg, #74b9ff, #0984e3); color: #fff; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;',
+                'angry': 'background: linear-gradient(135deg, #ff7675, #d63031); color: #fff; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;',
+                'surprised': 'background: linear-gradient(135deg, #a29bfe, #6c5ce7); color: #fff; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;',
+                'neutral': 'background: linear-gradient(135deg, #b2bec3, #636e72); color: #fff; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;',
+                'love': 'background: linear-gradient(135deg, #fd79a8, #e84393); color: #fff; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;',
+                'tired': 'background: linear-gradient(135deg, #dfe6e9, #b2bec3); color: #636e72; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;'
+            };
+            
+            return moodColors[mood] || 'background: rgba(0, 0, 0, 0.2); color: #fff; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;';
         }
         
         // HTML转义函数
@@ -455,6 +611,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 moods.forEach(mood => addMood(mood));
             }
         }
+    }
+
+    // 图片模态框功能
+    function initImageModal() {
+        const modal = document.getElementById('image-modal');
+        const modalImg = document.getElementById('modal-image');
+        const closeBtn = document.querySelector('.close-modal');
+        
+        // 关闭模态框
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // 恢复页面滚动
+        });
+        
+        // 点击模态框背景关闭
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto'; // 恢复页面滚动
+            }
+        });
+        
+        // 全局委托事件监听器，用于打开模态框
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.getAttribute('data-action') === 'view-image') {
+                modalImg.src = e.target.src;
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+            }
+        });
+        
+        // 键盘事件 - ESC键关闭模态框
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'block') {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
     }
 
     // 愿望清单功能
