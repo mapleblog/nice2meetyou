@@ -443,8 +443,11 @@ document.addEventListener('DOMContentLoaded', function() {
             let imageHtml = '';
             if (mood.image) {
                 imageHtml = `
-                    <div class="mood-image-container">
-                        <img src="${mood.image}" class="mood-image" alt="心情图片" data-action="view-image">
+                    <div class="mood-images-wrapper">
+                        <div class="mood-image-container">
+                            <img src="${mood.image}" class="mood-image" alt="心情图片" data-action="view-image">
+                            <div class="image-expand-icon"><i class="fas fa-expand"></i></div>
+                        </div>
                     </div>
                 `;
             }

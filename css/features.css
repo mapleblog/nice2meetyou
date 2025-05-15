@@ -374,8 +374,8 @@
     transition: all 0.3s ease;
 }
 
-/* 留言板中的图片显示为缩略图 */
-.message-images-wrapper {
+/* 留言板和心情日记中的图片显示为缩略图 */
+.message-images-wrapper, .mood-images-wrapper {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -383,7 +383,7 @@
     margin-bottom: 10px;
 }
 
-.message-image-container {
+.message-image-container, .mood-image-container {
     width: 100px;
     height: 100px;
     border-radius: 8px;
@@ -409,7 +409,8 @@
     transition: opacity 0.2s ease;
 }
 
-.message-image-container:hover .image-expand-icon {
+.message-image-container:hover .image-expand-icon,
+.mood-image-container:hover .image-expand-icon {
     opacity: 1;
 }
 
@@ -426,8 +427,8 @@
     object-fit: contain;
 }
 
-/* 留言板中的图片使用裁剪样式 */
-.message-image {
+/* 留言板和心情日记中的图片使用裁剪样式 */
+.message-image, .mood-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
