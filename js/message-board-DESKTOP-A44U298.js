@@ -81,51 +81,31 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // 尝试从Firebase加载留言
-        loadMessagesFromFirebase(function(firebaseMessages) {
-            // 如果从Firebase加载成功，使用Firebase的数据
-            if (firebaseMessages && firebaseMessages.length > 0) {
-                console.log(`从Firebase加载了 ${firebaseMessages.length} 条留言`);
-                displayMessages(firebaseMessages);
-                // 同步到本地存储
-                saveMessagesToStorage(firebaseMessages);
-                return;
-            }
+        // 获取留言数据
+        let messages = [];
+        
+        try {
+            // 尝试从本地存储获取留言
+            const savedMessages = localStorage.getItem('messages');
+            console.log('本地存储中的留言:', savedMessages);
             
-            // 如果Firebase加载失败或没有数据，尝试从本地存储加载
-            let messages = [];
-            try {
-                // 尝试从本地存储获取留言
-                const savedMessages = localStorage.getItem('messages');
-                console.log('本地存储中的留言:', savedMessages);
-                
-                if (savedMessages) {
-                    messages = JSON.parse(savedMessages);
-                }
-            } catch (error) {
-                console.error('解析留言数据出错:', error);
+            if (savedMessages) {
+                messages = JSON.parse(savedMessages);
             }
-            
-            // 如果没有留言，不显示任何内容
-            if (!messages || messages.length === 0) {
-                messageList.innerHTML = '';
-                return;
-            }
-            
-            // 显示本地存储的留言
-            displayMessages(messages);
-        });
-    }
-    
-    // 显示留言列表
-    function displayMessages(messages) {
-        console.log(`显示 ${messages.length} 条留言`);
+        } catch (error) {
+            console.error('解析留言数据出错:', error);
+        }
+        
+        // 如果没有留言，不显示任何内容
+        if (!messages || messages.length === 0) {
+            messageList.innerHTML = '';
+            return;
+        }
+        
+        console.log(`找到 ${messages.length} 条留言`);
         
         // 按时间倒序排序
         messages.sort((a, b) => b.id - a.id);
-        
-        // 清空留言列表
-        messageList.innerHTML = '';
         
         // 显示留言
         messages.forEach(function(message) {
@@ -134,51 +114,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // 从Firebase加载留言
-    function loadMessagesFromFirebase(callback) {
-        try {
-            if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
-                console.log('尝试从Firebase加载留言');
-                const db = firebase.database();
-                
-                // 首次加载数据
-                db.ref('messages').once('value')
-                    .then(snapshot => {
-                        const data = snapshot.val();
-                        if (data) {
-                            console.log('从Firebase加载留言成功');
-                            callback(data);
-                        } else {
-                            console.log('Firebase中没有留言数据');
-                            callback([]);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('从Firebase加载留言失败:', error);
-                        callback([]);
-                    });
-                
-                // 监听数据变化
-                db.ref('messages').on('value', snapshot => {
-                    const data = snapshot.val();
-                    if (data) {
-                        console.log('Firebase数据变化，实时更新留言');
-                        displayMessages(data);
-                        // 同步到本地存储
-                        saveMessagesToStorage(data);
-                    }
-                }, error => {
-                    console.error('Firebase监听错误:', error);
-                });
-            } else {
-                console.warn('Firebase未初始化，无法加载留言');
-                callback([]);
-            }
-        } catch (error) {
-            console.error('Firebase操作失败:', error);
-            callback([]);
-        }
-    }
     // 创建留言元素
     function createMessageElement(message) {
         console.log('创建留言元素:', message);
