@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 初始化 Firebase
     // 注意：在实际使用前需要替换上面的配置信息
-    let firebaseInitialized = false;
+    let firebaseInitialized = true;
     let db;
     
     try {
