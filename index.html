@@ -153,30 +153,21 @@
                             <label for="message-input">留言内容</label>
                             <textarea id="message-input" class="form-control" rows="3" placeholder="写下你想说的话..."></textarea>
                         </div>
-                        <div class="form-media">
-                            <div class="media-buttons">
-                                <div class="left-buttons">
-                                    <label for="message-image" class="image-upload-label">
-                                        <i class="fas fa-image"></i> 添加图片
-                                    </label>
-                                    <div class="emoji-container">
-                                        <button id="emoji-button" class="emoji-button" title="添加表情"><i class="far fa-smile"></i></button>
-                                        <div id="emoji-picker" class="emoji-picker">
-                                            <span class="emoji" title="微笑">😊</span>
-                                            <span class="emoji" title="笑哭">😂</span>
-                                            <span class="emoji" title="爱心">❤️</span>
-                                            <span class="emoji" title="点赞">👍</span>
-                                            <span class="emoji" title="庆祝">🎉</span>
-                                            <span class="emoji" title="樱花">🌸</span>
-                                            <span class="emoji" title="闪烁">✨</span>
-                                            <span class="emoji" title="爱心眼">🥰</span>
-                                        </div>
-                                    </div>
+                        <div class="form-actions">
+                            <div class="emoji-container">
+                                <button id="emoji-button" class="emoji-button"><i class="far fa-smile"></i> 表情</button>
+                                <div id="emoji-picker" class="emoji-picker">
+                                    <span class="emoji">😊</span>
+                                    <span class="emoji">😂</span>
+                                    <span class="emoji">❤️</span>
+                                    <span class="emoji">👍</span>
+                                    <span class="emoji">🎉</span>
+                                    <span class="emoji">🌸</span>
+                                    <span class="emoji">✨</span>
+                                    <span class="emoji">🥰</span>
                                 </div>
-                                <button type="submit" class="submit-button">发送留言</button>
                             </div>
-                            <input type="file" id="message-image" class="image-upload" accept="image/*">
-                            <div id="message-image-preview" class="image-preview"></div>
+                            <button type="submit" class="submit-button">发送留言</button>
                         </div>
                     </form>
                     <div id="message-list" class="message-list"></div>
@@ -203,17 +194,8 @@
                             <label for="mood-text">心情描述</label>
                             <textarea id="mood-text" class="form-control" rows="3" placeholder="今天发生了什么..."></textarea>
                         </div>
-                        <div class="form-media">
-                            <div class="media-buttons">
-                                <div class="left-buttons">
-                                    <label for="mood-image" class="image-upload-label">
-                                        <i class="fas fa-image"></i> 添加图片
-                                    </label>
-                                </div>
-                                <button type="submit" class="submit-button">记录心情</button>
-                            </div>
-                            <input type="file" id="mood-image" class="image-upload" accept="image/*">
-                            <div id="mood-image-preview" class="image-preview"></div>
+                        <div class="form-actions">
+                            <button type="submit" class="submit-button">记录心情</button>
                         </div>
                     </form>
                     <div id="mood-list" class="mood-list"></div>
@@ -261,14 +243,6 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    
-    <!-- 图片查看模态框 -->
-    <div id="image-modal" class="image-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <img id="modal-image" src="" alt="大图">
-        </div>
-    </div>
     
     <script src="js/script.js?v=1.0.2"></script>
     <script src="js/ocean.js"></script>
