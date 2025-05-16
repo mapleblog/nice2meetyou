@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 src: '/nice2meetyou/music/UntilIFoundYou.mp3'
             },
             {
-                title: Pretty Boy',
+                title: 'Pretty Boy',
                 src: '/nice2meetyou/music/PrettyBoy.mp3'
             },
             {
