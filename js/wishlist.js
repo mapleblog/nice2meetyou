@@ -18,7 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
      * 初始化愿望清单功能
      */
     function initWishlist() {
-        // 加载已保存的愿望
+        // 删除标题为 undefined 的愿望
+        removeUndefinedWishes();
+        
+        // 尝试从 Firebase 加载愿望
+        loadWishesFromFirebase();
+        
+        // 加载已保存的愿望（如果 Firebase 加载失败，将使用本地数据）
         loadWishes();
 
         // 设置优先级选择事件
@@ -122,6 +128,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const wishes = getWishes();
         wishes.push(wish);
         localStorage.setItem('wishes', JSON.stringify(wishes));
+        
+        // 保存到Firebase
+        saveWishesToFirebase(wishes);
     }
 
     /**
@@ -134,6 +143,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (index !== -1) {
             wishes[index] = updatedWish;
             localStorage.setItem('wishes', JSON.stringify(wishes));
+            
+            // 保存到Firebase
+            saveWishesToFirebase(wishes);
+            
             return true;
         }
         
@@ -149,12 +162,84 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (filteredWishes.length !== wishes.length) {
             localStorage.setItem('wishes', JSON.stringify(filteredWishes));
+            
+            // 保存到Firebase
+            saveWishesToFirebase(filteredWishes);
+            
             return true;
         }
         
         return false;
     }
 
+    /**
+     * 保存愿望到 Firebase
+     */
+    function saveWishesToFirebase(wishes) {
+        try {
+            if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                const db = firebase.database();
+                db.ref('wishes').set(wishes)
+                    .then(() => console.log('愿望已保存到 Firebase'))
+                    .catch(error => console.error('保存到 Firebase 失败:', error));
+            }
+        } catch (error) {
+            console.error('Firebase 操作失败:', error);
+        }
+    }
+    
+    /**
+     * 删除标题为 undefined 的愿望
+     */
+    function removeUndefinedWishes() {
+        const wishes = getWishes();
+        const validWishes = wishes.filter(wish => {
+            // 检查标题是否为 undefined 或者 'undefined'
+            return wish.title !== undefined && wish.title !== 'undefined' && wish.title.trim() !== '';
+        });
+        
+        // 如果有无效愿望被移除
+        if (validWishes.length < wishes.length) {
+            console.log(`已移除 ${wishes.length - validWishes.length} 个无效愿望`);
+            localStorage.setItem('wishes', JSON.stringify(validWishes));
+            
+            // 同步到 Firebase
+            saveWishesToFirebase(validWishes);
+            
+            // 重新加载愿望列表
+            loadWishes();
+            
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * 从 Firebase 加载愿望
+     */
+    function loadWishesFromFirebase() {
+        try {
+            if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                const db = firebase.database();
+                db.ref('wishes').once('value')
+                    .then(snapshot => {
+                        const firebaseWishes = snapshot.val();
+                        if (firebaseWishes) {
+                            // 将 Firebase 数据保存到本地存储
+                            localStorage.setItem('wishes', JSON.stringify(firebaseWishes));
+                            console.log('从 Firebase 加载愿望成功');
+                            // 重新加载愿望
+                            loadWishes();
+                        }
+                    })
+                    .catch(error => console.error('从 Firebase 加载愿望失败:', error));
+            }
+        } catch (error) {
+            console.error('Firebase 操作失败:', error);
+        }
+    }
+    
     /**
      * 加载愿望列表
      */

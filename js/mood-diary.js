@@ -13,7 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // 当前正在编辑的日记ID
     let editingMoodId = null;
     
-    // 加载日记
+    // 尝试从 Firebase 加载日记
+    loadMoodsFromFirebase();
+    
+    // 加载日记（如果 Firebase 加载失败，将使用本地数据）
     loadMoods();
     
     // 心情图标点击事件
@@ -256,6 +259,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // 保存更新后的日记
         localStorage.setItem('moods', JSON.stringify(moods));
         
+        // 保存到Firebase
+        saveMoodsToFirebase(moods);
+        
         // 重新加载日记
         loadMoods();
         
@@ -278,6 +284,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // 保存到本地存储
         localStorage.setItem('moods', JSON.stringify(moods));
         
+        // 保存到Firebase
+        saveMoodsToFirebase(moods);
+        
         // 重新加载日记
         loadMoods();
         
@@ -289,6 +298,43 @@ document.addEventListener('DOMContentLoaded', function() {
     function getMoods() {
         const moodsJson = localStorage.getItem('moods');
         return moodsJson ? JSON.parse(moodsJson) : [];
+    }
+    
+    // 从 Firebase 加载日记
+    function loadMoodsFromFirebase() {
+        try {
+            if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                const db = firebase.database();
+                db.ref('moods').once('value')
+                    .then(snapshot => {
+                        const firebaseMoods = snapshot.val();
+                        if (firebaseMoods) {
+                            // 将 Firebase 数据保存到本地存储
+                            localStorage.setItem('moods', JSON.stringify(firebaseMoods));
+                            console.log('从 Firebase 加载日记成功');
+                            // 重新加载日记
+                            loadMoods();
+                        }
+                    })
+                    .catch(error => console.error('从 Firebase 加载日记失败:', error));
+            }
+        } catch (error) {
+            console.error('Firebase 操作失败:', error);
+        }
+    }
+    
+    // 保存日记到 Firebase
+    function saveMoodsToFirebase(moods) {
+        try {
+            if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                const db = firebase.database();
+                db.ref('moods').set(moods)
+                    .then(() => console.log('日记已保存到 Firebase'))
+                    .catch(error => console.error('保存到 Firebase 失败:', error));
+            }
+        } catch (error) {
+            console.error('Firebase 操作失败:', error);
+        }
     }
     
     // 重置日记表单
