@@ -39,10 +39,11 @@
         width: 100%;
     }
 
-    /* u4e2au4ebau8d44u6599u533au57dfu4f18u5316 */
+    /* 个人资料区域优化 */
     .profile-canvas {
-        width: 100%;
-        max-width: 280px;
+        width: 110%;
+        max-width: 320px;
         margin: 15px auto 0;
+        margin-left: -5%;
     }
 }
