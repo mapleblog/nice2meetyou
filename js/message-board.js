@@ -154,19 +154,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         updateMessageElementContent(messageElement, message);
         
-        // 添加表情反应功能
-        if (window.ReactionsModule && !messageElement.querySelector('.reactions-container')) {
-            window.ReactionsModule.initReactions('MESSAGE', message.id, messageElement);
-        }
-        
         return messageElement;
     }
     
     // 更新留言元素内容
     function updateMessageElementContent(messageElement, message) {
-        // 保存表情反应容器（如果存在）
-        const reactionsContainer = messageElement.querySelector('.reactions-container');
-        
         // 检查是否处于编辑模式
         if (editingMessageId === message.id) {
             messageElement.classList.add('editing');
@@ -220,10 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const saveButton = messageElement.querySelector('.save-message-button');
             if (saveButton) {
                 saveButton.addEventListener('click', function() {
-                    const editArea = messageElement.querySelector('.message-content-edit');
-                    if (editArea) {
-                        saveEditedMessage(message.id, editArea.value);
-                    }
+                    saveEditedMessage(message.id, editArea.value);
                 });
             }
             
@@ -235,36 +224,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         } else {
-            // 非编辑模式，显示正常内容
+            // 正常显示模式
+            messageElement.classList.remove('editing');
+            
+            // 显示编辑状态
+            const editedInfo = message.edited ? '<span class="edited-info">(已编辑)</span>' : '';
+            
             messageElement.innerHTML = `
                 <div class="message-header">
                     <span class="message-author">${escapeHtml(message.author)}</span>
-                    <span class="message-time">${message.time}${message.edited ? ' (已编辑)' : ''}</span>
+                    <span class="message-time">${message.time} ${editedInfo}</span>
                 </div>
                 <div class="message-content">${escapeHtml(message.text)}</div>
                 <div class="message-actions">
                     <button class="message-button edit-message-button" title="编辑">
-                        <i class="fas fa-edit"></i> 编辑
+                        <i class="fas fa-edit"></i>
                     </button>
                     <button class="message-button delete-message-button" title="删除">
-                        <i class="fas fa-trash"></i> 删除
+                        <i class="fas fa-trash"></i>
                     </button>
                 </div>
             `;
             
-            // 如果之前有表情反应容器，重新添加
-            if (reactionsContainer) {
-                messageElement.appendChild(reactionsContainer);
-            }
-            // 如果没有表情反应容器且ReactionsModule可用，初始化表情反应
-            else if (window.ReactionsModule && !messageElement.querySelector('.reactions-container')) {
-                window.ReactionsModule.initReactions('MESSAGE', message.id, messageElement);
-            }
-            
             // 添加编辑按钮事件
             const editButton = messageElement.querySelector('.edit-message-button');
             if (editButton) {
-                editButton.addEventListener('click', function() {
+                editButton.addEventListener('click', function(e) {
+                    e.stopPropagation(); // 防止事件冒泡
                     startEdit(message.id);
                 });
             }
@@ -272,7 +258,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // 添加删除按钮事件
             const deleteButton = messageElement.querySelector('.delete-message-button');
             if (deleteButton) {
-                deleteButton.addEventListener('click', function() {
+                deleteButton.addEventListener('click', function(e) {
+                    e.stopPropagation(); // 防止事件冒泡
                     if (confirm('确定要删除这条留言吗？')) {
                         deleteMessage(message.id);
                     }
@@ -289,110 +276,253 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // 取消编辑
-    function cancelEdit() {
-        if (editingMessageId) {
-            console.log('取消编辑留言:', editingMessageId);
+    // 调整颜色亮度的辅助函数
+    function adjustColor(color, amount) {
+        // 处理rgba格式
+        const rgba = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+        if (rgba) {
+            let r = parseInt(rgba[1]);
+            let g = parseInt(rgba[2]);
+            let b = parseInt(rgba[3]);
+            let a = rgba[4] ? parseFloat(rgba[4]) : 1;
             
-            // 重置编辑状态
-            editingMessageId = null;
+            r = Math.max(0, Math.min(255, r + amount));
+            g = Math.max(0, Math.min(255, g + amount));
+            b = Math.max(0, Math.min(255, b + amount));
             
-            // 重新加载留言
-            loadMessages();
+            return `rgba(${r}, ${g}, ${b}, ${a})`;
         }
+        
+        // 处理十六进制格式
+        if (color.startsWith('#')) {
+            let hex = color.substring(1);
+            if (hex.length === 3) {
+                hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+            }
+            
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            
+            const newR = Math.max(0, Math.min(255, r + amount));
+            const newG = Math.max(0, Math.min(255, g + amount));
+            const newB = Math.max(0, Math.min(255, b + amount));
+            
+            return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+        }
+        
+        return color; // 如果不能解析颜色，返回原始颜色
     }
     
     // 开始编辑留言
     function startEdit(messageId) {
         console.log('开始编辑留言:', messageId);
         
-        // 设置当前正在编辑的留言ID
+        // 如果有其他留言正在编辑，先取消
+        if (editingMessageId && editingMessageId !== messageId) {
+            cancelEdit();
+        }
+        
+        // 设置当前编辑的留言ID
         editingMessageId = messageId;
         
-        // 重新加载留言，以显示编辑界面
-        loadMessages();
+        // 获取留言数据
+        const messages = getMessages();
+        const message = messages.find(m => m.id == messageId);
+        
+        if (message) {
+            // 获取留言元素并更新为编辑模式
+            const messageElement = document.querySelector(`.message-item[data-id="${messageId}"]`);
+            if (messageElement) {
+                updateMessageElementContent(messageElement, message);
+            }
+        }
     }
     
+        
+        // 添加删除按钮事件
+        const deleteButton = messageElement.querySelector('.delete-message-button');
+        if (deleteButton) {
+            deleteButton.addEventListener('click', function(e) {
+                e.stopPropagation(); // 防止事件冒泡
+                if (confirm('确定要删除这条留言吗？')) {
+                    deleteMessage(message.id);
+                }
+            });
+        }
+        
+        // 添加点击留言即可编辑的功能
+        const messageContent = messageElement.querySelector('.message-content');
+        if (messageContent) {
+            messageContent.addEventListener('dblclick', function() {
+                startEdit(message.id);
+            });
+        }
+    }
+}
+
+    // 调整颜色亮度的辅助函数
+    function adjustColor(color, amount) {
+        // 处理rgba格式
+        const rgba = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+        if (rgba) {
+            let r = parseInt(rgba[1]);
+            let g = parseInt(rgba[2]);
+            let b = parseInt(rgba[3]);
+            let a = rgba[4] ? parseFloat(rgba[4]) : 1;
+            
+            r = Math.max(0, Math.min(255, r + amount));
+            g = Math.max(0, Math.min(255, g + amount));
+            b = Math.max(0, Math.min(255, b + amount));
+            
+            return `rgba(${r}, ${g}, ${b}, ${a})`;
+        }
+        
+        // 处理十六进制格式
+        if (color.startsWith('#')) {
+            let hex = color.substring(1);
+            if (hex.length === 3) {
+                hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+            }
+            
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            
+            const newR = Math.max(0, Math.min(255, r + amount));
+            const newG = Math.max(0, Math.min(255, g + amount));
+            const newB = Math.max(0, Math.min(255, b + amount));
+            
+            return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+        }
+        
+        return color; // 如果不能解析颜色，返回原始颜色
+    }
+
+    // 开始编辑留言
+    function startEdit(messageId) {
+        console.log('开始编辑留言:', messageId);
+        
+        // 如果有其他留言正在编辑，先取消
+        if (editingMessageId && editingMessageId !== messageId) {
+            cancelEdit();
+        }
+        
+        // 设置当前编辑的留言ID
+        editingMessageId = messageId;
+        
+        // 获取留言数据
+        const messages = getMessages();
+        const message = messages.find(m => m.id == messageId);
+        
+        if (message) {
+            // 获取留言元素并更新为编辑模式
+            const messageElement = document.querySelector(`.message-item[data-id="${messageId}"]`);
+            if (messageElement) {
+                updateMessageElementContent(messageElement, message);
+            }
+        }
+    }
+
     // 保存编辑后的留言
     function saveEditedMessage(messageId, newText) {
         console.log('保存编辑后的留言:', messageId, newText);
         
-        if (!newText.trim()) {
-            alert('留言内容不能为空');
-            return;
-        }
-        
         // 获取所有留言
-        const messages = getMessagesFromStorage();
+        let messages = getMessages();
         
-        // 查找要编辑的留言
-        const messageIndex = messages.findIndex(m => m.id == messageId);
+        // 找到要编辑的留言
+        const messageIndex = messages.findIndex(message => message.id == messageId);
         
         if (messageIndex !== -1) {
             // 更新留言内容
             messages[messageIndex].text = newText.trim();
             messages[messageIndex].edited = true;
             
-            // 保存留言
+            // 保存到本地存储
             saveMessagesToStorage(messages);
             
-            // 保存到Firebase
-            saveMessagesToFirebase(messages);
+            // 更新Firebase中的特定留言
+            try {
+                if (window.firebaseInitialized) {
+                    const db = getFirebaseDB();
+                    if (db) {
+                        db.ref(`messages/${messageId}`).update({
+                            text: newText.trim(),
+                            edited: true
+                        })
+                        .then(() => console.log('留言已在Firebase中更新'))
+                        .catch(error => console.error('在Firebase中更新失败:', error));
+                    }
+                }
+            } catch (error) {
+                console.error('Firebase操作失败:', error);
+            }
             
-            // 重置编辑状态
+            // 退出编辑模式
             editingMessageId = null;
             
             // 重新加载留言
-            loadMessages();
-            
-            // 显示成功消息
-            if (savedMessage) {
-                savedMessage.textContent = '留言已更新！';
-                savedMessage.style.opacity = 1;
-                
-                setTimeout(function() {
-                    savedMessage.style.opacity = 0;
-                }, 2000);
-            }
+            displayMessages(messages);
         }
     }
     
     // 保存留言
     function saveMessage(message) {
-        // 获取已有留言
-        const messages = getMessagesFromStorage();
+        console.log('保存留言:', message);
+        
+        // 获取现有留言
+        let messages = [];
+        
+        try {
+            const savedMessages = localStorage.getItem('messages');
+            if (savedMessages) {
+                messages = JSON.parse(savedMessages);
+            }
+        } catch (error) {
+            console.error('解析留言数据出错:', error);
+        }
         
         // 添加新留言
         messages.push(message);
         
-        // 保存留言
-        saveMessagesToStorage(messages);
+        // 保存到本地存储
+        localStorage.setItem('messages', JSON.stringify(messages));
         
-        // 保存到Firebase
+        // 保存到 Firebase
         saveMessagesToFirebase(messages);
         
         // 重新加载留言
-        loadMessages();
+        displayMessages(messages);
     }
     
     // 删除留言
     function deleteMessage(id) {
         console.log('删除留言:', id);
         
-        // 获取所有留言
-        const messages = getMessagesFromStorage();
+        // 获取现有留言
+        let messages = getMessages();
         
         // 过滤掉要删除的留言
-        const filteredMessages = messages.filter(message => message.id != id);
+        messages = messages.filter(message => message.id != id);
         
-        // 保存留言
-        saveMessagesToStorage(filteredMessages);
+        // 保存到本地存储
+        saveMessagesToStorage(messages);
         
-        // 保存到Firebase
-        saveMessagesToFirebase(filteredMessages);
+        // 从Firebase中删除该留言
+        try {
+            if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                const db = firebase.database();
+                db.ref(`messages/${id}`).remove()
+                    .then(() => console.log('留言已从Firebase删除'))
+                    .catch(error => console.error('从Firebase删除失败:', error));
+            }
+        } catch (error) {
+            console.error('Firebase操作失败:', error);
+        }
         
         // 重新加载留言
-        loadMessages();
+        displayMessages(messages);
         
         // 显示成功消息
         if (savedMessage) {
@@ -426,8 +556,14 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
                 const db = firebase.database();
+                
+                // 直接使用 set 方法覆盖数据，与心情日记保持一致
                 db.ref('messages').set(messages)
-                    .then(() => console.log('留言已保存到 Firebase'))
+                    .then(() => {
+                        console.log('留言已保存到 Firebase');
+                        // 保存到本地存储，确保本地和 Firebase 数据一致
+                        localStorage.setItem('messages', JSON.stringify(messages));
+                    })
                     .catch(error => console.error('保存到 Firebase 失败:', error));
             }
         } catch (error) {
@@ -438,91 +574,49 @@ document.addEventListener('DOMContentLoaded', function() {
     // 从Firebase加载留言
     function loadMessagesFromFirebase() {
         try {
+            console.log('尝试从 Firebase 加载留言...');
+            
             if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
-                console.log('尝试从 Firebase 加载留言');
-                
                 const db = firebase.database();
                 db.ref('messages').once('value')
                     .then(snapshot => {
                         const firebaseMessages = snapshot.val();
+                        console.log('Firebase 留言数据:', firebaseMessages);
                         
                         if (firebaseMessages) {
-                            console.log('从 Firebase 加载到留言:', firebaseMessages.length);
-                            
-                            // 保存到本地存储
-                            saveMessagesToStorage(firebaseMessages);
-                            
-                            // 显示留言
-                            displayMessages(firebaseMessages);
+                            // 将 Firebase 数据保存到本地存储
+                            localStorage.setItem('messages', JSON.stringify(firebaseMessages));
+                            console.log('从 Firebase 加载留言成功');
+                            // 重新加载留言
+                            loadMessagesFromLocalStorage();
                         } else {
                             console.log('Firebase 中没有留言数据');
-                            // 从本地存储加载
-                            loadMessagesFromLocalStorage();
                         }
                     })
                     .catch(error => {
                         console.error('从 Firebase 加载留言失败:', error);
-                        // 从本地存储加载
+                        // 加载本地数据
                         loadMessagesFromLocalStorage();
                     });
             } else {
-                console.log('Firebase 未初始化，从本地存储加载');
-                // 从本地存储加载
+                console.warn('Firebase 未初始化，使用本地数据');
                 loadMessagesFromLocalStorage();
             }
         } catch (error) {
             console.error('Firebase 操作失败:', error);
-            // 从本地存储加载
+            // 出错时使用本地数据
             loadMessagesFromLocalStorage();
         }
-    }
-    
-    // 调整颜色亮度的辅助函数
-    function adjustColor(color, amount) {
-        // 处理rgba格式
-        const rgba = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-        if (rgba) {
-            let r = parseInt(rgba[1]);
-            let g = parseInt(rgba[2]);
-            let b = parseInt(rgba[3]);
-            let a = rgba[4] ? parseFloat(rgba[4]) : 1;
-            
-            r = Math.max(0, Math.min(255, r + amount));
-            g = Math.max(0, Math.min(255, g + amount));
-            b = Math.max(0, Math.min(255, b + amount));
-            
-            return `rgba(${r}, ${g}, ${b}, ${a})`;
-        }
         
-        // 处理十六进制格式
-        let hex = color.replace('#', '');
-        
-        // 将3位颜色扩展为6位
-        if (hex.length === 3) {
-            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-        }
-        
-        // 转换为RGB
-        let r = parseInt(hex.substr(0, 2), 16);
-        let g = parseInt(hex.substr(2, 2), 16);
-        let b = parseInt(hex.substr(4, 2), 16);
-        
-        // 调整亮度
-        r = Math.max(0, Math.min(255, r + amount));
-        g = Math.max(0, Math.min(255, g + amount));
-        b = Math.max(0, Math.min(255, b + amount));
-        
-        // 转回十六进制
-        return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+        // 返回空 Promise，与原来的函数签名兼容
+        return Promise.resolve([]);
     }
     
     // HTML转义函数
     function escapeHtml(text) {
-        return text
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 });
