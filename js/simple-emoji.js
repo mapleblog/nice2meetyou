@@ -124,14 +124,28 @@ document.addEventListener('DOMContentLoaded', function() {
             // 更新所有表情按钮状态
             emojiList.forEach(item => {
                 const emojiData = data[item.name] || {};
-                const isActive = emojiData[deviceId] !== undefined;
+                
+                // 检查是否有任何设备点击了该表情
+                const hasAnyReaction = Object.keys(emojiData).length > 0;
+                
+                // 检查当前设备是否点击了该表情
+                const isActiveOnThisDevice = emojiData[deviceId] !== undefined;
                 
                 const button = container.querySelector(`button[data-emoji="${item.name}"]`);
                 if (button) {
-                    if (isActive) {
+                    // 如果有任何设备点击了该表情，则显示为激活状态
+                    if (hasAnyReaction) {
                         button.classList.add('active');
+                        
+                        // 如果当前设备也点击了，添加额外的类
+                        if (isActiveOnThisDevice) {
+                            button.classList.add('active-by-me');
+                        } else {
+                            button.classList.remove('active-by-me');
+                        }
                     } else {
                         button.classList.remove('active');
+                        button.classList.remove('active-by-me');
                     }
                 }
             });
