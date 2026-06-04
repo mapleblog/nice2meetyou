@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Northern Lights</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: 'Lato', sans-serif;
+      background: #020812;
+    }
+
+    .sky {
+      position: fixed; inset: 0;
+      background: linear-gradient(180deg, #020812 0%, #050e22 35%, #071428 65%, #0a0a18 100%);
+    }
+
+    .aurora-layer {
+      position: fixed;
+      left: -20%; width: 140%;
+      border-radius: 50%;
+      filter: blur(60px);
+      mix-blend-mode: screen;
+      animation: aurora var(--dur) ease-in-out infinite alternate;
+      transform-origin: center center;
+      opacity: 0;
+      animation-fill-mode: both;
+    }
+    @keyframes aurora {
+      0%   { transform: skewX(var(--sk1)) scaleY(0.6) translateY(0px);   opacity: var(--lo); }
+      40%  { transform: skewX(var(--sk2)) scaleY(1.1) translateY(-20px); opacity: var(--hi); }
+      70%  { transform: skewX(var(--sk3)) scaleY(0.9) translateY(10px);  opacity: var(--mi); }
+      100% { transform: skewX(var(--sk1)) scaleY(0.7) translateY(-5px);  opacity: var(--lo); }
+    }
+
+    .stars { position: fixed; inset: 0; }
+    .star {
+      position: absolute; background: #fff; border-radius: 50%;
+      animation: twinkle var(--d) ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      from { opacity: var(--lo); }
+      to   { opacity: var(--hi); }
+    }
+
+    .shoot {
+      position: fixed;
+      width: 120px; height: 1px;
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 100%);
+      border-radius: 1px;
+      animation: shoot var(--sd) linear infinite;
+      opacity: 0;
+    }
+    @keyframes shoot {
+      0%   { transform: translate(0,0) rotate(var(--ang)); opacity: 0; }
+      5%   { opacity: 1; }
+      40%  { opacity: 0.8; }
+      60%  { opacity: 0; }
+      100% { transform: translate(var(--sx), var(--sy)) rotate(var(--ang)); opacity: 0; }
+    }
+
+    .ground { position: fixed; bottom: 0; left: 0; width: 100%; pointer-events: none; }
+    .ground svg { width: 100%; height: auto; display: block; }
+
+    .couple {
+      position: fixed; bottom: 13%; left: 50%; transform: translateX(-50%);
+      width: 80px;
+    }
+
+    .snowflake {
+      position: fixed; border-radius: 50%; background: rgba(220,240,255,0.85);
+      animation: snowfall var(--sf) linear infinite;
+    }
+    @keyframes snowfall {
+      from { transform: translate(0, -20px) rotate(0deg); opacity: 0.8; }
+      to   { transform: translate(var(--drift), 110vh) rotate(360deg); opacity: 0.1; }
+    }
+
+    .card {
+      position: relative; z-index: 20;
+      background: rgba(2, 8, 24, 0.75);
+      border: 1px solid rgba(80, 220, 180, 0.2);
+      border-radius: 20px; padding: 44px 40px; width: 340px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(80,220,180,0.08);
+    }
+    .tagline {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      color: rgba(100,230,200,0.7); font-size: 0.8rem;
+      letter-spacing: 0.1em; text-align: center; margin-bottom: 24px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif; font-size: 1.7rem;
+      font-weight: 400; color: #d8f4f0; text-align: center; margin-bottom: 6px;
+    }
+    .sub {
+      font-size: 0.78rem; color: rgba(140,210,200,0.5);
+      text-align: center; margin-bottom: 34px; letter-spacing: 0.08em;
+    }
+    label {
+      display: block; font-size: 0.72rem; color: rgba(140,210,200,0.65);
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 7px;
+    }
+    input {
+      width: 100%; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(80,220,180,0.2); border-radius: 10px;
+      padding: 12px 14px; color: #d0f0e8; font-size: 0.9rem;
+      font-family: 'Lato', sans-serif; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s; margin-bottom: 18px;
+    }
+    input:focus { border-color: rgba(80,220,180,0.5); box-shadow: 0 0 0 3px rgba(60,200,160,0.08); }
+    input::placeholder { color: rgba(100,180,160,0.3); }
+    button {
+      width: 100%; padding: 13px; border: none; border-radius: 10px;
+      background: linear-gradient(135deg, #0d4a40 0%, #1a8870 100%);
+      color: #d0fff6; font-size: 0.9rem; font-family: 'Lato', sans-serif;
+      letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s; margin-top: 4px;
+    }
+    button:hover { opacity: 0.88; transform: translateY(-1px); }
+    .footer { text-align: center; margin-top: 22px; font-size: 0.75rem; color: rgba(120,190,180,0.4); }
+    .footer a { color: rgba(80,220,180,0.55); text-decoration: none; }
+    .footer a:hover { color: rgba(80,220,180,0.9); }
+  </style>
+</head>
+<body>
+
+<div class="sky"></div>
+<div class="stars" id="stars"></div>
+<div id="auroras"></div>
+<div id="shoots"></div>
+<div class="ground">
+  <svg viewBox="0 0 1440 180" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,180 L0,120 Q120,80 240,100 Q360,120 480,90 Q600,60 720,85 Q840,110 960,80 Q1080,50 1200,75 Q1320,100 1440,85 L1440,180 Z" fill="#07111e"/>
+    <path d="M0,180 L0,155 Q180,140 360,150 Q540,160 720,148 Q900,136 1080,152 Q1260,168 1440,155 L1440,180 Z" fill="#0d1d2e"/>
+    <path d="M0,155 Q180,140 360,150 Q540,160 720,148 Q900,136 1080,152 Q1260,168 1440,155" stroke="rgba(180,220,240,0.2)" stroke-width="1.5" fill="none"/>
+  </svg>
+</div>
+<div id="snow"></div>
+
+<svg class="couple" viewBox="0 0 80 72" xmlns="http://www.w3.org/2000/svg" fill="#050e1c">
+  <circle cx="24" cy="16" r="6.5"/>
+  <path d="M24,22 Q17,34 19,50 Q21,60 24,60 Q27,60 29,50 Q31,34 24,22Z"/>
+  <path d="M24,32 Q14,36 10,46" stroke="#050e1c" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <path d="M24,32 Q34,35 38,33" stroke="#050e1c" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <circle cx="52" cy="18" r="6"/>
+  <path d="M52,24 Q45,36 47,50 Q49,59 52,59 Q55,59 57,50 Q59,36 52,24Z"/>
+  <path d="M52,33 Q42,35 38,33" stroke="#050e1c" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <path d="M52,33 Q62,38 66,48" stroke="#050e1c" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <path d="M24,10 Q33,8 38,12" stroke="#050e1c" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>
+
+<div class="card">
+  <div class="tagline">✦ beneath the dancing sky ✦</div>
+  <h1>Nice to Meet You</h1>
+  <p class="sub">Sign in to your story</p>
+
+  <label>Email</label>
+  <input type="email" placeholder="your@email.com" autocomplete="off">
+
+  <label>Password</label>
+  <input type="password" placeholder="••••••••">
+
+  <button>Into the Light</button>
+
+  <div class="footer">
+    No account? <a href="#">Start your story</a>
+  </div>
+</div>
+
+<script>
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 200; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      left:${Math.random()*100}%;top:${Math.random()*70}%;
+      width:${sz}px;height:${sz}px;
+      --lo:${(Math.random()*0.2+0.05).toFixed(2)};
+      --hi:${(Math.random()*0.6+0.4).toFixed(2)};
+      --d:${(Math.random()*3+1).toFixed(1)}s;
+      animation-delay:${(Math.random()*5).toFixed(1)}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  const auroraEl = document.getElementById('auroras');
+  const auroraConfigs = [
+    { color: 'rgba(20,200,140,0.9)',  top: 8  },
+    { color: 'rgba(60,160,220,0.9)',  top: 15 },
+    { color: 'rgba(140,60,220,0.9)',  top: 5  },
+    { color: 'rgba(20,220,180,0.9)',  top: 18 },
+    { color: 'rgba(80,240,160,0.9)',  top: 12 },
+    { color: 'rgba(160,80,240,0.9)',  top: 6  },
+  ];
+  auroraConfigs.forEach((ac, idx) => {
+    const el = document.createElement('div');
+    el.className = 'aurora-layer';
+    const sk = () => ((Math.random()-0.5)*30).toFixed(1)+'deg';
+    el.style.cssText = `
+      top:${ac.top}%;
+      height:${Math.random()*200+150}px;
+      background:${ac.color};
+      --dur:${(Math.random()*6+6).toFixed(1)}s;
+      --lo:${(Math.random()*0.1+0.05).toFixed(2)};
+      --mi:${(Math.random()*0.15+0.1).toFixed(2)};
+      --hi:${(Math.random()*0.25+0.18).toFixed(2)};
+      --sk1:${sk()};--sk2:${sk()};--sk3:${sk()};
+      animation-delay:${(idx*1.2).toFixed(1)}s;
+    `;
+    auroraEl.appendChild(el);
+  });
+
+  const shootEl = document.getElementById('shoots');
+  for (let i = 0; i < 4; i++) {
+    const s = document.createElement('div');
+    s.className = 'shoot';
+    s.style.cssText = `
+      left:${Math.random()*60+10}%;top:${Math.random()*30+5}%;
+      --sd:${(Math.random()*8+6).toFixed(1)}s;
+      --ang:${Math.floor(Math.random()*20+10)}deg;
+      --sx:${Math.floor(Math.random()*300+200)}px;
+      --sy:${Math.floor(Math.random()*200+100)}px;
+      animation-delay:${(Math.random()*10).toFixed(1)}s;
+    `;
+    shootEl.appendChild(s);
+  }
+
+  const snowEl = document.getElementById('snow');
+  for (let i = 0; i < 60; i++) {
+    const f = document.createElement('div');
+    f.className = 'snowflake';
+    const sz = Math.random() * 3 + 1;
+    f.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${sz}px;height:${sz}px;
+      --sf:${(Math.random()*12+8).toFixed(1)}s;
+      --drift:${((Math.random()-0.5)*80).toFixed(0)}px;
+      animation-delay:${(Math.random()*12).toFixed(1)}s;
+      opacity:${(Math.random()*0.6+0.2).toFixed(2)};
+    `;
+    snowEl.appendChild(f);
+  }
+</script>
+</body>
+</html>

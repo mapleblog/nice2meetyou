@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Bar — Golden Hour</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { min-height: 100vh; overflow: hidden; font-family: 'Inter', sans-serif; }
+
+    .sky {
+      position: fixed; inset: 0;
+      background: linear-gradient(180deg,
+        #0a0408 0%, #1c0810 12%,
+        #4a100a 28%, #8b2a08 42%,
+        #c85010 55%, #e87830 66%,
+        #f0a040 76%, #f8c860 86%,
+        #fce09a 94%, #fff5cc 100%);
+    }
+    .sun {
+      position: fixed; bottom: 22%; left: 50%; transform: translateX(-50%);
+      width: 78px; height: 78px; border-radius: 50%;
+      background: radial-gradient(circle, #fff5cc, #fce090 45%, #f0a020);
+      box-shadow:
+        0 0 60px 28px rgba(255,210,60,0.32),
+        0 0 140px 80px rgba(255,160,20,0.16),
+        0 0 260px 140px rgba(255,100,0,0.07);
+    }
+    .rays { position: fixed; bottom: 22%; left: 50%; transform: translateX(-50%); pointer-events: none; }
+    .ray {
+      position: absolute; top: 50%; left: 50%;
+      width: 2px; background: linear-gradient(to top, rgba(255,220,80,0.1), transparent);
+      transform-origin: bottom center; border-radius: 1px;
+    }
+    .bokeh {
+      position: fixed; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,210,80,0.16), transparent 70%);
+      filter: blur(8px);
+      animation: bob var(--bt) ease-in-out infinite alternate;
+    }
+    @keyframes bob {
+      from { transform:translate(0,0) scale(1); opacity:var(--bo1); }
+      to   { transform:translate(var(--bx),var(--by)) scale(var(--bs)); opacity:var(--bo2); }
+    }
+    .horizon { position: fixed; bottom: 78px; left: 0; width: 100%; pointer-events: none; }
+    .horizon svg { display: block; width: 100%; }
+    .couple-svg { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); pointer-events: none; opacity: 0.68; }
+    .couple {
+      position: fixed; bottom: 158px; left: 50%; transform: translateX(-50%);
+      text-align: center; pointer-events: none;
+    }
+    .cname { font-family:'Playfair Display',serif; font-style:italic; font-size:1.25rem; color:rgba(80,30,0,0.38); letter-spacing:0.05em; }
+    .cheart { display:block; font-size:0.85rem; color:rgba(180,80,10,0.28); margin:5px 0; }
+
+    /* ── Bar ── */
+    .bar {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 78px;
+      background: rgba(18, 8, 2, 0.74);
+      border-top: 1px solid rgba(200,130,30,0.18);
+      backdrop-filter: blur(28px) saturate(1.5);
+      box-shadow: 0 -6px 36px rgba(180,80,0,0.14), inset 0 1px 0 rgba(220,150,40,0.08);
+      display: grid; grid-template-columns: 220px 1fr 220px;
+      align-items: center; padding: 0 24px; gap: 16px; z-index: 100;
+    }
+    .prog-rail {
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: rgba(200,130,30,0.09); cursor: pointer;
+    }
+    .prog-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #b45309, #d97706, #f59e0b);
+      transition: width 0.35s linear; position: relative;
+    }
+    .prog-fill::after {
+      content: ''; position: absolute; right: -4px; top: -3px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #fbbf24; box-shadow: 0 0 10px rgba(251,191,36,0.65);
+    }
+
+    .bl { display: flex; align-items: center; gap: 11px; min-width: 0; }
+    .art-disc {
+      width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0;
+      background: conic-gradient(#78350f,#b45309,#d97706,#f59e0b,#fcd34d,#d97706,#78350f);
+      animation: dspin 5s linear infinite; animation-play-state: paused;
+      box-shadow: 0 0 16px rgba(217,119,6,0.48); position: relative;
+    }
+    .art-disc.playing { animation-play-state: running; }
+    @keyframes dspin { to { transform: rotate(360deg); } }
+    .art-disc::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #120800;
+    }
+    .ti { min-width: 0; }
+    .ti-title {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 0.9rem; color: #fde68a;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ti-artist {
+      font-size: 0.66rem; color: rgba(253,213,90,0.36);
+      letter-spacing: 0.1em; margin-top: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .fav-btn {
+      background: none; border: none; cursor: pointer; flex-shrink: 0;
+      font-size: 1rem; color: rgba(220,140,30,0.26);
+      transition: color 0.2s, transform 0.15s; padding: 4px;
+    }
+    .fav-btn:hover { color: #f59e0b; transform: scale(1.2); }
+    .fav-btn.on { color: #f59e0b; }
+
+    .bc { display: flex; align-items: center; justify-content: center; gap: 12px; }
+    .sk-btn {
+      background: none; border: none; cursor: pointer;
+      font-size: 0.88rem; color: rgba(220,160,50,0.36);
+      padding: 8px; transition: color 0.2s, transform 0.14s; line-height: 1;
+    }
+    .sk-btn:hover { color: #f59e0b; transform: scale(1.12); }
+    .pl-btn {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: linear-gradient(145deg, #b45309, #d97706);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.92rem; color: #fff8e8;
+      box-shadow: 0 4px 18px rgba(180,83,9,0.45);
+      transition: transform 0.13s, box-shadow 0.13s;
+    }
+    .pl-btn:hover { transform: scale(1.09); box-shadow: 0 6px 24px rgba(180,83,9,0.62); }
+    .pl-btn:active { transform: scale(0.93); }
+
+    .br { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+    .time-lbl { font-size: 0.66rem; color: rgba(220,160,50,0.3); white-space: nowrap; }
+    .vol-g { display: flex; align-items: center; gap: 7px; }
+    .vol-ic { font-size: 0.72rem; color: rgba(220,160,50,0.26); }
+    input[type=range] {
+      width: 76px; -webkit-appearance: none; appearance: none;
+      height: 3px; background: rgba(200,130,30,0.09);
+      border-radius: 2px; outline: none; cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 12px; height: 12px;
+      border-radius: 50%; background: #d97706;
+      box-shadow: 0 0 5px rgba(217,119,6,0.42);
+    }
+  </style>
+</head>
+<body>
+<div class="sky"></div>
+<div class="sun"></div>
+<div class="rays" id="rays"></div>
+<div id="bokeh"></div>
+
+<div class="horizon">
+  <svg viewBox="0 0 1440 180" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,180 L0,110 Q180,58 360,88 Q480,108 540,68 Q600,28 660,58 Q720,88 780,58 Q840,26 900,58 Q960,88 1080,68 Q1200,52 1440,78 L1440,180 Z" fill="rgba(10,4,2,0.6)"/>
+    <path d="M0,180 L0,138 Q240,100 480,125 Q660,145 720,118 Q780,90 880,115 Q1020,140 1200,120 Q1340,108 1440,124 L1440,180 Z" fill="rgba(8,2,0,0.8)"/>
+    <path d="M0,180 L0,158 Q720,140 1440,158 L1440,180 Z" fill="rgba(5,1,0,0.92)"/>
+  </svg>
+</div>
+
+<svg class="couple-svg" width="80" height="62" viewBox="0 0 80 62" xmlns="http://www.w3.org/2000/svg" fill="#06020a">
+  <circle cx="22" cy="12" r="5.5"/>
+  <path d="M22,18 Q15,28 17,42 Q19,50 22,50 Q25,50 27,42 Q29,28 22,18Z"/>
+  <path d="M22,26 Q14,30 11,38" stroke="#06020a" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M22,26 Q30,28 35,32" stroke="#06020a" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <circle cx="46" cy="13" r="5"/>
+  <path d="M46,19 Q39,29 41,42 Q43,50 46,50 Q49,50 51,42 Q53,29 46,19Z"/>
+  <path d="M46,27 Q38,28 35,32" stroke="#06020a" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M46,27 Q54,32 57,38" stroke="#06020a" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>
+
+<div class="couple">
+  <div class="cname">Thuy Trang</div>
+  <span class="cheart">✦</span>
+  <div class="cname">Dinh Khang</div>
+</div>
+
+<div class="bar">
+  <div class="prog-rail" id="prog-rail"><div class="prog-fill" id="prog-fill"></div></div>
+  <div class="bl">
+    <div class="art-disc" id="disc"></div>
+    <div class="ti">
+      <div class="ti-title" id="t-title">海浪声</div>
+      <div class="ti-artist" id="t-artist">Just Us</div>
+    </div>
+    <button class="fav-btn" id="fav">♡</button>
+  </div>
+  <div class="bc">
+    <button class="sk-btn" id="prev">⏮</button>
+    <button class="pl-btn" id="play">▶</button>
+    <button class="sk-btn" id="next">⏭</button>
+  </div>
+  <div class="br">
+    <span class="time-lbl" id="time">0:00 / 3:24</span>
+    <div class="vol-g">
+      <span class="vol-ic">🔈</span>
+      <input type="range" min="0" max="100" value="72">
+      <span class="vol-ic">🔊</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  const raysEl=document.getElementById('rays');
+  for(let i=0;i<16;i++){const r=document.createElement('div');r.className='ray';r.style.cssText=`transform-origin:bottom center;transform:rotate(${i*22.5}deg) translateY(-100%);opacity:${(Math.random()*0.4+0.08).toFixed(2)};height:${Math.random()*80+80}px;`;raysEl.appendChild(r);}
+  const bEl=document.getElementById('bokeh');
+  for(let i=0;i<10;i++){const b=document.createElement('div');b.className='bokeh';const sz=Math.random()*100+60;b.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*90}%;top:${Math.random()*68}%;--bt:${(Math.random()*6+5).toFixed(1)}s;--bx:${((Math.random()-0.5)*40).toFixed(0)}px;--by:${((Math.random()-0.5)*30).toFixed(0)}px;--bs:${(Math.random()*0.3+0.85).toFixed(2)};--bo1:${(Math.random()*0.35+0.08).toFixed(2)};--bo2:${(Math.random()*0.55+0.18).toFixed(2)};animation-delay:-${(Math.random()*6).toFixed(1)}s;`;bEl.appendChild(b);}
+
+  const tracks=[
+    {title:'海浪声',artist:'Just Us',dur:204},
+    {title:'Together',artist:'Thuy Trang & Dinh Khang',dur:252},
+    {title:'Sakura Path',artist:'Love Story',dur:238},
+    {title:'Nice to Meet You',artist:'Just Us',dur:301},
+  ];
+  let idx=0,playing=false,elapsed=0,timer=null,faved=false;
+  const disc=document.getElementById('disc'),playBtn=document.getElementById('play'),
+        fill=document.getElementById('prog-fill'),timeEl=document.getElementById('time'),
+        favBtn=document.getElementById('fav');
+  const fmt=s=>`${Math.floor(s/60)}:${String(s%60|0).padStart(2,'0')}`;
+  function load(i){idx=i;elapsed=0;document.getElementById('t-title').textContent=tracks[i].title;document.getElementById('t-artist').textContent=tracks[i].artist;fill.style.width='0%';timeEl.textContent=`0:00 / ${fmt(tracks[i].dur)}`;}
+  function tick(){elapsed++;if(elapsed>=tracks[idx].dur){load((idx+1)%tracks.length);if(playing)restart();return;}fill.style.width=(elapsed/tracks[idx].dur*100)+'%';timeEl.textContent=`${fmt(elapsed)} / ${fmt(tracks[idx].dur)}`;}
+  function restart(){clearInterval(timer);timer=setInterval(tick,1000);}
+  function setPlay(s){playing=s;disc.classList.toggle('playing',s);playBtn.textContent=s?'⏸':'▶';s?restart():clearInterval(timer);}
+  playBtn.addEventListener('click',()=>setPlay(!playing));
+  document.getElementById('prev').addEventListener('click',()=>{load((idx-1+tracks.length)%tracks.length);if(playing)restart();});
+  document.getElementById('next').addEventListener('click',()=>{load((idx+1)%tracks.length);if(playing)restart();});
+  favBtn.addEventListener('click',()=>{faved=!faved;favBtn.classList.toggle('on',faved);favBtn.textContent=faved?'♥':'♡';});
+  document.getElementById('prog-rail').addEventListener('click',e=>{const r=e.currentTarget.getBoundingClientRect();elapsed=Math.floor((e.clientX-r.left)/r.width*tracks[idx].dur);fill.style.width=(elapsed/tracks[idx].dur*100)+'%';timeEl.textContent=`${fmt(elapsed)} / ${fmt(tracks[idx].dur)}`;});
+  load(0);
+</script>
+</body>
+</html>

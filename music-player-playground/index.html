@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Player Playgrounds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh; background: #080410;
+      font-family: 'Inter', sans-serif;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 60px 20px 80px;
+    }
+    h1 { font-family:'Playfair Display',serif; color:#fff; font-size:2rem; font-weight:400; margin-bottom:8px; letter-spacing:0.03em; }
+    .sub { color:#555; font-size:0.82rem; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:52px; }
+
+    .section-label {
+      width:100%; max-width:900px;
+      font-size:0.66rem; color:#444; letter-spacing:0.18em; text-transform:uppercase;
+      margin-bottom:16px; padding-left:2px;
+      border-bottom:1px solid #181528; padding-bottom:10px;
+    }
+    .grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
+      gap: 22px; width: 100%; max-width: 900px; margin-bottom: 48px;
+    }
+    .card {
+      background: #0e0b1c; border: 1px solid #1c1830;
+      border-radius: 16px; overflow: hidden;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.55); }
+
+    /* Previews */
+    .preview { height: 120px; position: relative; overflow: hidden; display: flex; align-items: flex-end; }
+
+    .pv-vinyl { background: linear-gradient(145deg, #1e1208, #160e06); }
+    .pv-vinyl::before {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 82px; height: 82px; border-radius: 50%;
+      background: repeating-radial-gradient(circle at 50%, #191919 0px, #232323 4px, #1c1c1c 7px);
+      box-shadow: 0 0 0 6px #1c1206;
+    }
+    .pv-vinyl::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 24px; height: 24px; border-radius: 50%;
+      background: radial-gradient(circle at 40%, #eccb70, #b87828 60%, #8c5818);
+    }
+
+    .pv-moon { background: linear-gradient(160deg, #0d0520 0%, #1a0838 50%, #0e1230 100%); }
+    .pv-moon::before {
+      content: ''; position: absolute; top: 14px; right: 18px;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: radial-gradient(circle at 38%, #fffbe8, #f5e090 60%, #e0c060);
+      box-shadow: 0 0 18px 8px rgba(240,210,80,0.2);
+    }
+
+    .pv-blossom { background: linear-gradient(180deg, #3d1a5c 0%, #c45e82 55%, #fde8e0 100%); }
+
+    .pv-golden { background: linear-gradient(180deg, #1c0810 0%, #c85010 50%, #f8c860 100%); }
+
+    /* Mini bars at bottom of previews */
+    .mini-bar {
+      width: 100%; height: 20px; border-radius: 0 0 3px 3px;
+    }
+    .mb-purple { background: rgba(6,2,18,0.72); border-top: 1px solid rgba(160,100,255,0.16); }
+    .mb-pink   { background: rgba(255,240,246,0.56); border-top: 1px solid rgba(220,140,160,0.28); }
+    .mb-amber  { background: rgba(18,8,2,0.74); border-top: 1px solid rgba(200,130,30,0.18); }
+
+    .info { padding: 16px 18px 18px; }
+    .num  { font-size:0.64rem; color:#444; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:4px; }
+    .name { color:#d8d0f0; font-size:0.94rem; font-weight:400; margin-bottom:5px; }
+    .desc { color:#555; font-size:0.74rem; line-height:1.55; }
+    .tags { margin-top:9px; }
+    .tag {
+      display:inline-block; margin-right:4px;
+      font-size:0.6rem; color:#444; letter-spacing:0.1em; text-transform:uppercase;
+      border:1px solid #1e1a30; border-radius:20px; padding:2px 8px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Music Player Playgrounds ♡</h1>
+<p class="sub">4 couple-themed players — click to preview</p>
+
+<div class="section-label">Full Player</div>
+<div class="grid">
+  <a class="card" href="01-vinyl-turntable.html" target="_blank">
+    <div class="preview pv-vinyl"></div>
+    <div class="info">
+      <div class="num">Player 01</div>
+      <div class="name">Vinyl Turntable</div>
+      <div class="desc">Spinning vinyl record with pivoting tonearm — warm dark wood aesthetic, full card layout</div>
+      <div class="tags"><span class="tag">Full Card</span><span class="tag">Amber</span><span class="tag">Vinyl</span></div>
+    </div>
+  </a>
+</div>
+
+<div class="section-label">Bar Players</div>
+<div class="grid">
+  <a class="card" href="02-moonlit-bar.html" target="_blank">
+    <div class="preview pv-moon">
+      <div class="mini-bar mb-purple"></div>
+    </div>
+    <div class="info">
+      <div class="num">Bar 02</div>
+      <div class="name">Moonlit Romance</div>
+      <div class="desc">Starry night sky with glowing moon — dark purple glass bar, spinning art disc</div>
+      <div class="tags"><span class="tag">Bottom Bar</span><span class="tag">Purple</span><span class="tag">Dark</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="03-blossom-bar.html" target="_blank">
+    <div class="preview pv-blossom">
+      <div class="mini-bar mb-pink"></div>
+    </div>
+    <div class="info">
+      <div class="num">Bar 03</div>
+      <div class="name">Cherry Blossom</div>
+      <div class="desc">Sakura sky with falling petals — frosted light bar, blush pink tones</div>
+      <div class="tags"><span class="tag">Bottom Bar</span><span class="tag">Rose</span><span class="tag">Light</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="04-golden-bar.html" target="_blank">
+    <div class="preview pv-golden">
+      <div class="mini-bar mb-amber"></div>
+    </div>
+    <div class="info">
+      <div class="num">Bar 04</div>
+      <div class="name">Golden Hour</div>
+      <div class="desc">Warm sunset silhouette with sun rays and bokeh glow — amber dark bar, couple figure</div>
+      <div class="tags"><span class="tag">Bottom Bar</span><span class="tag">Amber</span><span class="tag">Sunset</span></div>
+    </div>
+  </a>
+</div>
+
+</body>
+</html>

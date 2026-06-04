@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Story — Sunflower Promise</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: 'Lato', sans-serif;
+    }
+
+    .sky {
+      position: fixed; inset: 0;
+      background: linear-gradient(180deg,
+        #1a0a00 0%,
+        #4a1a00 12%,
+        #a03800 28%,
+        #e06a10 45%,
+        #f5a030 60%,
+        #f8c060 75%,
+        #fde090 88%,
+        #fff3c0 100%
+      );
+    }
+
+    .sun {
+      position: fixed;
+      bottom: 38%; left: 50%;
+      transform: translateX(-50%);
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff8e0 0%, #ffe060 40%, #ffb020 70%, transparent 100%);
+      box-shadow:
+        0 0 40px 20px rgba(255,200,60,0.5),
+        0 0 100px 50px rgba(255,160,20,0.25),
+        0 0 200px 100px rgba(255,120,0,0.1);
+      z-index: 1;
+    }
+
+    .rays {
+      position: fixed;
+      bottom: 38%; left: 50%;
+      transform: translateX(-50%);
+      width: 300px; height: 300px;
+      z-index: 0;
+      animation: rotateSun 40s linear infinite;
+    }
+    @keyframes rotateSun { to { transform: translateX(-50%) rotate(360deg); } }
+
+    .horizon {
+      position: fixed;
+      bottom: 36%; left: 0; width: 100%;
+      height: 80px;
+      background: linear-gradient(to bottom, rgba(255,160,20,0.35) 0%, transparent 100%);
+      z-index: 2;
+    }
+
+    .hills {
+      position: fixed;
+      bottom: 18%; left: 0;
+      width: 100%; height: 280px;
+      pointer-events: none; z-index: 3;
+    }
+    .hills svg { width: 100%; height: 100%; }
+
+    .ground {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 100%; height: 20%;
+      background: linear-gradient(180deg, #3d2200 0%, #2a1600 100%);
+      z-index: 4;
+    }
+
+    .flowers { position: fixed; bottom: 17%; left: 0; width: 100%; z-index: 5; }
+    .sunflower {
+      position: absolute;
+      bottom: 0;
+      transform-origin: bottom center;
+      animation: sway var(--sw) ease-in-out infinite alternate;
+    }
+    @keyframes sway {
+      from { transform: rotate(var(--r1)); }
+      to   { transform: rotate(var(--r2)); }
+    }
+
+    .couple {
+      position: fixed;
+      bottom: 18%; left: 50%;
+      transform: translateX(-50%);
+      z-index: 8;
+      opacity: 0.92;
+    }
+
+    .particle {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: drift var(--dur) ease-in-out infinite;
+      opacity: 0;
+    }
+    @keyframes drift {
+      0%   { transform: translate(0,0) scale(1); opacity: 0; }
+      10%  { opacity: var(--op); }
+      80%  { opacity: var(--op); }
+      100% { transform: translate(var(--dx), var(--dy)) scale(0.3); opacity: 0; }
+    }
+
+    .card {
+      position: relative; z-index: 20;
+      background: rgba(40,16,0,0.6);
+      border: 1px solid rgba(255,180,40,0.3);
+      border-radius: 24px;
+      padding: 44px 42px;
+      width: 370px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 12px 60px rgba(80,30,0,0.4), inset 0 1px 0 rgba(255,200,80,0.12);
+      text-align: center;
+    }
+    .milestone-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,200,80,0.75);
+      background: rgba(255,180,40,0.08);
+      border: 1px solid rgba(255,180,40,0.2);
+      border-radius: 20px;
+      padding: 5px 14px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-weight: 400;
+      color: #fff3d0;
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+    .date {
+      font-size: 0.73rem;
+      color: rgba(220,170,80,0.55);
+      letter-spacing: 0.14em;
+      margin-bottom: 24px;
+    }
+    .quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.02rem;
+      color: rgba(255,230,160,0.75);
+      line-height: 1.72;
+      margin-bottom: 28px;
+      padding: 0 4px;
+    }
+    .timeline-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+    .milestone {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    .milestone-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(255,180,40,0.3);
+      border: 2px solid rgba(255,180,40,0.4);
+    }
+    .milestone-dot.now {
+      background: rgba(255,200,60,0.8);
+      border-color: rgba(255,220,80,0.9);
+      box-shadow: 0 0 8px rgba(255,200,60,0.5);
+    }
+    .milestone-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(255,180,40,0.2);
+      margin-top: 4px;
+      align-self: flex-start;
+    }
+    .milestone-text {
+      font-size: 0.6rem;
+      color: rgba(220,170,80,0.55);
+      letter-spacing: 0.08em;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .milestone-text.now { color: rgba(255,210,80,0.85); }
+    .btn-promise {
+      width: 100%;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #c87800, #ffb830);
+      color: #1a0800;
+      border: none;
+      border-radius: 30px;
+      padding: 13px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      font-weight: 400;
+    }
+    .btn-promise:hover { opacity: 0.88; transform: translateY(-1px); }
+    .footer-note {
+      margin-top: 16px;
+      font-size: 0.7rem;
+      color: rgba(200,150,60,0.45);
+      letter-spacing: 0.06em;
+    }
+  </style>
+</head>
+<body>
+
+<div class="sky"></div>
+<div class="sun"></div>
+
+<svg class="rays" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(150,150)">
+    <rect x="-2" y="-150" width="4" height="80" rx="2" fill="rgba(255,220,80,0.2)"/>
+    <rect x="-2" y="-150" width="4" height="80" rx="2" fill="rgba(255,220,80,0.2)" transform="rotate(30)"/>
+    <rect x="-2" y="-150" width="4" height="80" rx="2" fill="rgba(255,220,80,0.2)" transform="rotate(60)"/>
+    <rect x="-2" y="-150" width="4" height="80" rx="2" fill="rgba(255,220,80,0.2)" transform="rotate(90)"/>
+    <rect x="-2" y="-150" width="4" height="80" rx="2" fill="rgba(255,220,80,0.2)" transform="rotate(120)"/>
+    <rect x="-2" y="-150" width="4" height="80" rx="2" fill="rgba(255,220,80,0.2)" transform="rotate(150)"/>
+    <rect x="-2" y="-150" width="4" height="80" rx="2" fill="rgba(255,220,80,0.2)" transform="rotate(180)"/>
+    <rect x="-2" y="-150" width="4" height="80" rx="2" fill="rgba(255,220,80,0.2)" transform="rotate(210)"/>
+    <rect x="-2" y="-150" width="4" height="80" rx="2" fill="rgba(255,220,80,0.2)" transform="rotate(240)"/>
+    <rect x="-2" y="-150" width="4" height="80" rx="2" fill="rgba(255,220,80,0.2)" transform="rotate(270)"/>
+    <rect x="-2" y="-150" width="4" height="80" rx="2" fill="rgba(255,220,80,0.2)" transform="rotate(300)"/>
+    <rect x="-2" y="-150" width="4" height="80" rx="2" fill="rgba(255,220,80,0.2)" transform="rotate(330)"/>
+  </g>
+</svg>
+
+<div class="horizon"></div>
+
+<div class="hills">
+  <svg viewBox="0 0 1440 280" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,280 L0,180 Q180,80 360,140 Q540,200 720,120 Q900,40 1080,110 Q1260,180 1440,140 L1440,280 Z" fill="#2a1400" opacity="0.9"/>
+    <path d="M0,280 L0,220 Q200,160 400,195 Q600,230 800,180 Q1000,130 1200,175 Q1350,205 1440,190 L1440,280 Z" fill="#1e0e00" opacity="0.85"/>
+  </svg>
+</div>
+
+<div class="ground"></div>
+<div class="flowers" id="flowers"></div>
+
+<svg class="couple" width="90" height="90" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg" fill="#1a0a00">
+  <circle cx="28" cy="16" r="7"/>
+  <path d="M28,23 Q20,34 22,52 Q24,60 28,60 Q32,60 34,52 Q36,34 28,23Z"/>
+  <path d="M28,32 Q18,36 14,46" stroke="#1a0a00" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M28,32 Q38,30 44,34" stroke="#1a0a00" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <circle cx="58" cy="18" r="6.5"/>
+  <path d="M58,25 Q50,36 52,52 Q54,60 58,60 Q62,60 64,52 Q66,36 58,25Z"/>
+  <path d="M58,33 Q48,30 44,34" stroke="#1a0a00" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M58,33 Q68,37 72,46" stroke="#1a0a00" stroke-width="5" fill="none" stroke-linecap="round"/>
+</svg>
+
+<div id="particles"></div>
+
+<div class="card">
+  <span class="milestone-badge">🌻 One Year Together</span>
+  <h1>A Promise in a Field</h1>
+  <div class="date">August 9 · Sunflower Farm, Countryside</div>
+  <p class="quote">"Among a thousand sunflowers turning to the light, you turned to me — and I knew this was the place I'd always return to."</p>
+
+  <div class="timeline-row">
+    <div class="milestone">
+      <div class="milestone-dot"></div>
+      <div class="milestone-text">Met</div>
+    </div>
+    <div class="milestone-line"></div>
+    <div class="milestone">
+      <div class="milestone-dot"></div>
+      <div class="milestone-text">First Date</div>
+    </div>
+    <div class="milestone-line"></div>
+    <div class="milestone">
+      <div class="milestone-dot now"></div>
+      <div class="milestone-text now">1 Year ✦</div>
+    </div>
+    <div class="milestone-line"></div>
+    <div class="milestone">
+      <div class="milestone-dot"></div>
+      <div class="milestone-text">Forever</div>
+    </div>
+  </div>
+
+  <button class="btn-promise">Write Our Next Chapter</button>
+  <div class="footer-note">every story deserves to be remembered</div>
+</div>
+
+<script>
+  const flowerEl = document.getElementById('flowers');
+  for (let i = 0; i < 28; i++) {
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    const h = Math.random() * 80 + 60;
+    const w = h * 0.55;
+    const isCenter = Math.abs(i - 14) < 4;
+    svg.setAttribute('viewBox', '0 0 40 100');
+    svg.setAttribute('width', w);
+    svg.setAttribute('height', h);
+    svg.classList.add('sunflower');
+    svg.style.cssText = `
+      left:${(i / 28) * 104 - 2}%;
+      --sw:${(Math.random()*2+2.5).toFixed(1)}s;
+      --r1:${(Math.random()*4-5).toFixed(1)}deg;
+      --r2:${(Math.random()*4+1).toFixed(1)}deg;
+      animation-delay:${(Math.random()*3).toFixed(1)}s;
+      opacity:${isCenter ? 0.25 : (Math.random()*0.5+0.6).toFixed(2)};
+      z-index:${isCenter ? 6 : 5};
+    `;
+    const stem = document.createElementNS(ns, 'rect');
+    stem.setAttribute('x','18'); stem.setAttribute('y','30');
+    stem.setAttribute('width','4'); stem.setAttribute('height','70');
+    stem.setAttribute('fill','#3a6a10'); stem.setAttribute('rx','2');
+    svg.appendChild(stem);
+
+    const leaf = document.createElementNS(ns, 'ellipse');
+    leaf.setAttribute('cx','10'); leaf.setAttribute('cy','65');
+    leaf.setAttribute('rx','10'); leaf.setAttribute('ry','5');
+    leaf.setAttribute('fill','#3a6a10');
+    leaf.setAttribute('transform','rotate(-30,10,65)');
+    svg.appendChild(leaf);
+
+    [0,40,80,120,160,200,240,280,320].forEach(a => {
+      const p = document.createElementNS(ns, 'ellipse');
+      p.setAttribute('cx','20'); p.setAttribute('cy','8');
+      p.setAttribute('rx','4.5'); p.setAttribute('ry','9');
+      p.setAttribute('fill','#f5a800');
+      p.setAttribute('transform',`rotate(${a},20,20)`);
+      p.setAttribute('opacity','0.9');
+      svg.appendChild(p);
+    });
+
+    const center = document.createElementNS(ns, 'circle');
+    center.setAttribute('cx','20'); center.setAttribute('cy','20');
+    center.setAttribute('r','9'); center.setAttribute('fill','#4a1e00');
+    svg.appendChild(center);
+
+    const inner = document.createElementNS(ns, 'circle');
+    inner.setAttribute('cx','20'); inner.setAttribute('cy','20');
+    inner.setAttribute('r','5'); inner.setAttribute('fill','#2a0e00');
+    svg.appendChild(inner);
+
+    flowerEl.appendChild(svg);
+  }
+
+  const partEl = document.getElementById('particles');
+  const goldens = ['rgba(255,200,60,0.7)','rgba(255,160,20,0.6)','rgba(255,240,120,0.7)','rgba(240,180,40,0.5)'];
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 5 + 2;
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      bottom:${Math.random()*40+20}%;
+      width:${size}px;height:${size}px;
+      background:${goldens[Math.floor(Math.random()*goldens.length)]};
+      box-shadow:0 0 4px 2px rgba(255,200,60,0.3);
+      --dur:${(Math.random()*6+5).toFixed(1)}s;
+      --dx:${((Math.random()-0.5)*120).toFixed(0)}px;
+      --dy:-${(Math.random()*140+60).toFixed(0)}px;
+      --op:${(Math.random()*0.5+0.2).toFixed(2)};
+      animation-delay:${(Math.random()*8).toFixed(1)}s;
+    `;
+    partEl.appendChild(p);
+  }
+</script>
+</body>
+</html>

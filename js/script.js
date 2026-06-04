@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const nextBtn = document.getElementById('next-btn');
     const volumeSlider = document.getElementById('volume-slider');
     const songTitle = document.getElementById('song-title');
+    const progFill = document.getElementById('prog-fill');
+    const progStrip = document.getElementById('prog-strip');
+    const timeLbl = document.getElementById('time-lbl');
     
     // 初始化
     updateCounter();
@@ -66,25 +69,42 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('设置音乐源时出错:', err);
         }
         
+        // 进度条更新
+        audioPlayer.addEventListener('timeupdate', function() {
+            if (!audioPlayer.duration) return;
+            const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            if (progFill) progFill.style.width = pct + '%';
+            if (timeLbl) {
+                const cur = Math.floor(audioPlayer.currentTime);
+                const tot = Math.floor(audioPlayer.duration);
+                const fmt = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+                timeLbl.textContent = `${fmt(cur)} / ${fmt(tot)}`;
+            }
+        });
+
+        // 点击进度条跳转
+        if (progStrip) {
+            progStrip.addEventListener('click', function(e) {
+                if (!audioPlayer.duration) return;
+                const r = progStrip.getBoundingClientRect();
+                audioPlayer.currentTime = ((e.clientX - r.left) / r.width) * audioPlayer.duration;
+            });
+        }
+
         // 播放/暂停按钮
         playBtn.addEventListener('click', function() {
             if (isPlaying) {
                 audioPlayer.pause();
-                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playBtn.textContent = '▶';
             } else {
-                // 尝试播放并捕获错误
                 const playPromise = audioPlayer.play();
-                
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
-                        // 播放成功
-                        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                        playBtn.textContent = '⏸';
                         isPlaying = true;
                     }).catch(error => {
-                        // 播放失败
                         console.error('播放失败:', error);
-                        alert('播放失败: ' + error.message);
-                        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                        playBtn.textContent = '▶';
                         isPlaying = false;
                     });
                 }
@@ -122,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (isPlaying) {
                 audioPlayer.play();
-                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                playBtn.textContent = '⏸';
             }
         }
         

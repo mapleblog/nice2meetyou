@@ -1,0 +1,82 @@
+/* Sakura Path body background */
+body {
+  background: #1a0a2e !important;
+}
+
+.sakura-sky {
+  position: fixed; inset: 0; z-index: 0;
+  background: linear-gradient(180deg,
+    #1a0a2e 0%,
+    #3d1a5c 18%,
+    #7a2d6b 36%,
+    #c45e82 55%,
+    #e8a0a8 72%,
+    #f5cfc5 88%,
+    #fde8e0 100%
+  );
+}
+
+.sakura-moon {
+  position: fixed;
+  top: 8%; right: 12%;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 38%, #fff5f0, #f8d0c0);
+  box-shadow: 0 0 30px 12px rgba(248,208,180,0.35), 0 0 80px 30px rgba(248,208,180,0.12);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.sakura-mountains {
+  position: fixed;
+  bottom: 32%; left: 0;
+  width: 100%; height: 280px;
+  pointer-events: none;
+  z-index: 1;
+}
+.sakura-mountains svg { width: 100%; height: 100%; }
+
+.sakura-ground {
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%; height: 34%;
+  pointer-events: none;
+  z-index: 1;
+}
+.sakura-ground svg { width: 100%; height: 100%; }
+
+.sakura-tree-left,
+.sakura-tree-right {
+  position: fixed;
+  bottom: 30%;
+  width: 220px;
+  height: auto;
+  pointer-events: none;
+  z-index: 2;
+}
+.sakura-tree-left  { left: -30px; }
+.sakura-tree-right { right: -30px; transform: scaleX(-1); }
+
+.sakura-petal {
+  position: fixed;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 5;
+  animation-name: sakura-fall;
+  animation-timing-function: ease-in;
+  animation-iteration-count: infinite;
+  animation-duration: var(--dur);
+  animation-delay: var(--delay);
+}
+@keyframes sakura-fall {
+  0%   { transform: translateX(0) rotate(0deg); opacity: 0; top: -20px; }
+  5%   { opacity: var(--op); }
+  90%  { opacity: var(--op); }
+  100% { transform: translateX(var(--drift)) rotate(var(--spin)); opacity: 0; top: 108vh; }
+}
+
+/* Lift main content above background layers */
+.container {
+  position: relative;
+  z-index: 10;
+}

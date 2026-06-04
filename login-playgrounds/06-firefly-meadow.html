@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Firefly Meadow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: 'Lato', sans-serif;
+      background: #0a1020;
+    }
+
+    .sky {
+      position: fixed; inset: 0;
+      background: linear-gradient(180deg,
+        #060c1a 0%,
+        #0d1b35 30%,
+        #1a2e4a 55%,
+        #2d4a2a 75%,
+        #1a3018 88%,
+        #0e1f0c 100%
+      );
+    }
+
+    .stars { position: fixed; inset: 0; overflow: hidden; }
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle var(--d) ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      from { opacity: var(--lo); transform: scale(1); }
+      to   { opacity: var(--hi); transform: scale(1.4); }
+    }
+
+    .hill { position: fixed; bottom: 0; left: 0; width: 100%; height: 38%; }
+    .hill svg { width: 100%; height: 100%; }
+
+    .couple {
+      position: fixed;
+      bottom: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: auto;
+      opacity: 0.92;
+    }
+
+    .firefly {
+      position: fixed;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      animation: fly var(--dur) ease-in-out infinite, blink var(--blink) ease-in-out infinite;
+    }
+    @keyframes fly {
+      0%   { transform: translate(0px, 0px); }
+      25%  { transform: translate(var(--x1), var(--y1)); }
+      50%  { transform: translate(var(--x2), var(--y2)); }
+      75%  { transform: translate(var(--x3), var(--y3)); }
+      100% { transform: translate(0px, 0px); }
+    }
+    @keyframes blink {
+      0%, 40%, 100% { opacity: 1; }
+      20%, 60%      { opacity: 0.05; }
+    }
+
+    .grass { position: fixed; bottom: 0; width: 100%; height: 120px; pointer-events: none; }
+    .blade {
+      position: absolute;
+      bottom: 0;
+      width: 2px;
+      border-radius: 1px 1px 0 0;
+      transform-origin: bottom center;
+      background: linear-gradient(to top, #1a3018, #2d6020);
+      animation: sway var(--sw) ease-in-out infinite alternate;
+    }
+    @keyframes sway {
+      from { transform: rotate(var(--r1)); }
+      to   { transform: rotate(var(--r2)); }
+    }
+
+    .card {
+      position: relative;
+      z-index: 20;
+      background: rgba(10, 18, 30, 0.72);
+      border: 1px solid rgba(200, 255, 96, 0.18);
+      border-radius: 20px;
+      padding: 44px 40px;
+      width: 340px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 8px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(200,255,96,0.08);
+    }
+
+    .tagline {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: rgba(200,255,100,0.7);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      font-weight: 400;
+      color: #e8f5e0;
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+    .sub {
+      font-size: 0.78rem;
+      color: rgba(160,200,140,0.6);
+      text-align: center;
+      margin-bottom: 34px;
+      letter-spacing: 0.08em;
+    }
+    label {
+      display: block;
+      font-size: 0.72rem;
+      color: rgba(160,200,140,0.7);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+    input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(200,255,96,0.2);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: #e0f0d0;
+      font-size: 0.9rem;
+      font-family: 'Lato', sans-serif;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-bottom: 18px;
+    }
+    input:focus {
+      border-color: rgba(200,255,96,0.5);
+      box-shadow: 0 0 0 3px rgba(200,255,96,0.08);
+    }
+    input::placeholder { color: rgba(160,200,140,0.3); }
+    button {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4a7c2a 0%, #7ab840 100%);
+      color: #f0ffe0;
+      font-size: 0.9rem;
+      font-family: 'Lato', sans-serif;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      margin-top: 4px;
+    }
+    button:hover { opacity: 0.88; transform: translateY(-1px); }
+    .footer {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 0.75rem;
+      color: rgba(160,200,140,0.45);
+    }
+    .footer a { color: rgba(200,255,96,0.55); text-decoration: none; }
+    .footer a:hover { color: rgba(200,255,96,0.85); }
+  </style>
+</head>
+<body>
+
+<div class="sky"></div>
+<div class="stars" id="stars"></div>
+<div class="hill">
+  <svg viewBox="0 0 1440 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,220 L0,140 Q180,60 360,110 Q540,160 720,80 Q900,0 1080,60 Q1260,120 1440,90 L1440,220 Z" fill="#1a3018"/>
+    <path d="M0,220 L0,165 Q200,110 400,140 Q600,170 800,120 Q1000,70 1200,110 Q1350,135 1440,120 L1440,220 Z" fill="#0e1f0c"/>
+  </svg>
+</div>
+
+<svg class="couple" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg" fill="#0a1408">
+  <circle cx="28" cy="18" r="7"/>
+  <path d="M28,25 Q20,38 22,55 Q24,65 28,65 Q32,65 34,55 Q36,38 28,25Z"/>
+  <path d="M28,35 Q18,40 14,50" stroke="#0a1408" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M28,35 Q38,38 44,35" stroke="#0a1408" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <circle cx="58" cy="20" r="6.5"/>
+  <path d="M58,27 Q50,40 52,55 Q54,64 58,64 Q62,64 64,55 Q66,40 58,27Z"/>
+  <path d="M58,36 Q48,38 44,35" stroke="#0a1408" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M58,36 Q68,42 72,50" stroke="#0a1408" stroke-width="5" fill="none" stroke-linecap="round"/>
+</svg>
+
+<div class="grass" id="grass"></div>
+<div id="fireflies"></div>
+
+<div class="card">
+  <div class="tagline">✦ where fireflies find us ✦</div>
+  <h1>Nice to Meet You</h1>
+  <p class="sub">Sign in to your story</p>
+
+  <label>Email</label>
+  <input type="email" placeholder="your@email.com" autocomplete="off">
+
+  <label>Password</label>
+  <input type="password" placeholder="••••••••">
+
+  <button>Enter Our World</button>
+
+  <div class="footer">
+    No account? <a href="#">Start your story</a>
+  </div>
+</div>
+
+<script>
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 140; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.2 + 0.5;
+    s.style.cssText = `
+      left:${Math.random()*100}%;top:${Math.random()*55}%;
+      width:${size}px;height:${size}px;
+      --lo:${(Math.random()*0.3+0.1).toFixed(2)};
+      --hi:${(Math.random()*0.5+0.5).toFixed(2)};
+      --d:${(Math.random()*3+1.5).toFixed(1)}s;
+      animation-delay:${(Math.random()*4).toFixed(1)}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  const ffEl = document.getElementById('fireflies');
+  const ffColors = ['#c8ff60','#d0ff80','#b8ff40','#e0ffa0','#90ee40'];
+  for (let i = 0; i < 38; i++) {
+    const f = document.createElement('div');
+    f.className = 'firefly';
+    const col = ffColors[Math.floor(Math.random() * ffColors.length)];
+    const rnd = () => ((Math.random()-0.5)*120).toFixed(0)+'px';
+    f.style.cssText = `
+      left:${Math.random()*96+2}%;top:${Math.random()*45+30}%;
+      background:${col};
+      box-shadow:0 0 6px 3px ${col}99,0 0 14px 6px ${col}33;
+      --dur:${(Math.random()*8+5).toFixed(1)}s;
+      --blink:${(Math.random()*2+1).toFixed(1)}s;
+      --x1:${rnd()};--y1:${rnd()};
+      --x2:${rnd()};--y2:${rnd()};
+      --x3:${rnd()};--y3:${rnd()};
+      animation-delay:${(Math.random()*6).toFixed(1)}s;
+    `;
+    ffEl.appendChild(f);
+  }
+
+  const grassEl = document.getElementById('grass');
+  for (let i = 0; i < 120; i++) {
+    const b = document.createElement('div');
+    b.className = 'blade';
+    b.style.cssText = `
+      left:${Math.random()*100}%;
+      height:${Math.random()*60+30}px;
+      --r1:${(Math.random()*6-8).toFixed(1)}deg;
+      --r2:${(Math.random()*6+2).toFixed(1)}deg;
+      --sw:${(Math.random()*2+2).toFixed(1)}s;
+      animation-delay:${(Math.random()*3).toFixed(1)}s;
+      opacity:${(Math.random()*0.4+0.6).toFixed(2)};
+    `;
+    grassEl.appendChild(b);
+  }
+</script>
+</body>
+</html>

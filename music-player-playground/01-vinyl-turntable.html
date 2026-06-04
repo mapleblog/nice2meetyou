@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player — Vinyl Turntable</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #0e0804;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Inter', sans-serif;
+    }
+    .bg {
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 28% 22%, rgba(80,40,8,0.35) 0%, transparent 55%),
+        radial-gradient(ellipse at 72% 78%, rgba(60,28,4,0.28) 0%, transparent 50%),
+        #0e0804;
+    }
+    .shell {
+      position: relative; z-index: 1;
+      background: linear-gradient(150deg, #1e1208, #160e06);
+      border: 1px solid rgba(180,120,40,0.13);
+      border-radius: 24px;
+      padding: 38px 34px 34px;
+      width: 360px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.85), inset 0 1px 0 rgba(220,160,60,0.07);
+    }
+
+    /* ── Turntable ── */
+    .turntable {
+      position: relative; width: 270px; height: 270px;
+      margin: 0 auto 26px;
+    }
+    .platter {
+      position: absolute; inset: 0; border-radius: 50%;
+      background: radial-gradient(circle at 46% 42%, #2a1808, #160c04);
+      box-shadow:
+        0 0 0 5px #231404,
+        0 0 0 9px #1a1006,
+        0 14px 50px rgba(0,0,0,0.9);
+    }
+    .record {
+      position: absolute; inset: 13px; border-radius: 50%;
+      background:
+        repeating-radial-gradient(circle at 50% 50%,
+          #191919 0px, #191919 1.5px,
+          #242424 1.5px, #242424 3.5px,
+          #1d1d1d 3.5px, #1d1d1d 5px,
+          #222222 5px, #222222 7px
+        );
+      box-shadow: inset 0 0 28px rgba(0,0,0,0.75);
+      animation: spin 3s linear infinite;
+      animation-play-state: paused;
+    }
+    .record.playing { animation-play-state: running; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .record::before {
+      content: ''; position: absolute; inset: 0; border-radius: 50%;
+      background: conic-gradient(from 0deg,
+        transparent 0deg, rgba(255,255,255,0.025) 40deg,
+        transparent 80deg, rgba(255,255,255,0.03) 160deg,
+        transparent 200deg, rgba(255,255,255,0.02) 300deg,
+        transparent 360deg);
+    }
+    .label {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 34%; height: 34%; border-radius: 50%;
+      background: radial-gradient(circle at 40% 36%, #eccb70, #b87828 55%, #8c5818);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 6px; z-index: 2;
+      box-shadow: inset 0 1px 4px rgba(255,240,160,0.2), 0 2px 8px rgba(0,0,0,0.6);
+    }
+    .lbl-title {
+      font-size: 0.46rem; font-weight: 600;
+      color: #3a1800; letter-spacing: 0.06em;
+      text-transform: uppercase; line-height: 1.3;
+      max-width: 54px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .lbl-hole {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #0e0804; margin: 3px auto;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.9);
+    }
+    .lbl-artist {
+      font-size: 0.38rem; color: rgba(50,20,0,0.6);
+      letter-spacing: 0.04em; max-width: 52px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* Tonearm */
+    .arm-pivot {
+      position: absolute; top: 6px; right: 6px;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: radial-gradient(circle at 36% 33%, #d4a848, #806428);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.8); z-index: 11;
+    }
+    .arm-body {
+      position: absolute; top: 16px; right: 15px;
+      width: 5px; height: 140px;
+      background: linear-gradient(to bottom, #cca042 0%, #967038 70%, #6c4e20 100%);
+      border-radius: 2.5px;
+      transform-origin: top center;
+      transform: rotate(-26deg);
+      transition: transform 1.4s cubic-bezier(0.4,0,0.2,1);
+      z-index: 10;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+    }
+    .arm-body.playing { transform: rotate(-7deg); }
+    .arm-head {
+      position: absolute; bottom: -3px; left: -9px;
+      width: 20px; height: 12px;
+      background: linear-gradient(135deg, #b09040, #786020);
+      border-radius: 2px 2px 4px 4px;
+    }
+    .arm-needle {
+      position: absolute; bottom: -11px; left: 9px;
+      width: 2px; height: 9px;
+      background: linear-gradient(to bottom, #c0c0c0, #888);
+      border-radius: 0 0 1px 1px;
+    }
+
+    /* ── Info ── */
+    .info { text-align: center; margin-bottom: 18px; }
+    .info-title {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 1.3rem; color: #e2c87a; margin-bottom: 4px;
+    }
+    .info-artist {
+      font-size: 0.7rem; color: rgba(200,158,72,0.48);
+      letter-spacing: 0.14em; text-transform: uppercase;
+    }
+
+    /* ── Progress ── */
+    .prog-section { margin-bottom: 20px; }
+    .time-row {
+      display: flex; justify-content: space-between;
+      font-size: 0.66rem; color: rgba(195,142,52,0.42); margin-bottom: 9px;
+    }
+    .prog-track {
+      height: 3px; background: rgba(195,132,32,0.1);
+      border-radius: 2px; cursor: pointer; position: relative;
+    }
+    .prog-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(to right, #9a6420, #cfa040);
+      border-radius: 2px; position: relative;
+      transition: width 0.35s linear;
+    }
+    .prog-fill::after {
+      content: ''; position: absolute;
+      right: -5px; top: -4px;
+      width: 11px; height: 11px; border-radius: 50%;
+      background: #cfa040;
+      box-shadow: 0 0 8px rgba(195,140,40,0.55);
+    }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex; align-items: center;
+      justify-content: center; gap: 18px; margin-bottom: 20px;
+    }
+    .btn-skip {
+      background: none; border: none; cursor: pointer;
+      color: rgba(195,148,52,0.5); font-size: 1rem;
+      padding: 8px; transition: color 0.2s, transform 0.15s; line-height: 1;
+    }
+    .btn-skip:hover { color: #cfa040; transform: scale(1.14); }
+    .btn-play {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(145deg, #b07220, #d89c38);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: #0e0804;
+      box-shadow: 0 4px 20px rgba(176,114,32,0.48), inset 0 1px 0 rgba(255,220,100,0.18);
+      transition: transform 0.14s, box-shadow 0.14s;
+    }
+    .btn-play:hover { transform: scale(1.07); box-shadow: 0 6px 28px rgba(176,114,32,0.62); }
+    .btn-play:active { transform: scale(0.95); }
+
+    /* ── Volume ── */
+    .vol-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+    .vol-lbl { font-size: 0.75rem; color: rgba(195,148,52,0.38); }
+    input[type=range] {
+      flex: 1; -webkit-appearance: none; appearance: none;
+      height: 3px; background: rgba(195,132,32,0.1);
+      border-radius: 2px; outline: none; cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 13px; height: 13px;
+      border-radius: 50%; background: #b88430;
+      box-shadow: 0 0 5px rgba(185,130,42,0.45);
+    }
+
+    /* ── Track dots ── */
+    .dots { display: flex; justify-content: center; gap: 7px; }
+    .dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(195,132,32,0.2); cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .dot.active { background: rgba(195,132,32,0.72); transform: scale(1.4); }
+  </style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="shell">
+
+  <div class="turntable">
+    <div class="platter">
+      <div class="record" id="record">
+        <div class="label">
+          <div class="lbl-title" id="lbl-title">海浪声</div>
+          <div class="lbl-hole"></div>
+          <div class="lbl-artist" id="lbl-artist">Just Us</div>
+        </div>
+      </div>
+    </div>
+    <div class="arm-pivot"></div>
+    <div class="arm-body" id="arm">
+      <div class="arm-head"><div class="arm-needle"></div></div>
+    </div>
+  </div>
+
+  <div class="info">
+    <div class="info-title" id="info-title">海浪声</div>
+    <div class="info-artist" id="info-artist">Just Us</div>
+  </div>
+
+  <div class="prog-section">
+    <div class="time-row"><span id="cur">0:00</span><span id="dur">3:24</span></div>
+    <div class="prog-track" id="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-skip" id="prev">⏮</button>
+    <button class="btn-play" id="play">▶</button>
+    <button class="btn-skip" id="next">⏭</button>
+  </div>
+
+  <div class="vol-row">
+    <span class="vol-lbl">🔈</span>
+    <input type="range" id="vol" min="0" max="100" value="72">
+    <span class="vol-lbl">🔊</span>
+  </div>
+
+  <div class="dots" id="dots"></div>
+</div>
+
+<script>
+  const tracks = [
+    { title: '海浪声',           artist: 'Just Us',                  dur: 204 },
+    { title: 'Together',         artist: 'Thuy Trang & Dinh Khang', dur: 252 },
+    { title: 'Sakura Path',      artist: 'Love Story',               dur: 238 },
+    { title: 'Nice to Meet You', artist: 'Just Us',                  dur: 301 },
+  ];
+
+  let idx = 0, playing = false, elapsed = 0, timer = null;
+  const record   = document.getElementById('record');
+  const arm      = document.getElementById('arm');
+  const playBtn  = document.getElementById('play');
+  const fill     = document.getElementById('prog-fill');
+  const curEl    = document.getElementById('cur');
+  const durEl    = document.getElementById('dur');
+  const dotsEl   = document.getElementById('dots');
+  const fmt = s  => `${Math.floor(s/60)}:${String(s%60|0).padStart(2,'0')}`;
+
+  tracks.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => { loadTrack(i); if (playing) restart(); });
+    dotsEl.appendChild(d);
+  });
+
+  function updateDots() {
+    dotsEl.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i === idx));
+  }
+
+  function loadTrack(i) {
+    idx = i; elapsed = 0;
+    const t = tracks[i];
+    ['info-title','lbl-title'].forEach(id => document.getElementById(id).textContent = t.title);
+    ['info-artist','lbl-artist'].forEach(id => document.getElementById(id).textContent = t.artist);
+    durEl.textContent = fmt(t.dur);
+    fill.style.width = '0%'; curEl.textContent = '0:00';
+    updateDots();
+  }
+
+  function tick() {
+    elapsed++;
+    if (elapsed >= tracks[idx].dur) { loadTrack((idx+1) % tracks.length); restart(); return; }
+    fill.style.width = (elapsed / tracks[idx].dur * 100) + '%';
+    curEl.textContent = fmt(elapsed);
+  }
+
+  function restart() { clearInterval(timer); timer = setInterval(tick, 1000); }
+
+  function setPlay(state) {
+    playing = state;
+    record.classList.toggle('playing', playing);
+    arm.classList.toggle('playing', playing);
+    playBtn.textContent = playing ? '⏸' : '▶';
+    if (playing) restart(); else clearInterval(timer);
+  }
+
+  playBtn.addEventListener('click', () => setPlay(!playing));
+  document.getElementById('prev').addEventListener('click', () => { loadTrack((idx-1+tracks.length)%tracks.length); if(playing) restart(); });
+  document.getElementById('next').addEventListener('click', () => { loadTrack((idx+1)%tracks.length); if(playing) restart(); });
+  document.getElementById('prog-track').addEventListener('click', e => {
+    const r = e.currentTarget.getBoundingClientRect();
+    elapsed = Math.floor((e.clientX - r.left) / r.width * tracks[idx].dur);
+    fill.style.width = (elapsed / tracks[idx].dur * 100) + '%';
+    curEl.textContent = fmt(elapsed);
+  });
+
+  loadTrack(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Lotus Lanterns</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: 'Lato', sans-serif;
+      background: #06020f;
+    }
+
+    .sky {
+      position: fixed; inset: 0;
+      background: linear-gradient(180deg,
+        #04020c 0%,
+        #0a0518 30%,
+        #160828 55%,
+        #220a32 68%,
+        #180618 82%,
+        #0a030e 100%
+      );
+    }
+
+    .stars { position: fixed; inset: 0; overflow: hidden; }
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle var(--d) ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      from { opacity: var(--lo); }
+      to   { opacity: var(--hi); }
+    }
+
+    .moon {
+      position: fixed;
+      top: 10%; right: 14%;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 38%, #fff8e0, #ffe090 60%, #f0c040);
+      box-shadow: 0 0 40px 16px rgba(255,220,80,0.18), 0 0 90px 40px rgba(255,180,0,0.07);
+    }
+
+    .water {
+      position: fixed;
+      bottom: 0; left: 0; width: 100%; height: 30%;
+      background: linear-gradient(180deg,
+        rgba(20,8,40,0.5) 0%,
+        rgba(6,2,16,0.92) 100%
+      );
+    }
+    .water::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,180,50,0.3), transparent);
+    }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255,170,40,0.16);
+      animation: spread var(--rs) ease-out infinite;
+      animation-delay: var(--rd);
+    }
+    @keyframes spread {
+      0%   { transform: scale(0.15); opacity: 0.5; }
+      100% { transform: scale(1);    opacity: 0; }
+    }
+
+    .lantern-wrap { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
+    .lantern {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: rise var(--dur) ease-in-out infinite;
+      animation-delay: var(--delay);
+      opacity: 0;
+    }
+    @keyframes rise {
+      0%   { transform: translate(0,0) rotate(var(--r1)); opacity: 0; }
+      6%   { opacity: 0.9; }
+      94%  { opacity: 0.6; }
+      100% { transform: translate(var(--dx),-110vh) rotate(var(--r2)); opacity: 0; }
+    }
+    .l-top {
+      width: 0; height: 0;
+      border-left: calc(var(--hw) * 0.5) solid transparent;
+      border-right: calc(var(--hw) * 0.5) solid transparent;
+      border-bottom: calc(var(--hw) * 0.22) solid var(--rim);
+    }
+    .l-body {
+      width: var(--hw);
+      height: calc(var(--hw) * 1.4);
+      border-radius: 42% 42% 52% 52%;
+      background: radial-gradient(ellipse at 38% 30%, var(--lhi), var(--llo) 78%);
+      box-shadow: 0 0 var(--gs) var(--gh) var(--glow);
+    }
+    .l-bot {
+      width: 0; height: 0;
+      border-left: calc(var(--hw) * 0.5) solid transparent;
+      border-right: calc(var(--hw) * 0.5) solid transparent;
+      border-top: calc(var(--hw) * 0.18) solid var(--rim);
+    }
+    .l-tassel {
+      width: 1px;
+      height: calc(var(--hw) * 0.55);
+      background: linear-gradient(to bottom, var(--rim), transparent);
+    }
+
+    .lotus { position: fixed; bottom: 27%; pointer-events: none; }
+    .lpetals { position: relative; }
+    .lp {
+      position: absolute;
+      width: 44%; height: 64%;
+      border-radius: 50% 50% 40% 40%;
+      top: 16%; left: 28%;
+      transform-origin: bottom center;
+      opacity: 0.82;
+    }
+    .lcenter {
+      position: absolute;
+      width: 28%; height: 28%;
+      top: 36%; left: 36%;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffe090, #e09010);
+    }
+
+    .card {
+      position: relative; z-index: 20;
+      background: rgba(4,1,12,0.78);
+      border: 1px solid rgba(255,160,40,0.22);
+      border-radius: 20px;
+      padding: 44px 40px;
+      width: 340px;
+      backdrop-filter: blur(22px);
+      box-shadow: 0 8px 48px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,160,40,0.1);
+    }
+    .tagline {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: rgba(255,180,60,0.6);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      font-weight: 400;
+      color: #ffecd0;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .sub {
+      font-size: 0.78rem;
+      color: rgba(255,200,140,0.5);
+      text-align: center;
+      margin-bottom: 34px;
+      letter-spacing: 0.08em;
+    }
+    label {
+      display: block;
+      font-size: 0.72rem;
+      color: rgba(255,180,80,0.6);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+    input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,160,40,0.2);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: #ffecd0;
+      font-size: 0.9rem;
+      font-family: 'Lato', sans-serif;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-bottom: 18px;
+    }
+    input:focus {
+      border-color: rgba(255,160,40,0.5);
+      box-shadow: 0 0 0 3px rgba(255,130,0,0.08);
+    }
+    input::placeholder { color: rgba(255,180,80,0.22); }
+    button {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #a04800 0%, #e08800 100%);
+      color: #fff5e0;
+      font-size: 0.88rem;
+      font-family: 'Lato', sans-serif;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      margin-top: 4px;
+    }
+    button:hover { opacity: 0.88; transform: translateY(-1px); }
+    .footer {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 0.75rem;
+      color: rgba(255,180,80,0.38);
+    }
+    .footer a { color: rgba(255,180,60,0.6); text-decoration: none; }
+    .footer a:hover { color: rgba(255,180,60,0.9); }
+  </style>
+</head>
+<body>
+
+<div class="sky"></div>
+<div class="stars" id="stars"></div>
+<div class="moon"></div>
+<div class="water" id="water"></div>
+<div class="lantern-wrap" id="lanterns"></div>
+<div id="lotuses"></div>
+
+<div class="card">
+  <div class="tagline">✦ where light drifts to find you ✦</div>
+  <h1>Nice to Meet You</h1>
+  <p class="sub">Sign in to your story</p>
+  <label>Email</label>
+  <input type="email" placeholder="your@email.com" autocomplete="off">
+  <label>Password</label>
+  <input type="password" placeholder="••••••••">
+  <button>Enter Our World</button>
+  <div class="footer">No account? <a href="#">Start your story</a></div>
+</div>
+
+<script>
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 130; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2 + 0.4;
+    s.style.cssText = `
+      left:${Math.random()*100}%;top:${Math.random()*62}%;
+      width:${sz}px;height:${sz}px;
+      --lo:${(Math.random()*0.2+0.05).toFixed(2)};
+      --hi:${(Math.random()*0.5+0.42).toFixed(2)};
+      --d:${(Math.random()*4+1.8).toFixed(1)}s;
+      animation-delay:${(Math.random()*6).toFixed(1)}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // Lanterns
+  const lanternEl = document.getElementById('lanterns');
+  const palettes = [
+    { lhi:'#ffe580', llo:'#c05800', rim:'#b04000', glow:'rgba(255,200,0,0.7)',  gs:'22px', gh:'10px', hw:'30px' },
+    { lhi:'#ffb050', llo:'#c03000', rim:'#982800', glow:'rgba(255,100,0,0.6)',  gs:'18px', gh:'8px',  hw:'24px' },
+    { lhi:'#ff7040', llo:'#901800', rim:'#781800', glow:'rgba(255,60,0,0.5)',   gs:'14px', gh:'6px',  hw:'18px' },
+    { lhi:'#ffd060', llo:'#aa5800', rim:'#886000', glow:'rgba(255,190,0,0.68)', gs:'20px', gh:'9px',  hw:'28px' },
+  ];
+  for (let i = 0; i < 22; i++) {
+    const p = palettes[i % palettes.length];
+    const wrap = document.createElement('div');
+    wrap.className = 'lantern';
+    wrap.style.cssText = `
+      left:${Math.random()*94+3}%;bottom:-8%;
+      --dur:${(Math.random()*13+11).toFixed(1)}s;
+      --delay:-${(Math.random()*20).toFixed(1)}s;
+      --dx:${((Math.random()-0.5)*130).toFixed(0)}px;
+      --r1:${(Math.random()*8-4).toFixed(1)}deg;
+      --r2:${(Math.random()*24-12).toFixed(1)}deg;
+    `;
+    ['l-top','l-body','l-bot','l-tassel'].forEach(cls => {
+      const el = document.createElement('div');
+      el.className = cls;
+      el.style.cssText = `--hw:${p.hw};--lhi:${p.lhi};--llo:${p.llo};--rim:${p.rim};--glow:${p.glow};--gs:${p.gs};--gh:${p.gh};`;
+      wrap.appendChild(el);
+    });
+    lanternEl.appendChild(wrap);
+  }
+
+  // Ripples
+  const waterEl = document.getElementById('water');
+  for (let i = 0; i < 10; i++) {
+    const r = document.createElement('div');
+    r.className = 'ripple';
+    const w = Math.random() * 80 + 50;
+    r.style.cssText = `
+      left:${Math.random()*80+10}%;top:${Math.random()*55+20}%;
+      width:${w}px;height:${(w*0.3).toFixed(0)}px;
+      --rs:${(Math.random()*4+3).toFixed(1)}s;
+      --rd:-${(Math.random()*5).toFixed(1)}s;
+    `;
+    waterEl.appendChild(r);
+  }
+
+  // Lotus flowers
+  const lotusEl = document.getElementById('lotuses');
+  const spots = [6,20,36,58,72,87];
+  const lpal = [
+    { pd:'#c83860', pl:'#f07888', sz:46 },
+    { pd:'#b02858', pl:'#e05878', sz:36 },
+    { pd:'#d84870', pl:'#f898a8', sz:52 },
+  ];
+  spots.forEach((left, i) => {
+    const lp = lpal[i % lpal.length];
+    const div = document.createElement('div');
+    div.className = 'lotus';
+    div.style.left = left + '%';
+    const pp = document.createElement('div');
+    pp.className = 'lpetals';
+    pp.style.cssText = `width:${lp.sz}px;height:${lp.sz}px;`;
+    [0,45,90,135,180,225,270,315].forEach(a => {
+      const pe = document.createElement('div');
+      pe.className = 'lp';
+      pe.style.cssText = `transform:rotate(${a}deg);background:linear-gradient(to top,${lp.pd},${lp.pl});`;
+      pp.appendChild(pe);
+    });
+    const c = document.createElement('div'); c.className = 'lcenter';
+    pp.appendChild(c);
+    div.appendChild(pp);
+    lotusEl.appendChild(div);
+  });
+</script>
+</body>
+</html>
