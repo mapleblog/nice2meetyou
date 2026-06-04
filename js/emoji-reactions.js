@@ -3,7 +3,6 @@
  * 支持跨设备同步显示表情反应
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('初始化留言表情功能模块');
     
     // 立即初始化表情功能模块
     initEmojiReactions();
@@ -21,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
             deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             localStorage.setItem('device_id', deviceId);
         }
-        console.log('当前设备ID:', deviceId);
         
         // 表情选项
         const emojiOptions = [
@@ -40,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
          * @param {HTMLElement} container - 容器元素
          */
         function initEmojiReactions(itemType, itemId, container) {
-            console.log(`初始化表情反应: ${itemType}/${itemId}`);
             
             // 创建表情反应容器
             const reactionsContainer = document.createElement('div');
@@ -122,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     // 如果已存在，则移除
                     db.ref(path).remove()
                         .then(() => {
-                            console.log(`移除表情: ${path}`);
                         })
                         .catch(error => {
                             console.error('移除表情失败:', error);
@@ -133,7 +129,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         timestamp: firebase.database.ServerValue.TIMESTAMP
                     })
                         .then(() => {
-                            console.log(`添加表情: ${path}`);
                             
                             // 添加动画效果
                             const button = container.querySelector(`.emoji-button[data-emoji="${emojiName}"]`);
@@ -156,6 +151,5 @@ document.addEventListener('DOMContentLoaded', function() {
             initEmojiReactions: initEmojiReactions
         };
         
-        console.log('表情功能模块初始化完成');
     }
 });

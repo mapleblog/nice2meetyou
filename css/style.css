@@ -1518,3 +1518,5 @@ footer::before {
         padding: 2px 6px;
     }
 }
+
+#audio-player { display: none; }

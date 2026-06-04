@@ -1,6 +1,5 @@
 // u7559u8a00u677fu529fu80fdu6a21u5757
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOMu52a0u8f7du5b8cu6210uff0cu521du59cbu5316u7559u8a00u677f');
     
     // u83b7u53d6DOMu5143u7d20
     const messageForm = document.getElementById('message-form');
@@ -9,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const messageTextInput = document.getElementById('message-text');
     const savedMessage = document.getElementById('saved-message');
     
-    console.log('u7559u8a00u5217u8868u5143u7d20:', messageList);
     
     // u5f53u524du6b63u5728u7f16u8f91u7684u7559u8a00ID
     let editingMessageId = null;
@@ -77,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // u52a0u8f7du6240u6709u7559u8a00
     function loadMessages() {
-        console.log('u52a0u8f7du7559u8a00');
         
         // u6e05u7a7au7559u8a00u5217u8868
         if (messageList) {
@@ -150,7 +147,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // u5f00u59cbu7f16u8f91u7559u8a00
     function startEdit(messageId) {
-        console.log('u5f00u59cbu7f16u8f91u7559u8a00:', messageId);
         
         // u83b7u53d6u7559u8a00u6570u636e
         const messages = getMessages();
@@ -174,7 +170,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // u66f4u65b0u7559u8a00
     function updateMessage(messageId, newText) {
-        console.log('u66f4u65b0u7559u8a00:', messageId, newText);
         
         // u83b7u53d6u6240u6709u7559u8a00
         const messages = getMessages();
@@ -220,7 +215,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // u5220u9664u7559u8a00
     function deleteMessage(messageId) {
-        console.log('u5220u9664u7559u8a00:', messageId);
         
         // u83b7u53d6u73b0u6709u7559u8a00
         const messages = getMessages();
@@ -250,7 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // u4fdd u5b58u7559u8a00
     function saveMessage(message) {
-        console.log('u4fdd u5b58u7559u8a00:', message);
         
         // u83b7u53d6u73b0u6709u7559u8a00
         const messages = getMessages();
@@ -285,7 +278,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (firebaseMessages) {
                             // u5c06Firebaseu6570u636eu4fdd u5b58u5230u672cu5730u5b58u50a8
                             localStorage.setItem('messages', JSON.stringify(firebaseMessages));
-                            console.log('u4eceFirebaseu52a0u8f7du7559u8a00u6210u529f');
                             // u91cdu65b0u52a0u8f7du7559u8a00
                             loadMessages();
                         }
@@ -303,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
                 const db = firebase.database();
                 db.ref('messages').set(messages)
-                    .then(() => console.log('u7559u8a00u5df2u4fdd u5b58u5230Firebase'))
+
                     .catch(error => console.error('u4fdd u5b58u5230Firebaseu5931u8d25:', error));
             }
         } catch (error) {

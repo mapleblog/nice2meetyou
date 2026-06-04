@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Starry Night</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at 60% 30%, #1a1a4e 0%, #0d0d2b 50%, #000010 100%);
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+
+    canvas { position: fixed; inset: 0; pointer-events: none; }
+
+    .shoot {
+      position: fixed;
+      width: 2px;
+      height: 80px;
+      background: linear-gradient(to bottom, transparent, #fff);
+      opacity: 0;
+      animation: shoot 6s linear infinite;
+      transform: rotate(-45deg);
+      pointer-events: none;
+    }
+    @keyframes shoot {
+      0%   { opacity: 0; top: 5%; left: 70%; }
+      5%   { opacity: 1; }
+      20%  { opacity: 0; top: 30%; left: 50%; }
+      100% { opacity: 0; top: 30%; left: 50%; }
+    }
+
+    .card {
+      position: relative;
+      width: 420px;
+      background: rgba(15,10,50,0.65);
+      backdrop-filter: blur(22px);
+      border: 1px solid rgba(180,160,255,0.18);
+      border-radius: 24px;
+      padding: 50px 42px 42px;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(100,60,220,0.3), inset 0 0 40px rgba(120,80,255,0.06);
+    }
+
+    .moon { font-size: 2.6rem; display: block; margin-bottom: 12px; filter: drop-shadow(0 0 12px rgba(255,230,100,0.7)); }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      color: #e8deff;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 0.75rem;
+      color: #9b8cc4;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+
+    .field { margin-bottom: 20px; text-align: left; }
+
+    .field label {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #7b6aaa;
+      margin-bottom: 8px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(60,40,120,0.3);
+      border: 1px solid rgba(160,130,255,0.25);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      color: #ddd6ff;
+      outline: none;
+      transition: border-color 0.25s, background 0.25s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .field input::placeholder { color: #5a4a88; }
+    .field input:focus {
+      border-color: rgba(180,150,255,0.6);
+      background: rgba(60,40,120,0.45);
+    }
+
+    .btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 14px;
+      background: linear-gradient(135deg, #6c3fe0 0%, #9b59b6 100%);
+      color: #f0ecff;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(108,63,224,0.5);
+    }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(108,63,224,0.6); }
+
+    .footer { margin-top: 22px; font-size: 0.78rem; color: #7060a0; }
+    .footer a { color: #b09ae0; text-decoration: none; }
+
+    .hearts { font-size: 0.75rem; color: #5a4080; letter-spacing: 0.3em; margin: 18px 0; }
+  </style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div class="shoot"></div>
+
+<div class="card">
+  <span class="moon">🌙</span>
+  <h1>Beneath the Stars</h1>
+  <p class="subtitle">Our universe, just the two of us</p>
+
+  <div class="field">
+    <label>Email</label>
+    <input type="email" placeholder="your@email.com">
+  </div>
+
+  <div class="field">
+    <label>Password</label>
+    <input type="password" placeholder="••••••••">
+  </div>
+
+  <button class="btn">✦ Find Each Other ✦</button>
+
+  <p class="hearts">· · · ♡ · · ·</p>
+
+  <div class="footer">
+    First time here? <a href="#">Create your constellation</a>
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  const stars = Array.from({length: 200}, () => ({
+    x: Math.random(), y: Math.random(),
+    r: Math.random() * 1.4 + 0.3,
+    a: Math.random(),
+    speed: 0.003 + Math.random() * 0.008
+  }));
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      s.a += s.speed;
+      const alpha = (Math.sin(s.a) + 1) / 2 * 0.85 + 0.15;
+      ctx.beginPath();
+      ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(230,220,255,${alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+</script>
+</body>
+</html>

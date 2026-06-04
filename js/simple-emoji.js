@@ -3,7 +3,6 @@
  * 支持在留言板中添加表情反应
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('初始化简单表情功能模块');
     
     // 表情选项
     const emojiList = [
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
      * 初始化表情功能
      */
     function initEmojis(itemType, itemId, container) {
-        console.log(`初始化表情功能: ${itemType}/${itemId}`);
         
         // 创建表情容器
         const emojiContainer = document.createElement('div');
@@ -79,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 如果已存在，则移除
                 db.ref(path).remove()
                     .then(() => {
-                        console.log(`移除表情: ${emojiName}`);
                         button.classList.remove('active');
                     })
                     .catch(error => {
@@ -91,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 })
                     .then(() => {
-                        console.log(`添加表情: ${emojiName}`);
                         button.classList.add('active');
                         button.classList.add('just-clicked');
                         setTimeout(() => {
@@ -157,5 +153,4 @@ document.addEventListener('DOMContentLoaded', function() {
         initEmojis: initEmojis
     };
     
-    console.log('简单表情功能模块初始化完成');
 });

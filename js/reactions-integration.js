@@ -3,7 +3,6 @@
  * u8be5u6587u4ef6u8d1fu8d23u5c06u8868u60c5u53cdu5e94u529fu80fdu96c6u6210u5230u7559u8a00u677fu3001u5fc3u60c5u65e5u8bb0u548cu613fu671bu6e05u5355u4e2d
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('u521du59cbu5316u8868u60c5u53cdu5e94u96c6u6210');
     
     // u7b49u5f85u6240u6709u5185u5bb9u52a0u8f7du5b8cu6210
     setTimeout(initReactionsForAllItems, 1000);

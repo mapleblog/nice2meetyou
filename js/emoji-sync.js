@@ -3,7 +3,6 @@
  * u91cdu65b0u8bbeu8ba1u7684u8868u60c5u529fu80fduff0cu786eu4fddu8de8u8bbeu5907u540cu6b65
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('u521du59cbu5316u8de8u8bbeu5907u540cu6b65u8868u60c5u529fu80fdu6a21u5757');
     
     // u8868u60c5u9009u9879
     const emojiList = [
@@ -21,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
         deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('global_device_id', deviceId);
     }
-    console.log('u5f53u524du8bbeu5907ID:', deviceId);
     
     // u521bu5efau5168u5c40u7528u6237ID
     let userId = localStorage.getItem('global_user_id');
@@ -29,7 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
         userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('global_user_id', userId);
     }
-    console.log('u5f53u524du7528u6237ID:', userId);
     
     // u521du59cbu5316Firebaseu76d1u542cu5668
     const listeners = {};
@@ -41,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // u751fu6210u552fu4e00u7684u5bb9u5668ID
         const containerId = `${itemType}_${itemId}_emoji_container`;
         
-        console.log(`u521du59cbu5316u8868u60c5u529fu80fd: ${itemType}/${itemId}`);
         
         // u521bu5efau8868u60c5u5bb9u5668
         const emojiContainer = document.createElement('div');
@@ -98,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
             updateEmojiState(snapshot.val() || {}, itemType, itemId, containerId);
         });
         
-        console.log(`u5df2u8bbeu7f6eu76d1u542cu5668: ${listenerId}`);
     }
     
     /**
@@ -172,7 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then(() => {
-                console.log(`u5207u6362u8868u60c5u72b6u6001u6210u529f: ${path}`);
                 
                 // u6dfbu52a0u70b9u51fbu52a8u753b
                 const container = document.getElementById(containerId);
@@ -196,5 +190,4 @@ document.addEventListener('DOMContentLoaded', function() {
         initEmojis: initEmojis
     };
     
-    console.log('u8de8u8bbeu5907u540cu6b65u8868u60c5u529fu80fdu6a21u5757u521du59cbu5316u5b8cu6210');
 });

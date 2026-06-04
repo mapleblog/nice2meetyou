@@ -2,14 +2,12 @@
 // u7528u4e8eu6d4bu8bd5 Firebase u8fdeu63a5u548cu6570u636eu8bfbu53d6
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('u5f00u59cbu6d4bu8bd5 Firebase u8fdeu63a5...');
     
     // u7b49u5f85 Firebase u521du59cbu5316
     if (window.firebaseInitialized) {
         testFirebase();
     } else {
         document.addEventListener('firebaseInitialized', function() {
-            console.log('u6536u5230 Firebase u521du59cbu5316u5b8cu6210u4e8bu4ef6uff0cu5f00u59cbu6d4bu8bd5');
             testFirebase();
         });
         
@@ -30,13 +28,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // u6d4bu8bd5u8fdeu63a5u72b6u6001
             db.ref('.info/connected').on('value', function(snap) {
                 if (snap.val() === true) {
-                    console.log('u5df2u6210u529fu8fdeu63a5u5230 Firebase u6570u636eu5e93');
                     document.body.insertAdjacentHTML('afterbegin', '<div style="background-color: #ccffcc; padding: 10px; margin: 10px; border: 1px solid green;">Firebase u8fdeu63a5u6210u529f</div>');
                     
                     // u8bfbu53d6u7559u8a00u6570u636e
                     readMessages();
                 } else {
-                    console.log('u672au8fdeu63a5u5230 Firebase u6570u636eu5e93');
                     document.body.insertAdjacentHTML('afterbegin', '<div style="background-color: #ffcccc; padding: 10px; margin: 10px; border: 1px solid red;">Firebase u8fdeu63a5u5931u8d25</div>');
                 }
             });
@@ -52,9 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         db.ref('messages').once('value')
             .then(snapshot => {
-                console.log('Firebase u6570u636eu5febu7167:', snapshot.key);
                 const data = snapshot.val();
-                console.log('Firebase u6570u636eu5185u5bb9:', data);
                 
                 // u663eu793au7ed3u679c
                 let resultHTML = '<div style="background-color: #f0f0f0; padding: 10px; margin: 10px; border: 1px solid #ccc;">';

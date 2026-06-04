@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
                 const db = firebase.database();
                 db.ref('wishes').set(wishes)
-                    .then(() => console.log('愿望已保存到 Firebase'))
+
                     .catch(error => console.error('保存到 Firebase 失败:', error));
             }
         } catch (error) {
@@ -200,7 +200,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 如果有无效愿望被移除
         if (validWishes.length < wishes.length) {
-            console.log(`已移除 ${wishes.length - validWishes.length} 个无效愿望`);
             localStorage.setItem('wishes', JSON.stringify(validWishes));
             
             // 同步到 Firebase
@@ -228,7 +227,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (firebaseWishes) {
                             // 将 Firebase 数据保存到本地存储
                             localStorage.setItem('wishes', JSON.stringify(firebaseWishes));
-                            console.log('从 Firebase 加载愿望成功');
                             // 重新加载愿望
                             loadWishes();
                         }

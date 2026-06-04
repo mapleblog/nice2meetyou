@@ -3,7 +3,6 @@
  * u7528u4e8eu6d4bu8bd5Firebaseu8fdeu63a5u548cu6743u9650
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('u5f00u59cbu6d4bu8bd5Firebaseu8868u60c5u529fu80fd...');
     
     // u521bu5efau6d4bu8bd5u5bb9u5668
     const testContainer = document.createElement('div');
@@ -53,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
         logEntry.style.margin = '5px 0';
         logEntry.style.color = isError ? '#FF5252' : '#8BC34A';
         logArea.appendChild(logEntry);
-        console.log(message);
     }
     
     // u6d4bu8bd5Firebaseu8fdeu63a5

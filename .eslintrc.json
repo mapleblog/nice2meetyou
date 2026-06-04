@@ -1,0 +1,19 @@
+{
+  "env": {
+    "browser": true,
+    "es2020": true
+  },
+  "globals": {
+    "firebase": "readonly",
+    "gsap": "readonly",
+    "particlesJS": "readonly",
+    "jQuery": "readonly"
+  },
+  "rules": {
+    "no-var": "error",
+    "prefer-const": "warn",
+    "no-console": ["warn", { "allow": ["error"] }],
+    "eqeqeq": "error",
+    "no-unused-vars": "warn"
+  }
+}

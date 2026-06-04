@@ -1,6 +1,5 @@
 // u5fc3u60c5u65e5u8bb0u529fu80fd
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM加载完成，初始化心情日记功能');
     
     // 获取DOM元素
     const moodForm = document.getElementById('mood-form');
@@ -79,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 加载所有日记
     function loadMoods() {
-        console.log('加载心情日记');
         
         // 清空日记列表
         if (moodList) {
@@ -175,7 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 开始编辑日记
     function startEditMood(moodId) {
-        console.log('开始编辑日记:', moodId);
         
         // 获取日记数据
         const moods = getMoods();
@@ -212,7 +209,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 更新日记
     function updateMood(moodId, title, content, mood) {
-        console.log('更新日记:', moodId);
         
         // 获取日记数据
         const moods = getMoods();
@@ -248,7 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 删除日记
     function deleteMood(moodId) {
-        console.log('删除日记:', moodId);
         
         // 获取日记数据
         let moods = getMoods();
@@ -273,7 +268,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 保存日记
     function saveMood(mood) {
-        console.log('保存日记:', mood);
         
         // 获取现有日记
         const moods = getMoods();
@@ -311,7 +305,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (firebaseMoods) {
                             // 将 Firebase 数据保存到本地存储
                             localStorage.setItem('moods', JSON.stringify(firebaseMoods));
-                            console.log('从 Firebase 加载日记成功');
                             // 重新加载日记
                             loadMoods();
                         }
@@ -329,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
                 const db = firebase.database();
                 db.ref('moods').set(moods)
-                    .then(() => console.log('日记已保存到 Firebase'))
+
                     .catch(error => console.error('保存到 Firebase 失败:', error));
             }
         } catch (error) {

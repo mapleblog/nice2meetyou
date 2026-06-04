@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Cherry Blossom</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #fff0f5 0%, #ffd6e7 40%, #ffb3cc 100%);
+      overflow: hidden;
+      font-family: 'Lato', sans-serif;
+    }
+
+    .petal {
+      position: fixed;
+      top: -40px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50% 0 50% 0;
+      opacity: 0.8;
+      animation: fall linear infinite;
+      pointer-events: none;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(0)    rotate(0deg)   translateX(0);   opacity: 0.9; }
+      50%  { transform: translateY(50vh) rotate(180deg) translateX(40px); }
+      100% { transform: translateY(110vh) rotate(360deg) translateX(-20px); opacity: 0; }
+    }
+
+    .card {
+      position: relative;
+      width: 420px;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(18px);
+      border-radius: 28px;
+      padding: 52px 44px 44px;
+      box-shadow: 0 20px 60px rgba(255,110,160,0.22), 0 0 0 1px rgba(255,255,255,0.5);
+      text-align: center;
+    }
+
+    .badge { font-size: 2.8rem; margin-bottom: 10px; display: block; }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.65rem;
+      color: #c2185b;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 0.82rem;
+      color: #e88fad;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+      font-style: italic;
+    }
+
+    .field { position: relative; margin-bottom: 22px; text-align: left; }
+
+    .field label {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #d4819c;
+      margin-bottom: 7px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(255,220,235,0.35);
+      border: 1.5px solid rgba(255,150,185,0.4);
+      border-radius: 12px;
+      font-size: 0.95rem;
+      color: #7b2d4a;
+      outline: none;
+      transition: border-color 0.25s, background 0.25s;
+      font-family: 'Lato', sans-serif;
+    }
+
+    .field input::placeholder { color: #e8a8be; }
+    .field input:focus { border-color: #f06292; background: rgba(255,220,235,0.55); }
+
+    .btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 14px;
+      background: linear-gradient(135deg, #f48fb1 0%, #e91e8c 100%);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      box-shadow: 0 6px 22px rgba(233,30,140,0.35);
+    }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .footer { margin-top: 24px; font-size: 0.8rem; color: #e088aa; }
+    .footer a { color: #c2185b; text-decoration: none; font-weight: 600; }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 24px 0; color: #e8aac0; font-size: 0.75rem;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: rgba(240,150,180,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <span class="badge">🌸</span>
+  <h1>Welcome Back</h1>
+  <p class="subtitle">Our little corner of the world</p>
+
+  <div class="field">
+    <label>Email</label>
+    <input type="email" placeholder="your@email.com">
+  </div>
+
+  <div class="field">
+    <label>Password</label>
+    <input type="password" placeholder="••••••••">
+  </div>
+
+  <button class="btn">Enter Our Story ✿</button>
+
+  <div class="divider">or</div>
+
+  <div class="footer">
+    New here? <a href="#">Start your story</a>
+  </div>
+</div>
+
+<script>
+  const colors = ['#ffb7c5','#ffc0cb','#ff9eb5','#ff85a1','#ffccd5'];
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.cssText = `
+      left:${Math.random()*100}vw;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${10+Math.random()*14}px;
+      height:${10+Math.random()*14}px;
+      animation-duration:${4+Math.random()*6}s;
+      animation-delay:${-Math.random()*8}s;
+      border-radius:${Math.random()>0.5?'50% 0 50% 0':'0 50% 0 50%'};
+    `;
+    document.body.appendChild(p);
+  }
+</script>
+</body>
+</html>

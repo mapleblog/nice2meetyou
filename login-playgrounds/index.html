@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page Playgrounds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: #0f0f18;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 400;
+      margin-bottom: 8px;
+      letter-spacing: 0.04em;
+    }
+    .sub { color: #888; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 52px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 24px;
+      width: 100%;
+      max-width: 900px;
+    }
+    .card {
+      background: #1a1a2a;
+      border: 1px solid #2a2a3a;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+    .preview {
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+    }
+    .info { padding: 18px 20px 20px; }
+    .num { font-size: 0.68rem; color: #555; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+    .name { color: #e8e8f0; font-size: 1rem; font-weight: 400; margin-bottom: 5px; }
+    .desc { color: #666; font-size: 0.78rem; line-height: 1.5; }
+    .c1 { background: linear-gradient(135deg, #ffd6e7, #ffb3cc); }
+    .c2 { background: linear-gradient(135deg, #1a1a4e, #0d0d2b); }
+    .c3 { background: linear-gradient(135deg, #e67e22, #c0392b); }
+    .c4 { background: linear-gradient(135deg, #f5ede0, #d4b88a); }
+    .c5 { background: linear-gradient(135deg, #006994, #1e90ff); }
+  </style>
+</head>
+<body>
+
+<h1>Login Playgrounds ♡</h1>
+<p class="sub">5 couple story themes — click to preview</p>
+
+<div class="grid">
+  <a class="card" href="01-cherry-blossom.html" target="_blank">
+    <div class="preview c1">🌸</div>
+    <div class="info">
+      <div class="num">Theme 01</div>
+      <div class="name">Cherry Blossom</div>
+      <div class="desc">Soft pink petals falling — Japanese spring romance</div>
+    </div>
+  </a>
+  <a class="card" href="02-starry-night.html" target="_blank">
+    <div class="preview c2">🌙</div>
+    <div class="info">
+      <div class="num">Theme 02</div>
+      <div class="name">Starry Night</div>
+      <div class="desc">Deep cosmic blue with twinkling stars and shooting stars</div>
+    </div>
+  </a>
+  <a class="card" href="03-golden-sunset.html" target="_blank">
+    <div class="preview c3">🌅</div>
+    <div class="info">
+      <div class="num">Theme 03</div>
+      <div class="name">Golden Sunset</div>
+      <div class="desc">Warm horizon glow with a couple silhouette on the hill</div>
+    </div>
+  </a>
+  <a class="card" href="04-love-letter.html" target="_blank">
+    <div class="preview c4">💌</div>
+    <div class="info">
+      <div class="num">Theme 04</div>
+      <div class="name">Love Letter</div>
+      <div class="desc">Vintage parchment, cursive script, envelope flap and wax seal</div>
+    </div>
+  </a>
+  <a class="card" href="05-ocean-waves.html" target="_blank">
+    <div class="preview c5">🐚</div>
+    <div class="info">
+      <div class="num">Theme 05</div>
+      <div class="name">Ocean Waves</div>
+      <div class="desc">Animated waves, rising bubbles, glass morphism card</div>
+    </div>
+  </a>
+</div>
+
+</body>
+</html>

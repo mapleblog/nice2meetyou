@@ -37,7 +37,6 @@ function createBubble() {
 
 // 自动生成气泡
 function createBubbles() {
-    console.log('开始生成气泡');
     
     // 立即生成一批气泡
     for (let i = 0; i < 20; i++) {
@@ -68,7 +67,6 @@ function setupRippleEffect() {
 
 // 初始化海洋特效
 function initOceanEffect() {
-    console.log('初始化海洋特效');
     
     // 使用已存在的海洋特效容器
     const oceanEffect = document.querySelector('.ocean-effect');
@@ -85,7 +83,6 @@ function initOceanEffect() {
     // 设置涟漪效果
     setupRippleEffect();
     
-    console.log('海洋特效初始化完成');
 }
 
 // 当DOM加载完成后初始化

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Ocean Waves</title>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;1,300&family=Merriweather:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #87ceeb 0%, #1e90ff 35%, #006994 60%, #004d70 100%);
+      overflow: hidden;
+      font-family: 'Josefin Sans', sans-serif;
+    }
+
+    .waves {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 200px;
+      pointer-events: none;
+    }
+
+    .wave {
+      position: absolute;
+      bottom: 0;
+      left: -100%;
+      width: 300%;
+      height: 100%;
+    }
+    .wave svg { width: 100%; height: 100%; }
+    .wave1 { animation: wave-move 8s linear infinite; opacity: 0.8; }
+    .wave2 { animation: wave-move 12s linear infinite reverse; opacity: 0.5; bottom: 10px; }
+    .wave3 { animation: wave-move 10s linear infinite; opacity: 0.35; bottom: 20px; }
+    @keyframes wave-move {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(33.33%); }
+    }
+
+    .bubble {
+      position: fixed;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      animation: rise linear infinite;
+      pointer-events: none;
+    }
+    @keyframes rise {
+      0%   { transform: translateY(0) translateX(0); opacity: 0.7; }
+      50%  { transform: translateY(-40vh) translateX(15px); opacity: 0.5; }
+      100% { transform: translateY(-85vh) translateX(-10px); opacity: 0; }
+    }
+
+    .seagulls {
+      position: fixed;
+      top: 12%; left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      opacity: 0.55;
+      animation: drift 18s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    @keyframes drift {
+      from { transform: translateX(-70px); }
+      to   { transform: translateX(70px); }
+    }
+
+    .card {
+      position: relative;
+      width: 420px;
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 26px;
+      padding: 50px 42px 44px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,60,100,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    .icon { font-size: 2.5rem; display: block; margin-bottom: 12px; filter: drop-shadow(0 2px 8px rgba(0,100,180,0.5)); }
+
+    h1 {
+      font-family: 'Merriweather', serif;
+      font-size: 1.5rem;
+      color: #e8f8ff;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 0.72rem;
+      color: rgba(180,230,255,0.8);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 34px;
+    }
+
+    .field { margin-bottom: 20px; text-align: left; }
+
+    .field label {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(160,220,255,0.85);
+      margin-bottom: 8px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(0,80,160,0.2);
+      border: 1px solid rgba(100,200,255,0.25);
+      border-radius: 12px;
+      font-size: 0.95rem;
+      color: #e0f4ff;
+      outline: none;
+      transition: border-color 0.25s, background 0.25s;
+      font-family: 'Josefin Sans', sans-serif;
+    }
+    .field input::placeholder { color: rgba(120,190,230,0.5); }
+    .field input:focus { border-color: rgba(100,210,255,0.7); background: rgba(0,100,180,0.3); }
+
+    .btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 14px;
+      background: linear-gradient(135deg, #0099cc 0%, #006699 100%);
+      color: #e8f8ff;
+      border: none;
+      border-radius: 14px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      box-shadow: 0 5px 22px rgba(0,100,200,0.45);
+    }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .quote {
+      font-family: 'Merriweather', serif;
+      font-style: italic;
+      font-size: 0.78rem;
+      color: rgba(180,230,255,0.65);
+      margin: 18px 0 0;
+      line-height: 1.6;
+    }
+
+    .footer { margin-top: 14px; font-size: 0.75rem; color: rgba(150,210,255,0.6); }
+    .footer a { color: rgba(150,240,255,0.9); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="seagulls">🕊️ &nbsp;&nbsp;&nbsp; 🕊️</div>
+
+<div class="waves">
+  <div class="wave wave1">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path d="M0,60 C240,100 480,20 720,60 C960,100 1200,20 1440,60 L1440,120 L0,120 Z" fill="rgba(0,120,200,0.6)"/>
+    </svg>
+  </div>
+  <div class="wave wave2">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path d="M0,40 C200,80 440,10 720,50 C1000,90 1240,15 1440,55 L1440,120 L0,120 Z" fill="rgba(0,80,160,0.5)"/>
+    </svg>
+  </div>
+  <div class="wave wave3">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path d="M0,70 C300,30 500,90 720,55 C940,20 1100,80 1440,45 L1440,120 L0,120 Z" fill="rgba(0,50,130,0.4)"/>
+    </svg>
+  </div>
+</div>
+
+<div class="card">
+  <span class="icon">🐚</span>
+  <h1>By the Shore</h1>
+  <p class="subtitle">Where the waves brought us together</p>
+
+  <div class="field">
+    <label>Email</label>
+    <input type="email" placeholder="your@email.com">
+  </div>
+
+  <div class="field">
+    <label>Password</label>
+    <input type="password" placeholder="••••••••">
+  </div>
+
+  <button class="btn">Dive In Together 🌊</button>
+
+  <p class="quote">"Like the tide, I keep coming back to you."</p>
+
+  <div class="footer">
+    New to our shore? <a href="#">Make your mark</a>
+  </div>
+</div>
+
+<script>
+  for (let i = 0; i < 16; i++) {
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    const size = 6 + Math.random() * 18;
+    b.style.cssText = `
+      left:${Math.random()*100}vw;
+      bottom:${Math.random()*30}vh;
+      width:${size}px;
+      height:${size}px;
+      animation-duration:${6+Math.random()*10}s;
+      animation-delay:${-Math.random()*12}s;
+    `;
+    document.body.appendChild(b);
+  }
+</script>
+</body>
+</html>

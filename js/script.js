@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 设置初始音乐
         try {
-            console.log('加载音乐:', playlist[currentTrack]);
             audioPlayer.src = playlist[currentTrack].src;
             songTitle.textContent = playlist[currentTrack].title;
             
@@ -62,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 添加调试信息
             audioPlayer.addEventListener('canplay', function() {
-                console.log('音频已准备好可以播放');
             });
         } catch (err) {
             console.error('设置音乐源时出错:', err);
@@ -80,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
                         // 播放成功
-                        console.log('音乐开始播放');
                         playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                         isPlaying = true;
                     }).catch(error => {

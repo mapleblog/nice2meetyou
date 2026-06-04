@@ -2,7 +2,6 @@
  * 表情反应功能模块
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('初始化表情反应功能');
     
     // 表情反应配置
     const reactionTypes = {
@@ -209,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const path = `reactions/${itemType}/${itemId}`;
                 
                 db.ref(path).set(reactions)
-                    .then(() => console.log(`表情反应已保存到 Firebase: ${path}`))
+
                     .catch(error => console.error('保存表情反应到 Firebase 失败:', error));
             }
         } catch (error) {

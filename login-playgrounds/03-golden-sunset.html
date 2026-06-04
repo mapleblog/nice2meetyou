@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Golden Sunset</title>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Source Sans 3', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .sky {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        #1a0533 0%, #5c1a6e 12%, #c0392b 28%, #e74c3c 38%,
+        #e67e22 52%, #f39c12 62%, #f9ca4b 72%, #fdeaa0 83%, #fff8e1 100%
+      );
+    }
+
+    .glow {
+      position: fixed;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 120vw; height: 35vh;
+      background: radial-gradient(ellipse at center bottom, rgba(255,190,50,0.55) 0%, transparent 70%);
+    }
+
+    .sun {
+      position: fixed;
+      bottom: 22vh; left: 50%;
+      transform: translateX(-50%);
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fffde0 30%, #ffd700 60%, #ff8c00 100%);
+      box-shadow: 0 0 40px 20px rgba(255,200,0,0.5), 0 0 100px 50px rgba(255,150,0,0.25);
+    }
+
+    .ground {
+      position: fixed;
+      bottom: 0; left: 0; right: 0; height: 22vh;
+      background: #0d0010;
+      clip-path: polygon(0 40%,8% 35%,15% 28%,22% 33%,30% 20%,38% 30%,46% 25%,54% 30%,60% 18%,68% 28%,75% 22%,82% 32%,90% 26%,100% 35%,100% 100%,0 100%);
+    }
+
+    .couple {
+      position: fixed;
+      bottom: 21vh; left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.2rem;
+      filter: brightness(0) saturate(0);
+      opacity: 0.85;
+    }
+
+    .card {
+      position: relative;
+      width: 420px;
+      background: rgba(255,245,220,0.82);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 48px 42px 40px;
+      text-align: center;
+      box-shadow: 0 16px 56px rgba(180,80,0,0.22), 0 0 0 1px rgba(255,220,120,0.3);
+      border: 1px solid rgba(255,210,100,0.4);
+    }
+
+    .icon { font-size: 2.4rem; display: block; margin-bottom: 10px; }
+
+    h1 {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 1.6rem;
+      color: #7a2800;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 0.78rem;
+      color: #c0622a;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 34px;
+      font-style: italic;
+    }
+
+    .field { margin-bottom: 20px; text-align: left; }
+
+    .field label {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #b05a20;
+      margin-bottom: 7px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(255,235,180,0.4);
+      border: 1.5px solid rgba(220,140,60,0.35);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      color: #5c2000;
+      outline: none;
+      transition: border-color 0.25s, background 0.25s;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+    .field input::placeholder { color: #d4956a; }
+    .field input:focus { border-color: #e67e22; background: rgba(255,225,160,0.5); }
+
+    .btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 14px;
+      background: linear-gradient(135deg, #e67e22 0%, #c0392b 100%);
+      color: #fff8e8;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Libre Baskerville', serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      box-shadow: 0 5px 20px rgba(192,57,43,0.4);
+    }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .footer { margin-top: 22px; font-size: 0.78rem; color: #c07040; }
+    .footer a { color: #c0392b; text-decoration: none; font-weight: 600; }
+
+    .tagline {
+      font-style: italic;
+      font-size: 0.8rem;
+      color: #d4804a;
+      margin: 14px 0 0;
+      font-family: 'Libre Baskerville', serif;
+    }
+  </style>
+</head>
+<body>
+
+<div class="sky"></div>
+<div class="glow"></div>
+<div class="sun"></div>
+<div class="ground"></div>
+<div class="couple">👫</div>
+
+<div class="card">
+  <span class="icon">🌅</span>
+  <h1>Golden Hour</h1>
+  <p class="subtitle">Every sunset brings a new beginning</p>
+
+  <div class="field">
+    <label>Email</label>
+    <input type="email" placeholder="your@email.com">
+  </div>
+
+  <div class="field">
+    <label>Password</label>
+    <input type="password" placeholder="••••••••">
+  </div>
+
+  <button class="btn">Watch the Sunset Together ☀</button>
+
+  <p class="tagline">"Together, we make every evening glow."</p>
+
+  <div class="footer" style="margin-top:16px;">
+    New? <a href="#">Begin your journey</a>
+  </div>
+</div>
+
+</body>
+</html>
