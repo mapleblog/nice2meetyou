@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Transition Playgrounds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: #0e0b18;
+      font-family: 'Lato', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 64px 20px 80px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      color: #f0e8ff;
+      font-size: 2.1rem;
+      font-weight: 400;
+      margin-bottom: 6px;
+      letter-spacing: 0.03em;
+      text-align: center;
+    }
+    .sub {
+      color: #6b5888;
+      font-size: 0.82rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 56px;
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 28px;
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .card {
+      background: #16101f;
+      border: 1px solid #2a2040;
+      border-radius: 20px;
+      overflow: hidden;
+      text-decoration: none;
+      transition: transform 0.22s, box-shadow 0.22s, border-color 0.22s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+      border-color: #4a3060;
+    }
+
+    .preview {
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Preview backgrounds */
+    .p1 { background: linear-gradient(160deg, #fff0f5 0%, #ffd6e7 40%, #ffb3cc 100%); }
+    .p2 { background: radial-gradient(ellipse at 30% 40%, #1a1040 0%, #0a0818 55%, #060410 100%); }
+    .p3 { background: linear-gradient(160deg, #fff8f0 0%, #ffe4cc 45%, #ffcba4 100%); }
+
+    /* Animated preview decorations */
+    .p1-rings {
+      position: absolute; left: 50%; top: 50%;
+      width: 70px; height: 70px;
+    }
+    .p1-rings::before, .p1-rings::after {
+      content: '';
+      position: absolute; left: 50%; top: 50%;
+      border: 2px solid rgba(233,30,140,0.5);
+      border-radius: 50%;
+      animation: prev-ring 2s ease-out infinite;
+    }
+    .p1-rings::before { width: 70px; height: 70px; margin: -35px 0 0 -35px; }
+    .p1-rings::after  { width: 70px; height: 70px; margin: -35px 0 0 -35px; animation-delay: 0.5s; }
+    @keyframes prev-ring {
+      0%   { transform: scale(0.3); opacity: 1; }
+      100% { transform: scale(3.5); opacity: 0; }
+    }
+
+    .p2-orb1, .p2-orb2 {
+      position: absolute;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      animation: orb-drift 3s ease-in-out infinite alternate;
+    }
+    .p2-orb1 {
+      background: radial-gradient(circle, #fff, #cc44ff, transparent);
+      box-shadow: 0 0 10px 4px rgba(180,80,255,0.7);
+      left: 22%; top: 68%;
+      animation-name: orb-drift-1;
+    }
+    .p2-orb2 {
+      background: radial-gradient(circle, #fff, #44aaff, transparent);
+      box-shadow: 0 0 10px 4px rgba(80,160,255,0.7);
+      right: 22%; top: 18%;
+      animation-name: orb-drift-2;
+    }
+    @keyframes orb-drift-1 {
+      0%   { left: 22%; top: 68%; }
+      100% { left: 48%; top: 52%; }
+    }
+    @keyframes orb-drift-2 {
+      0%   { right: 22%; top: 18%; }
+      100% { right: 48%; top: 46%; }
+    }
+
+    .p3-iris {
+      position: absolute; left: 50%; top: 50%;
+      width: 60px; height: 60px;
+      background: linear-gradient(135deg, #c8f5d4, #72c99a);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: iris-pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes iris-pulse {
+      0%,100% { transform: translate(-50%,-50%) scale(0.6); opacity: 0.7; }
+      50%      { transform: translate(-50%,-50%) scale(1.1); opacity: 1; }
+    }
+
+    .info { padding: 22px 24px 24px; }
+    .num  { font-size: 0.68rem; color: #4a3866; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 5px; }
+    .name { color: #e0d4f8; font-family: 'Playfair Display', serif; font-size: 1.08rem; margin-bottom: 6px; }
+    .desc { color: #5a4878; font-size: 0.8rem; line-height: 1.55; }
+    .tag  { display: inline-block; margin-top: 12px; padding: 3px 10px; background: #1e1530; border: 1px solid #2e2045; border-radius: 10px; font-size: 0.68rem; color: #7a5aaa; letter-spacing: 0.08em; }
+
+    .back-link {
+      margin-top: 52px;
+      color: #3d2e58;
+      font-size: 0.8rem;
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: #7a5aaa; }
+  </style>
+</head>
+<body>
+
+  <h1>Login Transition Playground</h1>
+  <p class="sub">3 after-login animations — pick your favourite</p>
+
+  <div class="grid">
+
+    <!-- 01 -->
+    <a class="card" href="01-heartbeat-ripple.html">
+      <div class="preview p1">
+        <div class="p1-rings"></div>
+        <span style="position:relative;z-index:1">💗</span>
+      </div>
+      <div class="info">
+        <div class="num">01</div>
+        <div class="name">Heartbeat Ripple</div>
+        <div class="desc">Concentric rings pulse from the center like a heartbeat, then a rose wave floods the screen before dissolving into the home page.</div>
+        <span class="tag">warm · rose · radial</span>
+      </div>
+    </a>
+
+    <!-- 02 -->
+    <a class="card" href="02-two-stars.html">
+      <div class="preview p2">
+        <div class="p2-orb1"></div>
+        <div class="p2-orb2"></div>
+      </div>
+      <div class="info">
+        <div class="num">02</div>
+        <div class="name">Two Stars Meet</div>
+        <div class="desc">Two glowing orbs drift from opposite corners of the sky, leaving luminous trails until they collide in a burst of stardust and light.</div>
+        <span class="tag">dark · cosmic · dramatic</span>
+      </div>
+    </a>
+
+    <!-- 03 -->
+    <a class="card" href="03-iris-bloom.html">
+      <div class="preview p3">
+        <div class="p3-iris"></div>
+        <span style="position:relative;z-index:1;font-size:2.5rem">🌸</span>
+      </div>
+      <div class="info">
+        <div class="num">03</div>
+        <div class="name">Iris Bloom</div>
+        <div class="desc">The new page opens like a blooming flower — a circle iris expands from the center as petals fountain outward in a soft spring reveal.</div>
+        <span class="tag">spring · bloom · elegant</span>
+      </div>
+    </a>
+
+  </div>
+
+  <a class="back-link" href="../login_page.html">← Back to Login Page</a>
+
+</body>
+</html>

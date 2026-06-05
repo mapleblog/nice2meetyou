@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transition 02 — Two Stars Meet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Lato', sans-serif; }
+
+    /* ─── Screens ─── */
+    .screen {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #login {
+      background: radial-gradient(ellipse at 30% 40%, #1a1040 0%, #0a0818 55%, #060410 100%);
+      z-index: 1;
+      transition: opacity 0.4s ease;
+    }
+    #home {
+      background: radial-gradient(ellipse at 60% 50%, #2d1b4e 0%, #1a0d33 50%, #0d0820 100%);
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 0.65s ease;
+    }
+    #home.show { opacity: 1; z-index: 3; }
+
+    /* ─── Star field background ─── */
+    .star-bg {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    }
+
+    /* ─── Login card ─── */
+    .card {
+      position: relative; z-index: 2;
+      width: 390px; padding: 50px 42px 42px;
+      background: rgba(255,255,255,0.06); backdrop-filter: blur(20px);
+      border-radius: 28px; text-align: center;
+      box-shadow: 0 0 0 1px rgba(180,140,255,0.18), 0 24px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .badge { font-size: 2.8rem; margin-bottom: 10px; display: block; }
+    .card h1 { font-family: 'Playfair Display', serif; font-size: 1.65rem; color: #e8d8ff; margin-bottom: 4px; }
+    .card .sub { font-size: 0.82rem; color: #9b80cc; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 32px; font-style: italic; }
+    .field { margin-bottom: 20px; text-align: left; }
+    .field label { display: block; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #8b70bb; margin-bottom: 6px; }
+    .field input { width: 100%; padding: 13px 16px; background: rgba(180,140,255,0.08); border: 1.5px solid rgba(180,140,255,0.22); border-radius: 12px; font-family: 'Lato', sans-serif; font-size: 0.95rem; color: #d8c8f8; outline: none; transition: border-color 0.25s, background 0.25s; }
+    .field input::placeholder { color: #5a4878; }
+    .field input:focus { border-color: rgba(180,140,255,0.5); background: rgba(180,140,255,0.14); }
+    .btn { width: 100%; margin-top: 8px; padding: 14px; background: linear-gradient(135deg, #9c6bde, #6a3aa2); color: #fff; border: none; border-radius: 14px; font-family: 'Playfair Display', serif; font-size: 1rem; letter-spacing: 0.05em; cursor: pointer; box-shadow: 0 6px 28px rgba(150,80,220,0.5); transition: opacity 0.2s, transform 0.15s; }
+    .btn:hover { opacity: 0.88; transform: translateY(-2px); }
+    .btn:active { transform: translateY(0) scale(0.99); }
+
+    /* ─── Floating star dots on card ─── */
+    .sparkle {
+      position: fixed; border-radius: 50%; pointer-events: none;
+      animation: twinkle var(--d) ease-in-out var(--delay) infinite;
+    }
+    @keyframes twinkle {
+      0%,100% { opacity: var(--min); transform: scale(1); }
+      50%      { opacity: var(--max); transform: scale(1.4); }
+    }
+
+    /* ─── Transition layer ─── */
+    #overlay { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
+
+    /* Two glowing orbs */
+    .orb {
+      position: absolute;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+    }
+    #orb1 {
+      background: radial-gradient(circle, #fff 0%, #ffb3e6 35%, #cc44ff 65%, transparent 100%);
+      box-shadow: 0 0 18px 6px rgba(200,100,255,0.8), 0 0 40px 16px rgba(150,50,255,0.4);
+      left: 8%; top: 82%;
+    }
+    #orb2 {
+      background: radial-gradient(circle, #fff 0%, #b3d4ff 35%, #44aaff 65%, transparent 100%);
+      box-shadow: 0 0 18px 6px rgba(100,180,255,0.8), 0 0 40px 16px rgba(50,120,255,0.4);
+      left: 92%; top: 18%;
+    }
+
+    /* Orb trails */
+    .trail {
+      position: absolute;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Burst particles */
+    .burst-particle {
+      position: absolute;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+    }
+
+    /* Flash overlay */
+    #flash {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, #ffffff 0%, #e8d0ff 40%, transparent 75%);
+      opacity: 0;
+    }
+
+    /* ─── Home screen ─── */
+    .home-wrap { text-align: center; z-index: 2; position: relative; }
+    .stars-deco { font-size: 4rem; display: block; margin-bottom: 18px; animation: orbit 4s linear infinite; }
+    @keyframes orbit { 0%{transform:rotate(0deg) translateX(8px) rotate(0deg)} 100%{transform:rotate(360deg) translateX(8px) rotate(-360deg)} }
+    .home-wrap h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #e8d8ff; margin-bottom: 10px; text-shadow: 0 0 40px rgba(180,100,255,0.6); }
+    .home-wrap p { color: rgba(220,200,255,0.75); font-style: italic; margin-bottom: 32px; font-size: 1rem; letter-spacing: 0.03em; }
+    .back { padding: 11px 28px; background: rgba(180,140,255,0.18); border: 1.5px solid rgba(180,140,255,0.35); border-radius: 22px; color: #d8c8f8; cursor: pointer; font-size: 0.85rem; letter-spacing: 0.06em; transition: background 0.2s; font-family: 'Lato', sans-serif; }
+    .back:hover { background: rgba(180,140,255,0.3); }
+
+    /* ─── Label ─── */
+    .pg-label { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); background: rgba(120,60,200,0.25); backdrop-filter: blur(8px); border: 1px solid rgba(180,140,255,0.28); color: rgba(220,200,255,0.92); padding: 5px 16px; border-radius: 16px; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; z-index: 100; white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <div class="pg-label">Transition 02 — Two Stars Meet</div>
+
+  <!-- Login Screen -->
+  <div class="screen" id="login">
+    <canvas class="star-bg" id="starCanvas"></canvas>
+    <div class="card">
+      <span class="badge">✨</span>
+      <h1>Welcome Back</h1>
+      <p class="sub">Our little corner of the world</p>
+      <div class="field"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+      <div class="field"><label>Password</label><input type="password" placeholder="••••••••"></div>
+      <button class="btn" id="loginBtn" onclick="startTransition()">Enter Our Story ✦</button>
+    </div>
+  </div>
+
+  <!-- Transition Overlay -->
+  <div id="overlay">
+    <div class="orb" id="orb1"></div>
+    <div class="orb" id="orb2"></div>
+    <div id="flash"></div>
+  </div>
+
+  <!-- Home Screen -->
+  <div class="screen" id="home">
+    <canvas class="star-bg" id="starCanvas2"></canvas>
+    <div class="home-wrap">
+      <span class="stars-deco">💫</span>
+      <h2>Written in the stars</h2>
+      <p>Across the universe, I'd find you every time.</p>
+      <button class="back" onclick="resetDemo()">← Try Again</button>
+    </div>
+  </div>
+
+  <script>
+    const loginEl = document.getElementById('login');
+    const homeEl  = document.getElementById('home');
+    const orb1    = document.getElementById('orb1');
+    const orb2    = document.getElementById('orb2');
+    const flash   = document.getElementById('flash');
+    const overlay = document.getElementById('overlay');
+
+    // Draw star field on both canvases
+    function drawStars(canvasId, count) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext('2d');
+      for (let i = 0; i < count; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const r = Math.random() * 1.6 + 0.2;
+        const alpha = Math.random() * 0.7 + 0.2;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${200+Math.floor(Math.random()*55)},${180+Math.floor(Math.random()*55)},255,${alpha})`;
+        ctx.fill();
+      }
+    }
+    drawStars('starCanvas', 180);
+    drawStars('starCanvas2', 180);
+
+    // Trail element pool
+    let trails = [];
+    function spawnTrail(x, y, color) {
+      const t = document.createElement('div');
+      t.className = 'trail';
+      t.style.cssText = `left:${x}px;top:${y}px;background:${color};transform:translate(-50%,-50%) scale(1);`;
+      overlay.appendChild(t);
+      trails.push(t);
+      // Fade & shrink
+      requestAnimationFrame(() => {
+        t.style.transition = 'opacity 0.4s, transform 0.4s';
+        t.style.opacity = '0.6';
+        setTimeout(() => {
+          t.style.opacity = '0';
+          t.style.transform = 'translate(-50%,-50%) scale(0.2)';
+        }, 30);
+        setTimeout(() => t.remove(), 450);
+      });
+    }
+
+    // Burst on collision
+    function burst(cx, cy) {
+      const burstColors = ['#fff','#e0b0ff','#b3d4ff','#ffb3e6','#ffffaa','#c8f0ff'];
+      const count = 36;
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'burst-particle';
+        const angle = (i / count) * Math.PI * 2;
+        const dist  = 60 + Math.random() * 120;
+        const size  = 4 + Math.random() * 9;
+        el.style.cssText = `
+          left:${cx}px; top:${cy}px;
+          width:${size}px; height:${size}px;
+          background:${burstColors[Math.floor(Math.random()*burstColors.length)]};
+          box-shadow: 0 0 6px 2px rgba(200,150,255,0.5);
+          border-radius:50%;
+          transform:translate(-50%,-50%);
+          opacity:0;
+          position:absolute;
+        `;
+        overlay.appendChild(el);
+
+        requestAnimationFrame(() => {
+          el.style.transition = `transform 0.9s cubic-bezier(0.2,0.8,0.4,1), opacity 0.9s ease-out`;
+          el.style.opacity = '1';
+          el.style.transform = `translate(calc(-50% + ${Math.cos(angle)*dist}px), calc(-50% + ${Math.sin(angle)*dist}px)) scale(0.3)`;
+          setTimeout(() => { el.style.opacity = '0'; }, 200);
+          setTimeout(() => el.remove(), 950);
+        });
+      }
+    }
+
+    let animRunning = false;
+    let trailTimers = [];
+
+    function startTransition() {
+      if (animRunning) return;
+      animRunning = true;
+
+      const cx = window.innerWidth  / 2;
+      const cy = window.innerHeight / 2;
+
+      // 1. Show orbs at start positions
+      orb1.style.opacity = '1';
+      orb2.style.opacity = '1';
+
+      // 2. Move orbs to center over 1.4s
+      const moveDelay = 50;
+      setTimeout(() => {
+        orb1.style.transition = 'left 1.4s cubic-bezier(0.4,0,0.2,1), top 1.4s cubic-bezier(0.4,0,0.2,1)';
+        orb2.style.transition = 'left 1.4s cubic-bezier(0.4,0,0.2,1), top 1.4s cubic-bezier(0.4,0,0.2,1)';
+        orb1.style.left = '50%';  orb1.style.top = '50%';
+        orb2.style.left = '50%';  orb2.style.top = '50%';
+      }, moveDelay);
+
+      // 3. Spawn trails during movement
+      let tick = 0;
+      const trailTimer = setInterval(() => {
+        const t1 = getOrbPos(orb1);
+        const t2 = getOrbPos(orb2);
+        if (t1) spawnTrail(t1.x, t1.y, 'rgba(180,100,255,0.7)');
+        if (t2) spawnTrail(t2.x, t2.y, 'rgba(80,160,255,0.7)');
+        tick++;
+        if (tick > 18) clearInterval(trailTimer);
+      }, 70);
+      trailTimers.push(trailTimer);
+
+      // 4. Collision at ~1.45s → burst + flash
+      setTimeout(() => {
+        burst(cx, cy);
+        orb1.style.opacity = '0';
+        orb2.style.opacity = '0';
+        flash.style.transition = 'opacity 0.18s ease-in';
+        flash.style.opacity = '1';
+      }, moveDelay + 1420);
+
+      // 5. Flash fades, reveal home
+      setTimeout(() => {
+        loginEl.style.opacity = '0';
+        homeEl.classList.add('show');
+        flash.style.transition = 'opacity 0.6s ease-out';
+        flash.style.opacity = '0';
+      }, moveDelay + 1600);
+    }
+
+    function getOrbPos(el) {
+      const left = parseFloat(el.style.left);
+      const top  = parseFloat(el.style.top);
+      if (isNaN(left)) return null;
+      return {
+        x: (left / 100) * window.innerWidth,
+        y: (top  / 100) * window.innerHeight,
+      };
+    }
+
+    function resetDemo() {
+      animRunning = false;
+      trailTimers.forEach(clearInterval);
+      trailTimers = [];
+      trails.forEach(t => t.remove());
+      trails = [];
+
+      // Reset orbs
+      orb1.style.transition = 'none';
+      orb2.style.transition = 'none';
+      orb1.style.left = '8%';   orb1.style.top = '82%';
+      orb2.style.left = '92%';  orb2.style.top = '18%';
+      orb1.style.opacity = '0';
+      orb2.style.opacity = '0';
+
+      flash.style.transition = 'none';
+      flash.style.opacity = '0';
+
+      loginEl.style.opacity = '1';
+      homeEl.classList.remove('show');
+    }
+  </script>
+</body>
+</html>
