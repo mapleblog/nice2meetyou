@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Section v4 – Love Letter</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Dancing+Script:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #2c1a0e;
+      font-family: 'Lora', serif;
+      overflow-x: hidden;
+      padding: 40px 16px;
+    }
+
+    /* Paper texture via noise */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse at 20% 20%, rgba(180,120,60,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(140,80,30,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* ── Outer envelope wrapper ── */
+    .envelope-scene {
+      position: relative;
+      max-width: 820px;
+      width: 100%;
+    }
+
+    /* Wax seal at top-center */
+    .wax-seal {
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      width: 56px;
+      height: 56px;
+      background: radial-gradient(circle at 38% 35%, #c0392b, #7b0e0e);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(0,0,0,0.3);
+      color: #f5c6c0;
+      font-size: 1.4rem;
+    }
+    .wax-seal::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px dashed rgba(192,57,43,0.4);
+    }
+
+    /* ── Main letter card ── */
+    .letter-card {
+      background: #fdf6e8;
+      border-radius: 4px;
+      padding: 48px 40px 40px;
+      box-shadow:
+        0 20px 60px rgba(0,0,0,0.5),
+        0 4px 12px rgba(0,0,0,0.3),
+        inset 0 0 80px rgba(200,160,80,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Aged paper lines */
+    .letter-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        rgba(180,140,80,0.12) 31px,
+        rgba(180,140,80,0.12) 32px
+      );
+      background-position: 0 48px;
+      pointer-events: none;
+    }
+
+    /* Left red margin line */
+    .letter-card::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 68px;
+      width: 1px;
+      background: rgba(200,80,80,0.25);
+    }
+
+    /* ── Postmark stamp (top right) ── */
+    .postmark {
+      position: absolute;
+      top: 20px; right: 30px;
+      text-align: center;
+      border: 2px solid rgba(180,80,40,0.5);
+      border-radius: 4px;
+      padding: 6px 12px;
+      transform: rotate(6deg);
+    }
+    .postmark-date {
+      font-size: 0.65rem;
+      color: rgba(180,80,40,0.7);
+      letter-spacing: 1px;
+      font-family: 'Courier New', monospace;
+      font-weight: 700;
+    }
+    .postmark-location {
+      font-size: 0.6rem;
+      color: rgba(180,80,40,0.6);
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Letter heading ── */
+    .letter-heading {
+      text-align: center;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+    .letter-date {
+      font-size: 0.78rem;
+      color: #8a7050;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .letter-title {
+      font-family: 'Pinyon Script', cursive;
+      font-size: 3.2rem;
+      color: #5c3010;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .letter-subtitle {
+      font-size: 0.8rem;
+      color: #9a8060;
+      font-style: italic;
+      letter-spacing: 0.5px;
+    }
+
+    /* Divider flourish */
+    .flourish {
+      text-align: center;
+      color: #c0905050;
+      font-size: 1.1rem;
+      letter-spacing: 8px;
+      margin: 0 0 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Two profiles side by side ── */
+    .profiles-row {
+      display: flex;
+      gap: 28px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 28px;
+    }
+
+    /* ── Profile card: looks like a tucked photo + handwritten note ── */
+    .profile-letter {
+      width: 240px;
+      background: #fffdf5;
+      border: 1px solid rgba(180,140,80,0.3);
+      padding: 0;
+      border-radius: 2px;
+      box-shadow:
+        3px 3px 0 rgba(180,140,80,0.2),
+        6px 6px 0 rgba(180,140,80,0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .profile-letter:first-child { transform: rotate(-1.5deg); }
+    .profile-letter:last-child  { transform: rotate(1.2deg); }
+    .profile-letter:hover {
+      transform: rotate(0deg) translateY(-6px) !important;
+      box-shadow: 6px 12px 30px rgba(0,0,0,0.25), 0 0 0 2px rgba(192,57,43,0.2);
+    }
+
+    /* Photo strip */
+    .photo-strip {
+      position: relative;
+      width: 100%;
+      height: 160px;
+      overflow: hidden;
+      background: #d4c4a0;
+    }
+    .photo-strip img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: sepia(25%) saturate(0.85);
+      display: block;
+    }
+    /* Tape across top */
+    .tape {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 18px;
+      background: rgba(240,220,160,0.65);
+      border: 1px solid rgba(200,180,120,0.5);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    /* Country stamp */
+    .country-stamp {
+      position: absolute;
+      bottom: 8px; right: 8px;
+      background: rgba(40,20,5,0.7);
+      color: #f0d090;
+      font-size: 0.6rem;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 1px;
+      padding: 3px 7px;
+      text-transform: uppercase;
+      border: 1px solid rgba(240,208,144,0.4);
+    }
+
+    /* Handwritten note area */
+    .handwritten-note {
+      padding: 14px 16px 16px;
+    }
+    .note-name {
+      font-family: 'Pinyon Script', cursive;
+      font-size: 1.9rem;
+      color: #5c3010;
+      margin-bottom: 6px;
+      line-height: 1;
+    }
+    .note-birthday {
+      font-size: 0.72rem;
+      color: #8a7050;
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+    .note-birthday i { margin-right: 4px; color: #c08050; }
+
+    .note-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+    .note-tag {
+      font-family: 'Dancing Script', cursive;
+      font-size: 0.82rem;
+      color: #7a5030;
+      border-bottom: 1px solid rgba(180,120,60,0.4);
+      padding-bottom: 1px;
+    }
+    .note-tag::before { content: '#'; opacity: 0.5; margin-right: 1px; }
+
+    .note-motto {
+      font-family: 'Dancing Script', cursive;
+      font-size: 0.88rem;
+      color: #6a5040;
+      line-height: 1.5;
+      font-style: italic;
+      border-left: 2px solid rgba(192,57,43,0.3);
+      padding-left: 8px;
+    }
+
+    /* ── Center connector ── */
+    .connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding-top: 56px;
+    }
+    .connector-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(192,57,43,0.35); }
+    .connector-heart {
+      font-size: 1.6rem;
+      color: #c0392b;
+      filter: drop-shadow(0 2px 4px rgba(192,57,43,0.3));
+      animation: inkHeart 2s ease-in-out infinite;
+    }
+    @keyframes inkHeart {
+      0%,100% { transform: scale(1) rotate(-5deg); }
+      50%      { transform: scale(1.15) rotate(5deg); }
+    }
+
+    /* ── Footer of letter ── */
+    .letter-footer {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(180,140,80,0.2);
+      padding-top: 20px;
+    }
+    .letter-closing {
+      font-family: 'Pinyon Script', cursive;
+      font-size: 1.5rem;
+      color: #7a4020;
+      margin-bottom: 4px;
+    }
+    .letter-closing-sub {
+      font-size: 0.72rem;
+      color: #9a8060;
+      font-style: italic;
+      letter-spacing: 0.5px;
+    }
+    .signature-line {
+      width: 120px;
+      height: 1px;
+      background: rgba(180,120,60,0.4);
+      margin: 10px auto 0;
+    }
+
+    /* Corner fold */
+    .corner-fold {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 0; height: 0;
+      border-style: solid;
+      border-width: 0 0 32px 32px;
+      border-color: transparent transparent #e8d8b0 transparent;
+      filter: drop-shadow(-2px -2px 3px rgba(0,0,0,0.1));
+    }
+  </style>
+</head>
+<body>
+  <div class="envelope-scene">
+    <div class="wax-seal"><i class="fas fa-heart"></i></div>
+
+    <div class="letter-card">
+      <div class="postmark">
+        <div class="postmark-date">2025 · MAY · 05</div>
+        <div class="postmark-location">— Just Us —</div>
+      </div>
+
+      <div class="letter-heading">
+        <div class="letter-date">A letter from the heart — since May 5, 2025</div>
+        <div class="letter-title">Our Story</div>
+        <div class="letter-subtitle">Two souls, two countries, one beautiful bond.</div>
+      </div>
+
+      <div class="flourish">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+      <div class="profiles-row">
+
+        <!-- Person 1 -->
+        <div class="profile-letter">
+          <div class="photo-strip">
+            <img src="../img/profile1.jpg" alt="啊康 · Dinh Khang">
+            <div class="tape"></div>
+            <div class="country-stamp">Malaysia</div>
+          </div>
+          <div class="handwritten-note">
+            <div class="note-name">Dinh Khang</div>
+            <div class="note-birthday"><i class="fas fa-birthday-cake"></i>Feb 28, 1991 &nbsp;·&nbsp; 啊康</div>
+            <div class="note-tags">
+              <span class="note-tag">旅行</span>
+              <span class="note-tag">摄影</span>
+              <span class="note-tag">美食</span>
+            </div>
+            <div class="note-motto">"生活不止眼前的苏豆和试卷"</div>
+          </div>
+        </div>
+
+        <!-- Connector -->
+        <div class="connector">
+          <div class="connector-dot"></div>
+          <div class="connector-dot"></div>
+          <div class="connector-heart"><i class="fas fa-heart"></i></div>
+          <div class="connector-dot"></div>
+          <div class="connector-dot"></div>
+        </div>
+
+        <!-- Person 2 -->
+        <div class="profile-letter">
+          <div class="photo-strip">
+            <img src="../img/profile.png" alt="啊庄 · Thuy Trang">
+            <div class="tape"></div>
+            <div class="country-stamp">Vietnam</div>
+          </div>
+          <div class="handwritten-note">
+            <div class="note-name">Thuy Trang</div>
+            <div class="note-birthday"><i class="fas fa-birthday-cake"></i>Jan 18, 2000 &nbsp;·&nbsp; 啊庄</div>
+            <div class="note-tags">
+              <span class="note-tag">音乐</span>
+              <span class="note-tag">阅读</span>
+              <span class="note-tag">电影</span>
+            </div>
+            <div class="note-motto">"人生就像弦一样，不绕紧就弹不出美妙的音乐"</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="letter-footer">
+        <div class="letter-closing">Forever & Always</div>
+        <div class="letter-closing-sub">Thuy Trang &amp; Dinh Khang &nbsp;·&nbsp; Malaysia ↔ Vietnam</div>
+        <div class="signature-line"></div>
+      </div>
+
+      <div class="corner-fold"></div>
+    </div>
+  </div>
+</body>
+</html>

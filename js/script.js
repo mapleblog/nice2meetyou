@@ -57,9 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // 添加错误处理
             audioPlayer.addEventListener('error', function(e) {
                 console.error('音频加载错误:', e);
-                console.error('错误代码:', audioPlayer.error.code);
-                console.error('错误信息:', audioPlayer.error.message);
-                alert('音频加载失败\n请检查文件路径和格式\n错误代码: ' + audioPlayer.error.code);
             });
             
             // 添加调试信息

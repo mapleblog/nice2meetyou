@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Section v2 – Neon Cyberpunk</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0a0a0f;
+      font-family: 'Rajdhani', sans-serif;
+      overflow: hidden;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,200,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,200,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    /* Scanlines */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.1) 2px,
+        rgba(0,0,0,0.1) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    .friendship-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .avatars {
+      display: flex;
+      align-items: flex-start;
+      gap: 50px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .avatar-container { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+
+    /* Hexagonal avatar clip */
+    .avatar-wrapper {
+      position: relative;
+      width: 110px;
+      height: 110px;
+    }
+    .avatar-hex {
+      width: 110px;
+      height: 110px;
+      clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+      overflow: hidden;
+      border: none;
+      transition: filter 0.3s ease;
+    }
+    .avatar-hex:hover { filter: brightness(1.2) drop-shadow(0 0 12px #00ffc8); }
+    .avatar-hex img { width: 100%; height: 100%; object-fit: cover; }
+
+    .avatar-hex-border {
+      position: absolute;
+      inset: -3px;
+      clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+      background: linear-gradient(135deg, #00ffc8, #7b2fff, #ff003c);
+      z-index: -1;
+      animation: rotateBorder 4s linear infinite;
+    }
+    @keyframes rotateBorder {
+      0%   { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    .name-display {
+      color: #00ffc8;
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0,255,200,0.8);
+    }
+
+    /* Neon card */
+    .profile-canvas {
+      width: 240px;
+      background: rgba(10,10,20,0.9);
+      border: 1px solid rgba(0,255,200,0.3);
+      border-radius: 4px;
+      padding: 20px 16px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .profile-canvas:hover {
+      border-color: rgba(0,255,200,0.8);
+      box-shadow:
+        0 0 15px rgba(0,255,200,0.3),
+        0 0 40px rgba(0,255,200,0.1),
+        inset 0 0 20px rgba(0,255,200,0.05);
+      transform: translateY(-5px);
+    }
+
+    /* Corner decorations */
+    .profile-canvas::before,
+    .profile-canvas::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-color: #00ffc8;
+      border-style: solid;
+    }
+    .profile-canvas::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+    .profile-canvas::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+    /* Scan line animation */
+    .scan-line {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00ffc8, transparent);
+      animation: scanDown 3s linear infinite;
+      opacity: 0.6;
+    }
+    @keyframes scanDown {
+      0%   { top: 0%; opacity: 0.8; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    .profile-info {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(0,255,200,0.15);
+    }
+    .info-item { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .info-icon {
+      width: 32px; height: 32px;
+      border-radius: 2px;
+      background: rgba(0,255,200,0.1);
+      border: 1px solid rgba(0,255,200,0.3);
+      display: flex; align-items: center; justify-content: center;
+      color: #00ffc8;
+      font-size: 0.85rem;
+    }
+    .info-text { font-size: 0.72rem; color: rgba(255,255,255,0.6); font-weight: 600; letter-spacing: 0.5px; }
+
+    .profile-interests { margin-bottom: 14px; text-align: center; }
+    .profile-interests h4 {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.65rem;
+      color: rgba(0,255,200,0.6);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+    .profile-tags { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
+    .tag {
+      padding: 3px 10px;
+      border-radius: 2px;
+      font-size: 0.72rem;
+      color: #00ffc8;
+      background: rgba(0,255,200,0.07);
+      border: 1px solid rgba(0,255,200,0.25);
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
+    }
+    .tag:hover {
+      background: rgba(0,255,200,0.2);
+      box-shadow: 0 0 8px rgba(0,255,200,0.4);
+    }
+
+    .profile-motto {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      line-height: 1.5;
+      font-style: italic;
+      border-left: 2px solid rgba(0,255,200,0.3);
+      padding-left: 10px;
+      margin-top: 4px;
+    }
+
+    /* Connector */
+    .heart-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 60px;
+      gap: 8px;
+    }
+    .heart {
+      color: #ff003c;
+      font-size: 1.8rem;
+      animation: neonPulse 1.4s ease-in-out infinite;
+      text-shadow: 0 0 10px #ff003c, 0 0 20px #ff003c;
+    }
+    .connect-line {
+      width: 2px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(255,0,60,0.5), transparent);
+    }
+    @keyframes neonPulse {
+      0%,100% { text-shadow: 0 0 8px #ff003c, 0 0 16px #ff003c; transform: scale(1); }
+      50%      { text-shadow: 0 0 20px #ff003c, 0 0 40px #ff003c, 0 0 60px #ff003c; transform: scale(1.2); }
+    }
+  </style>
+</head>
+<body>
+  <section class="friendship-section">
+    <div class="avatars">
+
+      <div class="avatar-container">
+        <div class="avatar-wrapper">
+          <div class="avatar-hex-border"></div>
+          <div class="avatar-hex"><img src="../img/profile1.jpg" alt="啊康"></div>
+        </div>
+        <div class="name-display">啊康</div>
+        <div class="profile-canvas">
+          <div class="scan-line"></div>
+          <div class="profile-info">
+            <div class="info-item">
+              <span class="info-icon"><i class="fas fa-birthday-cake"></i></span>
+              <span class="info-text">1991-02-28</span>
+            </div>
+            <div class="info-item">
+              <span class="info-icon"><i class="fas fa-globe-asia"></i></span>
+              <span class="info-text">马来西亚</span>
+            </div>
+          </div>
+          <div class="profile-interests">
+            <h4>// Interests</h4>
+            <div class="profile-tags">
+              <span class="tag">旅行</span>
+              <span class="tag">摄影</span>
+              <span class="tag">美食</span>
+            </div>
+          </div>
+          <div class="profile-motto">"生活不止眼前的苏豆和试卷"</div>
+        </div>
+      </div>
+
+      <div class="heart-container">
+        <div class="connect-line"></div>
+        <div class="heart"><i class="fas fa-heart"></i></div>
+        <div class="connect-line" style="background: linear-gradient(to top, rgba(255,0,60,0.5), transparent);"></div>
+      </div>
+
+      <div class="avatar-container">
+        <div class="avatar-wrapper">
+          <div class="avatar-hex-border"></div>
+          <div class="avatar-hex"><img src="../img/profile.png" alt="啊庄"></div>
+        </div>
+        <div class="name-display">啊庄</div>
+        <div class="profile-canvas">
+          <div class="scan-line" style="animation-delay: -1.5s;"></div>
+          <div class="profile-info">
+            <div class="info-item">
+              <span class="info-icon"><i class="fas fa-birthday-cake"></i></span>
+              <span class="info-text">2000-01-18</span>
+            </div>
+            <div class="info-item">
+              <span class="info-icon"><i class="fas fa-globe-asia"></i></span>
+              <span class="info-text">越南</span>
+            </div>
+          </div>
+          <div class="profile-interests">
+            <h4>// Interests</h4>
+            <div class="profile-tags">
+              <span class="tag">音乐</span>
+              <span class="tag">阅读</span>
+              <span class="tag">电影</span>
+            </div>
+          </div>
+          <div class="profile-motto">"人生就像弦一样，不绕紧就弹不出美妙的音乐"</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</body>
+</html>

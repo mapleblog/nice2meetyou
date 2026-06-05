@@ -1,15 +1,5 @@
 /* u79fbu52a8u7aefu5934u50cfu533au5757u5c45u4e2du4f18u5316 */
 @media (max-width: 768px) {
-    /* u5934u50cfu533au5757u5c45u4e2du4f18u5316 */
-    .avatars {
-        flex-direction: column;
-        gap: 30px;
-        margin: 30px auto;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-    }
-
     .avatar-container {
         display: flex;
         flex-direction: column;

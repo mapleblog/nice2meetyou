@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Section v3 – Botanical / Soft Nature</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #fef9f0 0%, #f0ebe3 50%, #e8f4e8 100%);
+      font-family: 'Nunito', sans-serif;
+      overflow: hidden;
+    }
+
+    /* Decorative leaf SVGs */
+    .leaf {
+      position: fixed;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+    .leaf-1 { top: -60px; left: -60px; width: 280px; transform: rotate(-20deg); }
+    .leaf-2 { bottom: -80px; right: -60px; width: 320px; transform: rotate(160deg); }
+    .leaf-3 { top: 30%; right: -40px; width: 180px; transform: rotate(30deg); }
+
+    .friendship-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .avatars {
+      display: flex;
+      align-items: flex-start;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .avatar-container { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+    /* Soft circular avatar with petal ring */
+    .avatar {
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid #fff;
+      box-shadow:
+        0 0 0 6px rgba(180,210,130,0.3),
+        0 8px 30px rgba(0,0,0,0.12);
+      transition: all 0.4s ease;
+    }
+    .avatar:hover {
+      box-shadow:
+        0 0 0 8px rgba(180,210,130,0.5),
+        0 12px 40px rgba(0,0,0,0.18);
+      transform: scale(1.05);
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .name-display {
+      color: #5a7a3a;
+      font-family: 'Lora', serif;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Botanical card */
+    .profile-canvas {
+      width: 240px;
+      background: #fffef9;
+      border: 1px solid rgba(160,190,120,0.3);
+      border-radius: 16px;
+      padding: 22px 18px;
+      box-shadow:
+        0 4px 20px rgba(0,0,0,0.07),
+        0 1px 3px rgba(0,0,0,0.05);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s ease;
+    }
+    .profile-canvas:hover {
+      transform: translateY(-6px);
+      box-shadow:
+        0 12px 40px rgba(0,0,0,0.12),
+        0 0 0 2px rgba(160,190,120,0.4);
+    }
+
+    /* Leaf watermark in corner */
+    .profile-canvas::before {
+      content: '🌿';
+      position: absolute;
+      top: -6px; right: 6px;
+      font-size: 3rem;
+      opacity: 0.08;
+      pointer-events: none;
+      transform: rotate(20deg);
+    }
+    /* Bottom accent line */
+    .profile-canvas::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 20%; right: 20%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #a0be78, #e8c4a0, transparent);
+      border-radius: 0 0 16px 16px;
+    }
+
+    .profile-info {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px dashed rgba(160,190,120,0.4);
+    }
+    .info-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .info-icon {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e8f5d8, #d0e8b8);
+      display: flex; align-items: center; justify-content: center;
+      color: #5a7a3a;
+      font-size: 0.85rem;
+      box-shadow: 0 2px 6px rgba(90,122,58,0.15);
+    }
+    .info-text { font-size: 0.73rem; color: #7a8a6a; font-weight: 700; }
+
+    .profile-interests { margin-bottom: 16px; text-align: center; }
+    .profile-interests h4 {
+      font-family: 'Lora', serif;
+      font-size: 0.8rem;
+      color: #8a9a7a;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+    .profile-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .tag {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.73rem;
+      color: #5a7a3a;
+      background: linear-gradient(135deg, #edf7e0, #f5f0e8);
+      border: 1px solid rgba(160,190,120,0.4);
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+    .tag:hover {
+      background: linear-gradient(135deg, #d8f0c0, #f0e8d8);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(90,122,58,0.15);
+    }
+
+    .profile-motto {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.82rem;
+      color: #9a8a7a;
+      text-align: center;
+      line-height: 1.6;
+      padding: 0 4px;
+    }
+    .profile-motto::before { content: '\201C'; color: #a0be78; font-size: 1.2rem; margin-right: 2px; }
+    .profile-motto::after  { content: '\201D'; color: #a0be78; font-size: 1.2rem; margin-left: 2px; }
+
+    /* Floral connector */
+    .heart-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 55px;
+      gap: 6px;
+    }
+    .heart {
+      color: #e07890;
+      font-size: 1.8rem;
+      filter: drop-shadow(0 2px 6px rgba(224,120,144,0.4));
+      animation: softBeat 2s ease-in-out infinite;
+    }
+    .petal-row { display: flex; gap: 4px; }
+    .mini-petal {
+      color: #f0b8c8;
+      font-size: 0.6rem;
+      animation: sway 2s ease-in-out infinite alternate;
+    }
+    .mini-petal:nth-child(2) { animation-delay: 0.3s; }
+    .mini-petal:nth-child(3) { animation-delay: 0.6s; }
+
+    @keyframes softBeat {
+      0%,100% { transform: scale(1); }
+      30%      { transform: scale(1.15); }
+      60%      { transform: scale(0.95); }
+    }
+    @keyframes sway {
+      from { transform: rotate(-15deg); }
+      to   { transform: rotate(15deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Decorative leaves -->
+  <svg class="leaf leaf-1" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100,280 Q20,200 40,100 Q60,20 100,10 Q140,20 160,100 Q180,200 100,280Z" fill="#5a7a3a"/>
+    <line x1="100" y1="10" x2="100" y2="280" stroke="#3a5a1a" stroke-width="2"/>
+    <line x1="100" y1="80" x2="60" y2="120" stroke="#3a5a1a" stroke-width="1.5"/>
+    <line x1="100" y1="80" x2="140" y2="120" stroke="#3a5a1a" stroke-width="1.5"/>
+    <line x1="100" y1="140" x2="50" y2="180" stroke="#3a5a1a" stroke-width="1.5"/>
+    <line x1="100" y1="140" x2="150" y2="180" stroke="#3a5a1a" stroke-width="1.5"/>
+  </svg>
+  <svg class="leaf leaf-2" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100,280 Q20,200 40,100 Q60,20 100,10 Q140,20 160,100 Q180,200 100,280Z" fill="#5a7a3a"/>
+    <line x1="100" y1="10" x2="100" y2="280" stroke="#3a5a1a" stroke-width="2"/>
+    <line x1="100" y1="80" x2="60" y2="120" stroke="#3a5a1a" stroke-width="1.5"/>
+    <line x1="100" y1="80" x2="140" y2="120" stroke="#3a5a1a" stroke-width="1.5"/>
+  </svg>
+
+  <section class="friendship-section">
+    <div class="avatars">
+
+      <div class="avatar-container">
+        <div class="avatar">
+          <img src="../img/profile1.jpg" alt="啊康">
+        </div>
+        <div class="name-display">啊康</div>
+        <div class="profile-canvas">
+          <div class="profile-info">
+            <div class="info-item">
+              <span class="info-icon"><i class="fas fa-birthday-cake"></i></span>
+              <span class="info-text">1991-02-28</span>
+            </div>
+            <div class="info-item">
+              <span class="info-icon"><i class="fas fa-globe-asia"></i></span>
+              <span class="info-text">马来西亚</span>
+            </div>
+          </div>
+          <div class="profile-interests">
+            <h4>兴趣爱好</h4>
+            <div class="profile-tags">
+              <span class="tag">旅行</span>
+              <span class="tag">摄影</span>
+              <span class="tag">美食</span>
+            </div>
+          </div>
+          <div class="profile-motto">生活不止眼前的苏豆和试卷</div>
+        </div>
+      </div>
+
+      <div class="heart-container">
+        <div class="petal-row">
+          <span class="mini-petal">✿</span>
+          <span class="mini-petal">✿</span>
+          <span class="mini-petal">✿</span>
+        </div>
+        <div class="heart"><i class="fas fa-heart"></i></div>
+        <div class="petal-row">
+          <span class="mini-petal">✿</span>
+          <span class="mini-petal">✿</span>
+          <span class="mini-petal">✿</span>
+        </div>
+      </div>
+
+      <div class="avatar-container">
+        <div class="avatar">
+          <img src="../img/profile.png" alt="啊庄">
+        </div>
+        <div class="name-display">啊庄</div>
+        <div class="profile-canvas">
+          <div class="profile-info">
+            <div class="info-item">
+              <span class="info-icon"><i class="fas fa-birthday-cake"></i></span>
+              <span class="info-text">2000-01-18</span>
+            </div>
+            <div class="info-item">
+              <span class="info-icon"><i class="fas fa-globe-asia"></i></span>
+              <span class="info-text">越南</span>
+            </div>
+          </div>
+          <div class="profile-interests">
+            <h4>兴趣爱好</h4>
+            <div class="profile-tags">
+              <span class="tag">音乐</span>
+              <span class="tag">阅读</span>
+              <span class="tag">电影</span>
+            </div>
+          </div>
+          <div class="profile-motto">人生就像弦一样，不绕紧就弹不出美妙的音乐</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</body>
+</html>
