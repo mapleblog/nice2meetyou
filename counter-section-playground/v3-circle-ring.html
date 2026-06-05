@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V3 — Circle Rings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #0f0c29, #302b63, #24243e);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Soft aurora blobs */
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::before {
+      width: 500px; height: 500px;
+      background: rgba(180, 80, 200, 0.12);
+      top: -100px; left: -100px;
+    }
+    body::after {
+      width: 400px; height: 400px;
+      background: rgba(60, 160, 255, 0.1);
+      bottom: -80px; right: -80px;
+    }
+
+    .counter-section {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .days-label {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.6rem;
+      color: #fff;
+      text-shadow: 0 0 30px rgba(200, 140, 255, 0.7);
+      margin-bottom: 6px;
+    }
+    .days-sublabel {
+      font-size: 0.68rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 50px;
+    }
+
+    /* Ring row */
+    .counter-container {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* Each ring unit */
+    .ring-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .ring-wrap {
+      position: relative;
+      width: 110px;
+      height: 110px;
+    }
+
+    /* SVG ring */
+    .ring-wrap svg {
+      position: absolute;
+      inset: 0;
+      transform: rotate(-90deg);
+    }
+
+    .ring-track {
+      fill: none;
+      stroke: rgba(255,255,255,0.06);
+      stroke-width: 6;
+    }
+
+    .ring-fill {
+      fill: none;
+      stroke-width: 6;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* Colour per unit */
+    .ring-unit:nth-child(1) .ring-fill { stroke: url(#grad-d); }
+    .ring-unit:nth-child(2) .ring-fill { stroke: url(#grad-h); }
+    .ring-unit:nth-child(3) .ring-fill { stroke: url(#grad-m); }
+    .ring-unit:nth-child(4) .ring-fill { stroke: url(#grad-s); }
+
+    /* Inner number */
+    .ring-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ring-inner .num {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+
+    /* Glow pulse on each ring */
+    .ring-wrap {
+      filter: drop-shadow(0 0 8px rgba(180,120,255,0.3));
+      animation: ringPulse 4s ease-in-out infinite;
+    }
+    .ring-unit:nth-child(1) .ring-wrap { animation-delay: 0s; }
+    .ring-unit:nth-child(2) .ring-wrap { animation-delay: 0.5s; }
+    .ring-unit:nth-child(3) .ring-wrap { animation-delay: 1s; }
+    .ring-unit:nth-child(4) .ring-wrap { animation-delay: 1.5s; }
+    @keyframes ringPulse {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(180,120,255,0.3)); }
+      50%       { filter: drop-shadow(0 0 18px rgba(180,120,255,0.6)); }
+    }
+
+    .ring-label {
+      font-size: 0.62rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* Dot separators between rings */
+    .sep {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-bottom: 24px;
+    }
+    .sep-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .since-line {
+      margin-top: 44px;
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+    }
+    .since-line span { color: rgba(255,255,255,0.5); }
+
+    .version-badge {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.35);
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<div class="version-badge">V3 — Circle Rings</div>
+
+<section class="counter-section">
+  <div class="days-label">Days of Us</div>
+  <div class="days-sublabel">since May 5, 2025</div>
+
+  <!-- SVG gradient defs (hidden) -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <linearGradient id="grad-d" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f093fb"/>
+        <stop offset="100%" stop-color="#f5576c"/>
+      </linearGradient>
+      <linearGradient id="grad-h" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#4facfe"/>
+        <stop offset="100%" stop-color="#00f2fe"/>
+      </linearGradient>
+      <linearGradient id="grad-m" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#43e97b"/>
+        <stop offset="100%" stop-color="#38f9d7"/>
+      </linearGradient>
+      <linearGradient id="grad-s" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#fa709a"/>
+        <stop offset="100%" stop-color="#fee140"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="counter-container">
+
+    <!-- Days -->
+    <div class="ring-unit">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 110 110">
+          <circle class="ring-track" cx="55" cy="55" r="46"/>
+          <circle class="ring-fill" id="ring-days" cx="55" cy="55" r="46"
+                  stroke-dasharray="289" stroke-dashoffset="289"/>
+        </svg>
+        <div class="ring-inner">
+          <span class="num" id="days">0</span>
+        </div>
+      </div>
+      <div class="ring-label">Days</div>
+    </div>
+
+    <div class="sep"><div class="sep-dot"></div><div class="sep-dot"></div></div>
+
+    <!-- Hours -->
+    <div class="ring-unit">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 110 110">
+          <circle class="ring-track" cx="55" cy="55" r="46"/>
+          <circle class="ring-fill" id="ring-hours" cx="55" cy="55" r="46"
+                  stroke-dasharray="289" stroke-dashoffset="289"/>
+        </svg>
+        <div class="ring-inner">
+          <span class="num" id="hours">0</span>
+        </div>
+      </div>
+      <div class="ring-label">Hours</div>
+    </div>
+
+    <div class="sep"><div class="sep-dot"></div><div class="sep-dot"></div></div>
+
+    <!-- Minutes -->
+    <div class="ring-unit">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 110 110">
+          <circle class="ring-track" cx="55" cy="55" r="46"/>
+          <circle class="ring-fill" id="ring-mins" cx="55" cy="55" r="46"
+                  stroke-dasharray="289" stroke-dashoffset="289"/>
+        </svg>
+        <div class="ring-inner">
+          <span class="num" id="minutes">0</span>
+        </div>
+      </div>
+      <div class="ring-label">Minutes</div>
+    </div>
+
+    <div class="sep"><div class="sep-dot"></div><div class="sep-dot"></div></div>
+
+    <!-- Seconds -->
+    <div class="ring-unit">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 110 110">
+          <circle class="ring-track" cx="55" cy="55" r="46"/>
+          <circle class="ring-fill" id="ring-secs" cx="55" cy="55" r="46"
+                  stroke-dasharray="289" stroke-dashoffset="289"/>
+        </svg>
+        <div class="ring-inner">
+          <span class="num" id="seconds">0</span>
+        </div>
+      </div>
+      <div class="ring-label">Seconds</div>
+    </div>
+
+  </div>
+
+  <div class="since-line">Started <span>May 5, 2025</span> · Still counting ♥</div>
+</section>
+
+<script>
+  const CIRC = 2 * Math.PI * 46; // ≈ 289
+
+  function setRing(id, val, max) {
+    const el = document.getElementById(id);
+    const pct = Math.min(val / max, 1);
+    el.style.strokeDashoffset = CIRC * (1 - pct);
+  }
+
+  const start = new Date('2025-05-05T00:00:00');
+
+  function update() {
+    const diff = Date.now() - start;
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+
+    document.getElementById('days').textContent    = d;
+    document.getElementById('hours').textContent   = String(h).padStart(2,'0');
+    document.getElementById('minutes').textContent = String(m).padStart(2,'0');
+    document.getElementById('seconds').textContent = String(s).padStart(2,'0');
+
+    // Rings: days capped at 365, hours at 24, mins/secs at 60
+    setRing('ring-days',  d % 365, 365);
+    setRing('ring-hours', h, 24);
+    setRing('ring-mins',  m, 60);
+    setRing('ring-secs',  s, 60);
+  }
+
+  update();
+  setInterval(update, 1000);
+</script>
+</body>
+</html>

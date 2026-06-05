@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V2 — Flip Clock</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #0d0d0d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Warm vignette bg */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 40%, rgba(180,60,80,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .counter-section {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .days-label {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.6rem;
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 6px;
+    }
+    .days-sublabel {
+      font-size: 0.68rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 48px;
+    }
+
+    /* Row of flip units */
+    .counter-container {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    /* Each unit = flip tile + label */
+    .flip-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* The flip card tile */
+    .flip-tile {
+      position: relative;
+      width: 90px;
+      height: 100px;
+      perspective: 400px;
+    }
+
+    .flip-top, .flip-bottom {
+      position: absolute;
+      width: 100%;
+      height: 50%;
+      left: 0;
+      overflow: hidden;
+      background: #1c1c1c;
+      border: 1px solid #333;
+    }
+    .flip-top {
+      top: 0;
+      border-radius: 10px 10px 0 0;
+      border-bottom: 1px solid #111;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 2px;
+    }
+    .flip-bottom {
+      bottom: 0;
+      border-radius: 0 0 10px 10px;
+      border-top: 1px solid #444;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 2px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    }
+
+    .flip-top span, .flip-bottom span {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+      display: block;
+    }
+    /* bottom half shows bottom of digit — clip with negative margin trick */
+    .flip-bottom span {
+      transform: translateY(-50%);
+    }
+    .flip-top span {
+      transform: translateY(50%);
+    }
+
+    /* The animated flap overlay */
+    .flip-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      overflow: hidden;
+      border-radius: 10px 10px 0 0;
+      transform-origin: bottom center;
+      transform-style: preserve-3d;
+      background: #252525;
+      border: 1px solid #333;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 2px;
+      animation: flipAnim 0.5s ease-in-out;
+      opacity: 0;
+    }
+    .flip-flap span {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #e0e0e0;
+      transform: translateY(50%);
+    }
+    @keyframes flipAnim {
+      0%   { transform: rotateX(0deg);    opacity: 1; }
+      100% { transform: rotateX(-90deg);  opacity: 0; }
+    }
+
+    /* Hinge line */
+    .flip-tile::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      top: 50%;
+      height: 2px;
+      background: #111;
+      z-index: 10;
+      transform: translateY(-50%);
+    }
+
+    /* Colon separator */
+    .sep {
+      color: rgba(255,255,255,0.2);
+      font-size: 2.5rem;
+      font-weight: 800;
+      padding-top: 20px;
+      line-height: 100px;
+      user-select: none;
+    }
+
+    .flip-label {
+      font-size: 0.62rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .since-line {
+      margin-top: 40px;
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+    }
+    .since-line span { color: rgba(255,255,255,0.5); }
+
+    .version-badge {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.35);
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<div class="version-badge">V2 — Flip Clock</div>
+
+<section class="counter-section">
+  <div class="days-label">Days of Us</div>
+  <div class="days-sublabel">since May 5, 2025</div>
+
+  <div class="counter-container">
+    <div class="flip-unit">
+      <div class="flip-tile" id="tile-days">
+        <div class="flip-top"><span id="days-top">00</span></div>
+        <div class="flip-bottom"><span id="days-bot">00</span></div>
+      </div>
+      <div class="flip-label">Days</div>
+    </div>
+
+    <div class="sep">:</div>
+
+    <div class="flip-unit">
+      <div class="flip-tile" id="tile-hours">
+        <div class="flip-top"><span id="hours-top">00</span></div>
+        <div class="flip-bottom"><span id="hours-bot">00</span></div>
+      </div>
+      <div class="flip-label">Hours</div>
+    </div>
+
+    <div class="sep">:</div>
+
+    <div class="flip-unit">
+      <div class="flip-tile" id="tile-mins">
+        <div class="flip-top"><span id="mins-top">00</span></div>
+        <div class="flip-bottom"><span id="mins-bot">00</span></div>
+      </div>
+      <div class="flip-label">Minutes</div>
+    </div>
+
+    <div class="sep">:</div>
+
+    <div class="flip-unit">
+      <div class="flip-tile" id="tile-secs">
+        <div class="flip-top"><span id="secs-top">00</span></div>
+        <div class="flip-bottom"><span id="secs-bot">00</span></div>
+      </div>
+      <div class="flip-label">Seconds</div>
+    </div>
+  </div>
+
+  <div class="since-line">Started <span>May 5, 2025</span> · Still counting ♥</div>
+</section>
+
+<script>
+  const start = new Date('2025-05-05T00:00:00');
+  const prev = { d: null, h: null, m: null, s: null };
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function flipTo(tileId, topId, botId, val) {
+    const tile = document.getElementById(tileId);
+    const top  = document.getElementById(topId);
+    const bot  = document.getElementById(botId);
+    const v    = pad(val);
+
+    if (top.textContent === v) return; // no change
+
+    // Create flap
+    const flap = document.createElement('div');
+    flap.className = 'flip-flap';
+    const flapSpan = document.createElement('span');
+    flapSpan.textContent = top.textContent; // old value
+    flap.appendChild(flapSpan);
+    tile.appendChild(flap);
+
+    // Update display
+    top.textContent = v;
+    bot.textContent = v;
+
+    // Remove flap after animation
+    flap.addEventListener('animationend', () => flap.remove());
+  }
+
+  function update() {
+    const diff = Date.now() - start;
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+
+    flipTo('tile-days',  'days-top',  'days-bot',  d);
+    flipTo('tile-hours', 'hours-top', 'hours-bot', h);
+    flipTo('tile-mins',  'mins-top',  'mins-bot',  m);
+    flipTo('tile-secs',  'secs-top',  'secs-bot',  s);
+  }
+
+  update();
+  setInterval(update, 1000);
+</script>
+</body>
+</html>

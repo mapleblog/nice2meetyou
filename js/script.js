@@ -180,10 +180,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const seconds = elapsedSecondsToday % 60;
         
         // 更新DOM
-        daysEl.innerHTML = days;
-        hoursEl.innerHTML = hours;
-        minutesEl.innerHTML = minutes;
-        secondsEl.innerHTML = seconds;
+        daysEl.innerHTML = String(days).padStart(2, '0');
+        hoursEl.innerHTML = String(hours).padStart(2, '0');
+        minutesEl.innerHTML = String(minutes).padStart(2, '0');
+        secondsEl.innerHTML = String(seconds).padStart(2, '0');
         
         // 添加数字变化动画
         animateValue(daysEl, parseInt(daysEl.textContent), days, 500);

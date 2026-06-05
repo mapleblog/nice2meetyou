@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V4 — Love Letter Counter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Lora:ital,wght@0,400;1,400;1,600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #1a0e0e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lora', serif;
+      overflow: hidden;
+    }
+
+    /* Warm candlelight gradient backdrop */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 60%, rgba(180,80,40,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 70% 30%, rgba(200,100,60,0.12) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    /* Floating hearts bg */
+    .hearts-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .h-particle {
+      position: absolute;
+      font-size: var(--sz);
+      opacity: 0;
+      animation: riseHeart var(--dur) ease-in infinite;
+      animation-delay: var(--del);
+      color: rgba(220, 100, 120, 0.25);
+    }
+    @keyframes riseHeart {
+      0%   { opacity: 0;    transform: translateY(0) scale(0.8); }
+      20%  { opacity: 1; }
+      100% { opacity: 0;    transform: translateY(-140px) scale(1.2) rotate(15deg); }
+    }
+
+    /* Paper card */
+    .letter-wrap {
+      position: relative;
+      z-index: 1;
+      width: min(520px, 94vw);
+      background: linear-gradient(160deg, #2a1414 0%, #1e0f0f 60%, #160c0c 100%);
+      border: 1px solid rgba(200,130,80,0.2);
+      border-radius: 4px;
+      padding: 44px 36px 36px;
+      box-shadow:
+        0 2px 0 rgba(200,130,80,0.12),
+        0 20px 60px rgba(0,0,0,0.7),
+        inset 0 1px 0 rgba(255,220,180,0.06);
+    }
+
+    /* Wax seal top */
+    .wax-seal {
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 44px; height: 44px;
+      background: radial-gradient(circle at 40% 35%, #c0392b, #7b0a0a);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,200,180,0.2);
+      color: rgba(255,220,200,0.9);
+    }
+
+    /* Decorative rule */
+    .rule {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 26px;
+      color: rgba(200,130,80,0.4);
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+    }
+    .rule::before, .rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200,130,80,0.3), transparent);
+    }
+
+    /* Heading */
+    .letter-heading {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .letter-heading .script-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.2rem;
+      color: #e8c4a0;
+      text-shadow: 0 0 20px rgba(200,130,60,0.4);
+      line-height: 1.1;
+    }
+    .letter-heading .subtitle {
+      font-style: italic;
+      font-size: 0.8rem;
+      color: rgba(200,160,120,0.5);
+      margin-top: 6px;
+      letter-spacing: 1.5px;
+    }
+
+    /* Counter row */
+    .counter-container {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin: 0 auto;
+    }
+
+    .counter-unit {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 18px 8px 14px;
+      position: relative;
+    }
+
+    /* Vertical divider between units */
+    .counter-unit + .counter-unit::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20%; bottom: 20%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(200,130,80,0.25), transparent);
+    }
+
+    .counter-unit .num {
+      font-family: 'Lora', serif;
+      font-size: 2.6rem;
+      font-weight: 400;
+      font-style: italic;
+      color: #e8c4a0;
+      line-height: 1;
+      text-shadow: 0 0 14px rgba(200,130,60,0.5);
+    }
+
+    .counter-unit .label {
+      margin-top: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(200,160,110,0.45);
+    }
+
+    /* Heart ornament between numbers */
+    .heart-sep {
+      display: flex;
+      align-items: center;
+      padding-top: 14px;
+      color: rgba(180,70,80,0.5);
+      font-size: 0.65rem;
+    }
+
+    /* Bottom closing */
+    .letter-closing {
+      text-align: center;
+      margin-top: 28px;
+    }
+    .letter-closing .closing-script {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.25rem;
+      color: rgba(200,150,110,0.55);
+    }
+    .letter-closing .since-date {
+      margin-top: 6px;
+      font-size: 0.62rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(200,150,110,0.28);
+    }
+
+    /* Corner flourish */
+    .flourish {
+      position: absolute;
+      color: rgba(200,130,80,0.15);
+      font-size: 1.1rem;
+      font-family: serif;
+      line-height: 1;
+    }
+    .flourish.tl { top: 12px; left: 16px; }
+    .flourish.tr { top: 12px; right: 16px; }
+    .flourish.bl { bottom: 12px; left: 16px; }
+    .flourish.br { bottom: 12px; right: 16px; }
+
+    .version-badge {
+      position: fixed; top: 16px; left: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.25);
+      font-size: 0.62rem; letter-spacing: 2px;
+      padding: 5px 12px; border-radius: 20px;
+      text-transform: uppercase; font-family: 'Montserrat', sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<div class="version-badge">V4 — Love Letter</div>
+<div class="hearts-bg" id="hearts-bg"></div>
+
+<div class="letter-wrap">
+  <div class="wax-seal">♥</div>
+
+  <div class="flourish tl">✦</div>
+  <div class="flourish tr">✦</div>
+  <div class="flourish bl">✦</div>
+  <div class="flourish br">✦</div>
+
+  <div class="rule">our story</div>
+
+  <div class="letter-heading">
+    <div class="script-title">Days of Us</div>
+    <div class="subtitle">every moment sealed with love</div>
+  </div>
+
+  <div class="rule">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+  <div class="counter-container">
+    <div class="counter-unit">
+      <span class="num" id="days">0</span>
+      <span class="label">Days</span>
+    </div>
+    <div class="heart-sep">♥</div>
+    <div class="counter-unit">
+      <span class="num" id="hours">00</span>
+      <span class="label">Hours</span>
+    </div>
+    <div class="heart-sep">♥</div>
+    <div class="counter-unit">
+      <span class="num" id="minutes">00</span>
+      <span class="label">Minutes</span>
+    </div>
+    <div class="heart-sep">♥</div>
+    <div class="counter-unit">
+      <span class="num" id="seconds">00</span>
+      <span class="label">Seconds</span>
+    </div>
+  </div>
+
+  <div class="rule" style="margin-top:28px;">since may 5 · 2025</div>
+
+  <div class="letter-closing">
+    <div class="closing-script">Forever &amp; Always</div>
+    <div class="since-date">Thuy Trang &nbsp;·&nbsp; Dinh Khang</div>
+  </div>
+</div>
+
+<script>
+  // Floating hearts
+  const bg = document.getElementById('hearts-bg');
+  const symbols = ['♥','♡','❤','♥'];
+  for (let i = 0; i < 22; i++) {
+    const h = document.createElement('span');
+    h.className = 'h-particle';
+    h.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    h.style.cssText = `left:${Math.random()*100}%;bottom:${Math.random()*40}%;--sz:${(Math.random()*14+8)}px;--dur:${(Math.random()*5+5).toFixed(1)}s;--del:${(Math.random()*8).toFixed(1)}s`;
+    bg.appendChild(h);
+  }
+
+  // Counter
+  const start = new Date('2025-05-05T00:00:00');
+  function pad(n) { return String(n).padStart(2,'0'); }
+  function update() {
+    const diff = Date.now() - start;
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('days').textContent    = d;
+    document.getElementById('hours').textContent   = pad(h);
+    document.getElementById('minutes').textContent = pad(m);
+    document.getElementById('seconds').textContent = pad(s);
+  }
+  update();
+  setInterval(update, 1000);
+</script>
+</body>
+</html>

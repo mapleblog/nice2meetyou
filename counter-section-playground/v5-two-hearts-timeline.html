@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V5 — Two Hearts Timeline</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #0b0b1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      overflow: hidden;
+    }
+
+    /* Deep starfield */
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .star {
+      position: absolute; border-radius: 50%; background: #fff;
+      animation: twinkle var(--d) ease-in-out infinite alternate;
+      opacity: var(--o);
+    }
+    @keyframes twinkle { to { opacity: 0.05; transform: scale(0.5); } }
+
+    /* Soft nebula glow */
+    .nebula {
+      position: fixed; border-radius: 50%; filter: blur(90px); pointer-events: none; z-index: 0;
+    }
+    .nebula-1 { width:500px;height:400px; background:rgba(120,40,180,0.14); top:-100px; left:-120px; }
+    .nebula-2 { width:400px;height:350px; background:rgba(200,60,120,0.10); bottom:-80px; right:-80px; }
+
+    /* Wrapper */
+    .scene {
+      position: relative; z-index: 1;
+      width: min(580px, 95vw);
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* Title */
+    .days-label {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.5rem;
+      color: #fff;
+      text-shadow: 0 0 24px rgba(220,140,200,0.7);
+      margin-bottom: 4px;
+    }
+    .days-sublabel {
+      font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase;
+      color: rgba(255,255,255,0.28); margin-bottom: 40px;
+    }
+
+    /* Two avatars + thread */
+    .couple-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 40px;
+    }
+
+    .avatar {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      flex-shrink: 0;
+    }
+    .avatar-circle {
+      width: 62px; height: 62px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .avatar-circle img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+    }
+    /* glow ring on hover */
+    .avatar-circle::after {
+      content: '';
+      position: absolute; inset: -3px; border-radius: 50%;
+      border: 2px solid transparent;
+      background: linear-gradient(135deg, #f093fb, #f5576c) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out; mask-composite: exclude;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .avatar-circle:hover::after { opacity: 1; }
+
+    .avatar-name {
+      font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* The connecting thread with heart and counter embeds */
+    .thread {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 0 8px;
+    }
+
+    /* Line */
+    .thread-line {
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg,
+        rgba(240,147,251,0.4),
+        rgba(245,87,108,0.6) 50%,
+        rgba(240,147,251,0.4));
+      position: relative;
+    }
+    .thread-line::before, .thread-line::after {
+      content: ''; position: absolute; top: 50%; transform: translateY(-50%);
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(245,87,108,0.7);
+    }
+    .thread-line::before { left: 0; }
+    .thread-line::after  { right: 0; }
+
+    /* Beating heart on thread */
+    .thread-heart {
+      font-size: 1.5rem;
+      animation: heartbeat 1.2s ease-in-out infinite;
+      color: #f5576c;
+      text-shadow: 0 0 14px rgba(245,87,108,0.7);
+      line-height: 1;
+    }
+    @keyframes heartbeat {
+      0%,100% { transform: scale(1); }
+      14%      { transform: scale(1.25); }
+      28%      { transform: scale(1); }
+      42%      { transform: scale(1.18); }
+    }
+
+    .thread-days-text {
+      font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+    }
+
+    /* Four metric tiles */
+    .counter-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .counter {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 18px 8px 14px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .counter:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(245,87,108,0.35);
+    }
+
+    /* Subtle top-edge colour line */
+    .counter::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      border-radius: 14px 14px 0 0;
+    }
+    .counter:nth-child(1)::before { background: linear-gradient(90deg, #f093fb, #f5576c); }
+    .counter:nth-child(2)::before { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+    .counter:nth-child(3)::before { background: linear-gradient(90deg, #43e97b, #38f9d7); }
+    .counter:nth-child(4)::before { background: linear-gradient(90deg, #fa709a, #fee140); }
+
+    .counter .num {
+      display: block;
+      font-size: 2rem; font-weight: 800; color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      line-height: 1; margin-bottom: 7px;
+    }
+    .counter .label {
+      display: block;
+      font-size: 0.55rem; letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* Location tags */
+    .location-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .loc-tag {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      padding: 5px 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+    }
+    .loc-flag { font-size: 1rem; }
+
+    .version-badge {
+      position: fixed; top: 16px; left: 16px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.25); font-size: 0.62rem; letter-spacing: 2px;
+      padding: 5px 12px; border-radius: 20px; text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<div class="version-badge">V5 — Two Hearts Timeline</div>
+<div class="stars" id="stars"></div>
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+
+<div class="scene">
+
+  <div class="days-label">Days of Us</div>
+  <div class="days-sublabel">since May 5, 2025</div>
+
+  <!-- Couple thread -->
+  <div class="couple-row">
+    <div class="avatar">
+      <div class="avatar-circle">
+        <img src="../img/profile1.jpg" alt="Dinh Khang"
+             onerror="this.style.display='none';this.parentNode.textContent='🧑'">
+      </div>
+      <span class="avatar-name">Dinh Khang</span>
+    </div>
+
+    <div class="thread">
+      <div class="thread-heart">♥</div>
+      <div class="thread-line"></div>
+      <div class="thread-days-text" id="thread-days-text">— days together —</div>
+    </div>
+
+    <div class="avatar">
+      <div class="avatar-circle">
+        <img src="../img/profile.png" alt="Thuy Trang"
+             onerror="this.style.display='none';this.parentNode.textContent='👩'">
+      </div>
+      <span class="avatar-name">Thuy Trang</span>
+    </div>
+  </div>
+
+  <!-- Counter tiles -->
+  <div class="counter-container">
+    <div class="counter">
+      <span class="num" id="days">0</span>
+      <span class="label">Days</span>
+    </div>
+    <div class="counter">
+      <span class="num" id="hours">00</span>
+      <span class="label">Hours</span>
+    </div>
+    <div class="counter">
+      <span class="num" id="minutes">00</span>
+      <span class="label">Minutes</span>
+    </div>
+    <div class="counter">
+      <span class="num" id="seconds">00</span>
+      <span class="label">Seconds</span>
+    </div>
+  </div>
+
+  <!-- Location tags -->
+  <div class="location-row">
+    <div class="loc-tag"><span class="loc-flag">🇲🇾</span> Malaysia</div>
+    <div class="loc-tag">♥</div>
+    <div class="loc-tag"><span class="loc-flag">🇻🇳</span> Vietnam</div>
+  </div>
+
+</div>
+
+<script>
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 130; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2 + 0.5;
+    s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${(Math.random()*3+1.5).toFixed(1)}s;--o:${(Math.random()*0.6+0.15).toFixed(2)};animation-delay:${(Math.random()*4).toFixed(1)}s`;
+    starsEl.appendChild(s);
+  }
+
+  // Counter
+  const start = new Date('2025-05-05T00:00:00');
+  function pad(n) { return String(n).padStart(2,'0'); }
+  function update() {
+    const diff = Date.now() - start;
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('days').textContent          = d;
+    document.getElementById('hours').textContent         = pad(h);
+    document.getElementById('minutes').textContent       = pad(m);
+    document.getElementById('seconds').textContent       = pad(s);
+    document.getElementById('thread-days-text').textContent = `— ${d} days together —`;
+  }
+  update();
+  setInterval(update, 1000);
+</script>
+</body>
+</html>
