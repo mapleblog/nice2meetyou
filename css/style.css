@@ -26,7 +26,7 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     position: relative;
     overflow-x: hidden;
     background-color: var(--ocean-bg-color);
@@ -125,13 +125,27 @@ body {
 }
 
 .container {
-    max-width: 800px;
-    width: 90%;
+    max-width: 1200px;
+    width: 92%;
     margin: 50px auto 110px;
     padding: 40px;
     position: relative;
     color: white;
     z-index: 10;
+}
+
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1400px;
+        width: 88%;
+    }
+}
+
+@media (min-width: 1920px) {
+    .container {
+        max-width: 1600px;
+        width: 85%;
+    }
 }
 
 

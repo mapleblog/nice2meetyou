@@ -45,7 +45,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <!-- 添加拉丁风格字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&family=Great+Vibes&family=Pinyon+Script&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&family=Great+Vibes&family=Pinyon+Script&family=Dancing+Script:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/profile-love-letter.css">
 </head>
 <body>
     <!-- Sakura Path background -->
@@ -81,82 +82,86 @@
     <div id="sakura-petals"></div>
     
     <div class="container">
-                <div class="avatar-container">
-                    <div class="avatar" id="avatar1">
-                        <img src="img/profile1.jpg" alt="头像1" id="avatar1-img" draggable="false" class="protected-image">
-                    </div>
-                    <div class="name-display">啊康</div>
-                    <div class="profile-canvas">
-                        <div class="profile-content">
-                            <div class="profile-info">
-                                <div class="info-item">
-                                    <span class="info-icon"><i class="fas fa-birthday-cake"></i></span>
-                                    <span class="info-text">1991-02-28</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-icon"><i class="fas fa-globe-asia"></i></span>
-                                    <span class="info-text">马来西亚</span>
-                                </div>
-                            </div>
-                            <div class="profile-interests">
-                                <h4>兴趣爱好</h4>
-                                <div class="profile-tags">
-                                    <span class="tag">旅行</span>
-                                    <span class="tag">摄影</span>
-                                    <span class="tag">美食</span>
-                                </div>
-                            </div>
-                            <div class="profile-motto">
-                                <p>"生活不止眼前的苏豆和试卷”</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="heart-container">
-                    <div class="heart">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <div class="mini-heart"><i class="fas fa-heart"></i></div>
-                    <div class="mini-heart"><i class="fas fa-heart"></i></div>
-                    <div class="mini-heart"><i class="fas fa-heart"></i></div>
-                    <div class="mini-heart"><i class="fas fa-heart"></i></div>
-                </div>
-                
-                <div class="avatar-container">
-                    <div class="avatar" id="avatar2">
-                        <img src="img/profile.png" alt="头像2" id="avatar2-img" draggable="false" class="protected-image">
-                    </div>
-                    <div class="name-display">啊庄</div>
-                    <div class="profile-canvas">
-                        <div class="profile-content">
-                            <div class="profile-info">
-                                <div class="info-item">
-                                    <span class="info-icon"><i class="fas fa-birthday-cake"></i></span>
-                                    <span class="info-text">2000-01-18</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-icon"><i class="fas fa-globe-asia"></i></span>
-                                    <span class="info-text">越南</span>
-                                </div>
-                            </div>
-                            <div class="profile-interests">
-                                <h4>兴趣爱好</h4>
-                                <div class="profile-tags">
-                                    <span class="tag">音乐</span>
-                                    <span class="tag">阅读</span>
-                                    <span class="tag">电影</span>
-                                </div>
-                            </div>
-                            <div class="profile-motto">
-                                <p>"人生就像弦一样，不绕紧就弹不出美妙的音乐”</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-            <div class="save-button-container">
+        <!-- Love Letter Profile Section -->
+        <div class="envelope-scene">
+          <div class="wax-seal"><i class="fas fa-heart"></i></div>
+
+          <div class="letter-card">
+            <div class="postmark">
+              <div class="postmark-date">2025 · MAY · 05</div>
+              <div class="postmark-location">— Just Us —</div>
             </div>
+
+            <div class="letter-heading">
+              <div class="letter-date">A letter from the heart — since May 5, 2025</div>
+              <div class="letter-title">Our Story</div>
+              <div class="letter-subtitle">Two souls, two countries, one beautiful bond.</div>
+            </div>
+
+            <div class="flourish">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+            <div class="profiles-row">
+
+              <!-- Person 1 -->
+              <div class="profile-letter">
+                <div class="photo-strip">
+                  <img src="img/profile1.jpg" alt="啊康 · Dinh Khang" draggable="false" class="protected-image">
+                  <div class="tape"></div>
+                  <div class="country-stamp">Malaysia</div>
+                </div>
+                <div class="handwritten-note">
+                  <div class="note-name">Dinh Khang</div>
+                  <div class="note-birthday"><i class="fas fa-birthday-cake"></i>Feb 28, 1991 &nbsp;·&nbsp; 啊康</div>
+                  <div class="note-tags">
+                    <span class="note-tag">旅行</span>
+                    <span class="note-tag">摄影</span>
+                    <span class="note-tag">美食</span>
+                  </div>
+                  <div class="note-motto">"生活不止眼前的苏豆和试卷"</div>
+                </div>
+              </div>
+
+              <!-- Connector -->
+              <div class="ll-connector">
+                <div class="ll-connector-dot"></div>
+                <div class="ll-connector-dot"></div>
+                <div class="ll-connector-heart"><i class="fas fa-heart"></i></div>
+                <div class="ll-connector-dot"></div>
+                <div class="ll-connector-dot"></div>
+              </div>
+
+              <!-- Person 2 -->
+              <div class="profile-letter">
+                <div class="photo-strip">
+                  <img src="img/profile.png" alt="啊庄 · Thuy Trang" draggable="false" class="protected-image">
+                  <div class="tape"></div>
+                  <div class="country-stamp">Vietnam</div>
+                </div>
+                <div class="handwritten-note">
+                  <div class="note-name">Thuy Trang</div>
+                  <div class="note-birthday"><i class="fas fa-birthday-cake"></i>Jan 18, 2000 &nbsp;·&nbsp; 啊庄</div>
+                  <div class="note-tags">
+                    <span class="note-tag">音乐</span>
+                    <span class="note-tag">阅读</span>
+                    <span class="note-tag">电影</span>
+                  </div>
+                  <div class="note-motto">"人生就像弦一样，不绕紧就弹不出美妙的音乐"</div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="letter-footer">
+              <div class="letter-closing">Forever &amp; Always</div>
+              <div class="letter-closing-sub">Thuy Trang &amp; Dinh Khang &nbsp;·&nbsp; Malaysia ↔ Vietnam</div>
+              <div class="letter-signature-line"></div>
+            </div>
+
+            <div class="corner-fold"></div>
+          </div>
+        </div>
+        <!-- End Love Letter Profile Section -->
 
         <section class="counter-section">
             <div class="days-label">Days of Friendship</div>
