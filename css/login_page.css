@@ -14,14 +14,15 @@ body {
   position: fixed;
   pointer-events: none;
   opacity: 0;
+  will-change: transform, opacity;
   animation: fall var(--dur) ease-in var(--delay) infinite;
 }
 
 @keyframes fall {
-  0%   { transform: translateX(0) rotate(0deg); opacity: 0; top: -20px; }
+  0%   { transform: translateX(0) translateY(0) rotate(0deg); opacity: 0; }
   5%   { opacity: var(--op); }
   90%  { opacity: var(--op); }
-  100% { transform: translateX(var(--drift)) rotate(var(--spin)); opacity: 0; top: 108vh; }
+  100% { transform: translateX(var(--drift)) translateY(calc(108vh + 20px)) rotate(var(--spin)); opacity: 0; }
 }
 
 .container {

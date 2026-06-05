@@ -7,7 +7,8 @@
     ];
     const pinks = ['#f5a8c0','#f0c0d0','#e890b0','#fbd0de','#f2b0c8'];
     const ns = 'http://www.w3.org/2000/svg';
-    for (let i = 0; i < 55; i++) {
+    const count = window.matchMedia('(max-width: 768px)').matches ? 25 : 55;
+    for (let i = 0; i < count; i++) {
         const svg = document.createElementNS(ns, 'svg');
         const size = Math.random() * 14 + 7;
         svg.setAttribute('viewBox', '-2 -2 18 18');

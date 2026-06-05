@@ -31,20 +31,15 @@
     <link rel="stylesheet" href="css/message-form.css">
     <link rel="stylesheet" href="css/mood-diary.css">
     <link rel="stylesheet" href="css/wishlist.css">
-    <link rel="stylesheet" href="css/ocean-effect.css">
     <link rel="stylesheet" href="css/image-protection.css">
     <link rel="stylesheet" href="css/mobile-optimization.css">
     <link rel="stylesheet" href="css/profile-redesign.css">
     <link rel="stylesheet" href="css/love-effects.css">
     <link rel="stylesheet" href="css/love-tree.css">
-    <link rel="stylesheet" href="css/stars-background.css">
-    <link rel="stylesheet" href="css/heart-effects.css">
     <link rel="stylesheet" href="css/feature-tabs-custom.css">
     <link rel="stylesheet" href="css/sakura-bg.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
-    <!-- 添加拉丁风格字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&family=Great+Vibes&family=Pinyon+Script&family=Dancing+Script:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Tangerine:wght@400;700&family=Great+Vibes&family=Pinyon+Script&family=Dancing+Script:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/profile-love-letter.css">
 </head>
 <body>
@@ -105,7 +100,7 @@
               <!-- Person 1 -->
               <div class="profile-letter">
                 <div class="photo-strip">
-                  <img src="img/profile1.jpg" alt="啊康 · Dinh Khang" draggable="false" class="protected-image">
+                  <img src="img/profile1.jpg" alt="啊康 · Dinh Khang" draggable="false" class="protected-image" loading="lazy" decoding="async">
                   <div class="tape"></div>
                   <div class="country-stamp">Malaysia</div>
                 </div>
@@ -133,7 +128,7 @@
               <!-- Person 2 -->
               <div class="profile-letter">
                 <div class="photo-strip">
-                  <img src="img/profile.png" alt="啊庄 · Thuy Trang" draggable="false" class="protected-image">
+                  <img src="img/profile.png" alt="啊庄 · Thuy Trang" draggable="false" class="protected-image" loading="lazy" decoding="async">
                   <div class="tape"></div>
                   <div class="country-stamp">Vietnam</div>
                 </div>
@@ -398,13 +393,9 @@
           <span class="bbar-vol-ic">🔊</span>
         </div>
       </div>
-      <audio id="audio-player" preload="auto"></audio>
+      <audio id="audio-player" preload="none"></audio>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha384-d+vyQ0dYcymoP8ndq2hW7FGC50nqGdXUEgoOUGxbbkAJwZqL7h+jKN0GGgn9hFDS" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js" integrity="sha384-d+UOwmNNIC7V4izkTAKSXzWhjC2GxiS9PTykO1XdOPC3nc2z65UOS7SP6QdKPA70" crossorigin="anonymous"></script>
-    <script src="js/stars-background.js"></script>
-    <script src="js/heart-effects.js"></script>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js" integrity="sha384-v3Z/Xdw1sCeo6M/geW7sn1Lt9obIm7MhAk8laVV+rvYFmzuWDELOiygx7dVte2dX" crossorigin="anonymous"></script>
@@ -419,8 +410,6 @@
     <script src="js/mood-diary.js"></script>
     <script src="js/image-protection.js"></script>
     <script src="js/wishlist.js"></script>
-    <script src="js/ocean-effect.js"></script>
-
     <script src="js/sakura-petals.js"></script>
 </body>
 </html>
