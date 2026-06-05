@@ -32,29 +32,58 @@
   background: rgba(255,150,200,0.25);
 }
 
-/* Outer paper card — matches .letter-card */
+/* Outer paper card — V2 Aged Parchment */
 .ann-card {
-  background: #fdf6e8;
-  border-radius: 4px;
-  padding: 40px 40px 36px;
-  box-shadow:
-    0 20px 60px rgba(0,0,0,0.5),
-    0 4px 12px rgba(0,0,0,0.3),
-    inset 0 0 80px rgba(200,160,80,0.08);
+  border-radius: 2px;
+  padding: 48px 48px 40px;
   position: relative;
+  background:
+    radial-gradient(ellipse 60px 55px at 88% 8%, rgba(140,90,30,0.12) 60%, transparent 100%),
+    radial-gradient(circle 12px at 15% 70%, rgba(160,110,50,0.1) 0%, transparent 100%),
+    radial-gradient(circle 8px at 75% 85%, rgba(140,90,30,0.09) 0%, transparent 100%),
+    radial-gradient(circle 18px at 5% 30%, rgba(130,80,20,0.08) 0%, transparent 100%),
+    linear-gradient(168deg,
+      #f0e6c8 0%,
+      #ecddb8 18%,
+      #f2e8cc 35%,
+      #e8d8a8 55%,
+      #eedfc0 72%,
+      #e4d4a0 88%,
+      #ecddb8 100%
+    );
+  box-shadow:
+    0 25px 70px rgba(0,0,0,0.65),
+    0 6px 18px rgba(0,0,0,0.4),
+    inset 0 0 60px rgba(100,60,10,0.12),
+    inset 0 0 120px rgba(80,40,5,0.06);
 }
-/* Aged paper lines */
+/* Worn corner overlays */
+.ann-card-corner {
+  position: absolute;
+  width: 60px; height: 60px;
+  pointer-events: none;
+}
+.ann-card-corner-tl {
+  top: 0; left: 0;
+  background: radial-gradient(circle at 0% 0%, rgba(80,40,5,0.15) 0%, transparent 70%);
+}
+.ann-card-corner-br {
+  bottom: 0; right: 0;
+  background: radial-gradient(circle at 100% 100%, rgba(80,40,5,0.12) 0%, transparent 70%);
+}
+/* Horizontal ruled lines */
 .ann-card::before {
   content: '';
   position: absolute;
   inset: 0;
+  border-radius: 2px;
   background-image: repeating-linear-gradient(
     transparent,
     transparent 31px,
-    rgba(180,140,80,0.12) 31px,
-    rgba(180,140,80,0.12) 32px
+    rgba(150,110,50,0.14) 31px,
+    rgba(150,110,50,0.14) 32px
   );
-  background-position: 0 48px;
+  background-position: 0 56px;
   pointer-events: none;
 }
 /* Left red margin line */
@@ -62,9 +91,15 @@
   content: '';
   position: absolute;
   top: 0; bottom: 0;
-  left: 68px;
+  left: 72px;
   width: 1px;
-  background: rgba(200,80,80,0.25);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(180,60,60,0.3) 5%,
+    rgba(180,60,60,0.28) 95%,
+    transparent 100%
+  );
 }
 
 /* Postmark */
@@ -72,22 +107,23 @@
   position: absolute;
   top: 20px; right: 30px;
   text-align: center;
-  border: 2px solid rgba(180,80,40,0.5);
-  border-radius: 4px;
+  border: 2px solid rgba(160,70,30,0.45);
+  border-radius: 3px;
   padding: 6px 12px;
   transform: rotate(6deg);
   z-index: 1;
+  background: rgba(160,70,30,0.04);
 }
 .ann-postmark-date {
   font-size: 0.62rem;
-  color: rgba(180,80,40,0.7);
+  color: rgba(160,70,30,0.7);
   letter-spacing: 1px;
   font-family: 'Courier New', monospace;
   font-weight: 700;
 }
 .ann-postmark-location {
   font-size: 0.58rem;
-  color: rgba(180,80,40,0.6);
+  color: rgba(160,70,30,0.55);
   font-family: 'Courier New', monospace;
   letter-spacing: 0.5px;
 }
@@ -102,28 +138,28 @@
 .ann-heading-sub {
   font-family: 'Lora', serif;
   font-size: 0.76rem;
-  color: #8a7050;
+  color: #7a6040;
   letter-spacing: 1px;
   margin-bottom: 8px;
 }
 .ann-heading-title {
   font-family: 'Pinyon Script', cursive;
   font-size: 2.8rem;
-  color: #5c3010;
+  color: #4a2808;
   line-height: 1;
   margin-bottom: 6px;
 }
 .ann-heading-desc {
   font-family: 'Lora', serif;
   font-size: 0.78rem;
-  color: #9a8060;
+  color: #8a7050;
   font-style: italic;
 }
 
 /* Divider */
 .ann-flourish {
   text-align: center;
-  color: rgba(192,144,80,0.5);
+  color: rgba(160,120,50,0.5);
   font-size: 1rem;
   letter-spacing: 8px;
   margin: 0 0 24px;
@@ -315,14 +351,14 @@
   position: relative;
   z-index: 1;
   text-align: center;
-  border-top: 1px solid rgba(180,140,80,0.2);
+  border-top: 1px solid rgba(160,120,50,0.2);
   padding-top: 22px;
 }
 .ann-countdown-label {
   font-family: 'Lora', serif;
   font-size: 0.72rem;
   font-style: italic;
-  color: #8a7050;
+  color: #7a6040;
   margin-bottom: 14px;
   letter-spacing: 0.5px;
 }
@@ -334,16 +370,16 @@
 }
 .ann-cd-box {
   text-align: center;
-  background: rgba(200,160,80,0.08);
-  border: 1px solid rgba(180,140,80,0.2);
-  border-radius: 6px;
+  background: rgba(180,140,60,0.07);
+  border: 1px solid rgba(160,120,50,0.2);
+  border-radius: 4px;
   padding: 10px 14px;
   min-width: 62px;
 }
 .ann-cd-num {
   font-family: 'Dancing Script', cursive;
   font-size: 1.7rem;
-  color: #5c3010;
+  color: #4a2808;
   line-height: 1;
 }
 .ann-cd-unit {
@@ -351,7 +387,7 @@
   font-size: 0.52rem;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #9a8060;
+  color: #8a7050;
   margin-top: 3px;
 }
 
@@ -473,14 +509,14 @@
   width: 0; height: 0;
   border-style: solid;
   border-width: 0 0 28px 28px;
-  border-color: transparent transparent #e8d8b0 transparent;
-  filter: drop-shadow(-2px -2px 3px rgba(0,0,0,0.08));
+  border-color: transparent transparent #d8c890 transparent;
+  filter: drop-shadow(-2px -2px 3px rgba(0,0,0,0.1));
 }
 
 /* Mobile */
 @media (max-width: 600px) {
   .ann-card { padding: 36px 18px 28px; }
-  .ann-card::after { left: 40px; }
+  .ann-card::after { left: 44px; }
   .ann-envelope, .ann-env-body { width: 280px; }
   .ann-flap {
     border-left-width: 140px;

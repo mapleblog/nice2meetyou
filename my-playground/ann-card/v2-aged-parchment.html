@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ann-Card V2 — Aged Parchment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Dancing+Script:wght@400;700&family=Lora:ital,wght@0,400;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #2c1a0e;
+      background-image:
+        radial-gradient(ellipse at 20% 10%, rgba(80,40,10,0.8) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 90%, rgba(60,20,5,0.7) 0%, transparent 55%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      font-family: 'Lora', serif;
+    }
+
+    .design-label { font-family: 'Lora', serif; font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase; color: rgba(200,160,80,0.45); margin-bottom: 8px; }
+    .design-title { font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: rgba(220,180,100,0.6); margin-bottom: 32px; }
+
+    /* ── ANN-CARD V2: Aged Parchment ── */
+    .ann-card {
+      max-width: 580px; width: 100%;
+      border-radius: 2px; padding: 48px 48px 40px; position: relative;
+      background:
+        radial-gradient(ellipse 60px 55px at 88% 8%, rgba(140,90,30,0.12) 60%, transparent 100%),
+        radial-gradient(circle 12px at 15% 70%, rgba(160,110,50,0.1) 0%, transparent 100%),
+        radial-gradient(circle 8px at 75% 85%, rgba(140,90,30,0.09) 0%, transparent 100%),
+        radial-gradient(circle 18px at 5% 30%, rgba(130,80,20,0.08) 0%, transparent 100%),
+        linear-gradient(168deg, #f0e6c8 0%, #ecddb8 18%, #f2e8cc 35%, #e8d8a8 55%, #eedfc0 72%, #e4d4a0 88%, #ecddb8 100%);
+      box-shadow:
+        0 25px 70px rgba(0,0,0,0.65),
+        0 6px 18px rgba(0,0,0,0.4),
+        inset 0 0 60px rgba(100,60,10,0.12),
+        inset 0 0 120px rgba(80,40,5,0.06);
+    }
+    .ann-card::before {
+      content: '';
+      position: absolute; inset: 0; border-radius: 2px;
+      background-image: repeating-linear-gradient(transparent, transparent 31px, rgba(150,110,50,0.14) 31px, rgba(150,110,50,0.14) 32px);
+      background-position: 0 56px;
+      pointer-events: none;
+    }
+    .ann-card::after {
+      content: '';
+      position: absolute; top: 0; bottom: 0; left: 72px; width: 1px;
+      background: linear-gradient(to bottom, transparent 0%, rgba(180,60,60,0.3) 5%, rgba(180,60,60,0.28) 95%, transparent 100%);
+    }
+    .ann-card-corner { position: absolute; width: 60px; height: 60px; pointer-events: none; }
+    .ann-card-corner-tl { top: 0; left: 0; background: radial-gradient(circle at 0% 0%, rgba(80,40,5,0.15) 0%, transparent 70%); }
+    .ann-card-corner-br { bottom: 0; right: 0; background: radial-gradient(circle at 100% 100%, rgba(80,40,5,0.12) 0%, transparent 70%); }
+
+    .ann-postmark { position: absolute; top: 20px; right: 28px; text-align: center; border: 2px solid rgba(160,70,30,0.45); border-radius: 3px; padding: 6px 12px; transform: rotate(6deg); z-index: 1; background: rgba(160,70,30,0.04); }
+    .ann-postmark-date { font-size: 0.62rem; color: rgba(160,70,30,0.7); letter-spacing: 1px; font-family: 'Courier New', monospace; font-weight: 700; }
+    .ann-postmark-location { font-size: 0.58rem; color: rgba(160,70,30,0.55); font-family: 'Courier New', monospace; letter-spacing: 0.5px; }
+
+    .ann-heading { text-align: center; margin-bottom: 28px; position: relative; z-index: 1; }
+    .ann-heading-sub { font-family: 'Lora', serif; font-size: 0.76rem; color: #7a6040; letter-spacing: 1px; margin-bottom: 8px; }
+    .ann-heading-title { font-family: 'Pinyon Script', cursive; font-size: 2.8rem; color: #4a2808; line-height: 1; margin-bottom: 6px; }
+    .ann-heading-desc { font-family: 'Lora', serif; font-size: 0.78rem; color: #8a7050; font-style: italic; }
+
+    .ann-flourish { text-align: center; color: rgba(160,120,50,0.5); font-size: 1rem; letter-spacing: 8px; margin: 0 0 24px; position: relative; z-index: 1; }
+
+    .ann-envelope-wrap { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; margin-bottom: 28px; }
+    .ann-envelope { position: relative; width: 320px; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
+    .ann-env-body { width: 320px; height: 195px; background: linear-gradient(145deg, #f5e8c8, #e8d4a8); border-radius: 4px; border: 1px solid rgba(180,140,80,0.4); position: relative; overflow: hidden; box-shadow: 3px 6px 20px rgba(0,0,0,0.25), inset 0 0 30px rgba(200,160,80,0.08); transition: box-shadow 0.3s; }
+    .ann-envelope:hover .ann-env-body { box-shadow: 4px 8px 28px rgba(0,0,0,0.3), inset 0 0 30px rgba(200,160,80,0.1); }
+    .ann-flap { position: absolute; top: 0; left: 0; right: 0; height: 0; border-left: 160px solid transparent; border-right: 160px solid transparent; border-top: 95px solid #dcc88a; transform-origin: top center; transition: transform 0.7s cubic-bezier(0.4,0,0.2,1), opacity 0.3s; z-index: 4; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+    .ann-envelope.open .ann-flap { transform: rotateX(180deg); }
+    .ann-env-bl { position: absolute; bottom: 0; left: 0; width: 0; height: 0; border-bottom: 105px solid #d4bc82; border-right: 160px solid transparent; z-index: 1; }
+    .ann-env-br { position: absolute; bottom: 0; right: 0; width: 0; height: 0; border-bottom: 105px solid #c8b074; border-left: 160px solid transparent; z-index: 1; }
+    .ann-wax-seal { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 48px; height: 48px; background: radial-gradient(circle at 38% 35%, #c0392b, #7b0e0e); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #f5c6c0; font-size: 1.1rem; box-shadow: 0 3px 12px rgba(0,0,0,0.4), inset 0 -2px 4px rgba(0,0,0,0.3); z-index: 5; transition: opacity 0.4s 0.1s, transform 0.4s 0.1s; }
+    .ann-wax-seal::before { content: ''; position: absolute; inset: -3px; border-radius: 50%; border: 1px dashed rgba(192,57,43,0.4); }
+    .ann-envelope.open .ann-wax-seal { opacity: 0; transform: translate(-50%,-50%) scale(0.4); pointer-events: none; }
+    .ann-tap-hint { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font-family: 'Lora', serif; font-size: 0.66rem; font-style: italic; color: rgba(120,80,40,0.45); animation: hintPulse 2.5s ease-in-out infinite; z-index: 5; transition: opacity 0.3s; }
+    .ann-envelope.open .ann-tap-hint { opacity: 0; pointer-events: none; }
+    @keyframes hintPulse { 0%,100%{opacity:0.45;} 50%{opacity:0.75;} }
+
+    .ann-letter { width: 320px; background: #fef9f0; border-radius: 3px; border: 1px solid rgba(180,140,80,0.25); padding: 20px 18px 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); max-height: 0; overflow: hidden; opacity: 0; pointer-events: none; transition: max-height 0.7s 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.5s 0.5s ease, padding 0.4s ease; padding-top: 0; padding-bottom: 0; }
+    .ann-envelope.open + .ann-letter { max-height: 400px; opacity: 1; pointer-events: auto; padding-top: 20px; padding-bottom: 16px; }
+    .ann-letter-date { font-family: 'Courier New', monospace; font-size: 0.58rem; color: rgba(180,80,40,0.65); letter-spacing: 1px; margin-bottom: 10px; }
+    .ann-letter-salutation { font-family: 'Pinyon Script', cursive; font-size: 1.5rem; color: #7a2040; margin-bottom: 8px; line-height: 1.2; }
+    .ann-letter-body { font-family: 'Lora', serif; font-size: 0.78rem; line-height: 1.75; color: #5a3040; font-style: italic; margin-bottom: 12px; }
+    .ann-letter-sign { font-family: 'Pinyon Script', cursive; font-size: 1.15rem; color: #a04060; text-align: right; }
+
+    .ann-countdown { position: relative; z-index: 1; text-align: center; border-top: 1px solid rgba(160,120,50,0.2); padding-top: 22px; }
+    .ann-countdown-label { font-family: 'Lora', serif; font-size: 0.72rem; font-style: italic; color: #7a6040; margin-bottom: 14px; letter-spacing: 0.5px; }
+    .ann-countdown-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .ann-cd-box { text-align: center; background: rgba(180,140,60,0.07); border: 1px solid rgba(160,120,50,0.2); border-radius: 4px; padding: 10px 14px; min-width: 62px; }
+    .ann-cd-num { font-family: 'Dancing Script', cursive; font-size: 1.7rem; color: #4a2808; line-height: 1; }
+    .ann-cd-unit { font-family: 'Lora', serif; font-size: 0.52rem; letter-spacing: 2px; text-transform: uppercase; color: #8a7050; margin-top: 3px; }
+
+    .ann-corner-fold { position: absolute; bottom: 0; right: 0; width: 0; height: 0; border-style: solid; border-width: 0 0 28px 28px; border-color: transparent transparent #d8c890 transparent; filter: drop-shadow(-2px -2px 3px rgba(0,0,0,0.1)); }
+  </style>
+</head>
+<body>
+  <div class="design-label">Ann-Card Playground · V2</div>
+  <div class="design-title">Aged Parchment</div>
+
+  <div class="ann-card">
+    <div class="ann-card-corner ann-card-corner-tl"></div>
+    <div class="ann-card-corner ann-card-corner-br"></div>
+    <div class="ann-postmark">
+      <div class="ann-postmark-date">2026年 · 六月 · 6日</div>
+      <div class="ann-postmark-location">— 1 年 —</div>
+    </div>
+    <div class="ann-heading">
+      <div class="ann-heading-sub">我们的第一个纪念日</div>
+      <div class="ann-heading-title">给我们的信</div>
+      <div class="ann-heading-desc">A letter written from the heart — tap to open</div>
+    </div>
+    <div class="ann-flourish">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <div class="ann-envelope-wrap">
+      <div class="ann-envelope" onclick="this.classList.toggle('open')">
+        <div class="ann-env-body">
+          <div class="ann-flap"></div>
+          <div class="ann-env-bl"></div>
+          <div class="ann-env-br"></div>
+          <div class="ann-wax-seal"><i class="fas fa-heart"></i></div>
+          <div class="ann-tap-hint">— tap to open —</div>
+        </div>
+      </div>
+      <div class="ann-letter">
+        <div class="ann-letter-date">June 06, 2026 · 已经在一起一年</div>
+        <div class="ann-letter-salutation">挚爱地 阿庄,</div>
+        <div class="ann-letter-body">一年前，你成为我每天最美的一部分。<br>隔着我们之间每一英里的海洋，我都觉得你离我更近了<br>比任何东西。谢谢你的每一个早上，每一个深夜，</div>
+        <div class="ann-letter-sign">Yours, 阿康 ♡</div>
+      </div>
+    </div>
+    <div class="ann-countdown">
+      <div class="ann-countdown-label">Counting down to our next anniversary · May 5</div>
+      <div class="ann-countdown-row">
+        <div class="ann-cd-box"><div class="ann-cd-num" id="d">--</div><div class="ann-cd-unit">Days</div></div>
+        <div class="ann-cd-box"><div class="ann-cd-num" id="h">--</div><div class="ann-cd-unit">Hours</div></div>
+        <div class="ann-cd-box"><div class="ann-cd-num" id="m">--</div><div class="ann-cd-unit">Mins</div></div>
+        <div class="ann-cd-box"><div class="ann-cd-num" id="s">--</div><div class="ann-cd-unit">Secs</div></div>
+      </div>
+    </div>
+    <div class="ann-corner-fold"></div>
+  </div>
+
+  <script>
+    function tick() {
+      const diff = new Date('2027-05-05T00:00:00') - new Date();
+      if (diff <= 0) return;
+      document.getElementById('d').textContent = Math.floor(diff / 86400000);
+      document.getElementById('h').textContent = Math.floor(diff / 3600000) % 24;
+      document.getElementById('m').textContent = Math.floor(diff / 60000) % 60;
+      document.getElementById('s').textContent = Math.floor(diff / 1000) % 60;
+    }
+    tick(); setInterval(tick, 1000);
+  </script>
+</body>
+</html>

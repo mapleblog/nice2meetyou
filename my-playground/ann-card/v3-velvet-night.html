@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ann-Card V3 — Velvet Night</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Dancing+Script:wght@400;700&family=Lora:ital,wght@0,400;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #0b0812;
+      background-image:
+        radial-gradient(ellipse at 50% 0%, #1a0b2e 0%, transparent 60%),
+        radial-gradient(ellipse at 0% 100%, #0e0820 0%, transparent 50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      font-family: 'Lora', serif;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stars { position: fixed; inset: 0; pointer-events: none; }
+    .star { position: absolute; border-radius: 50%; background: white; animation: twinkle var(--d) ease-in-out infinite alternate; }
+    @keyframes twinkle { to { opacity: 0.05; } }
+
+    .mote { position: fixed; width: 2px; height: 2px; border-radius: 50%; background: rgba(220,180,80,0.7); animation: floatMote var(--d) var(--delay) ease-in-out infinite; pointer-events: none; }
+    @keyframes floatMote { 0%{transform:translate(0,0) scale(1);opacity:0;} 20%{opacity:0.8;} 80%{opacity:0.3;} 100%{transform:translate(var(--dx),var(--dy)) scale(0.3);opacity:0;} }
+
+    .design-label { font-family: 'Lora', serif; font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,200,150,0.4); margin-bottom: 8px; position: relative; z-index: 1; }
+    .design-title { font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: rgba(255,210,160,0.55); margin-bottom: 32px; position: relative; z-index: 1; }
+
+    /* ── ANN-CARD V3: Velvet Night ── */
+    .ann-card {
+      max-width: 580px; width: 100%;
+      border-radius: 12px; padding: 40px 40px 36px; position: relative; z-index: 1;
+      background:
+        radial-gradient(ellipse 80% 45% at 50% 0%, rgba(200,140,60,0.18) 0%, transparent 100%),
+        radial-gradient(ellipse 100% 50% at 50% 110%, rgba(120,30,60,0.25) 0%, transparent 100%),
+        linear-gradient(160deg, #1c0a24 0%, #160820 25%, #12061a 50%, #180a20 75%, #1a0c22 100%);
+      border: 1px solid rgba(200,150,80,0.15);
+      box-shadow:
+        0 30px 80px rgba(0,0,0,0.8),
+        0 8px 24px rgba(0,0,0,0.5),
+        0 0 0 1px rgba(200,150,60,0.08),
+        inset 0 1px 0 rgba(220,170,90,0.12),
+        inset 0 0 80px rgba(150,80,200,0.04);
+    }
+    .ann-card::before {
+      content: '';
+      position: absolute; inset: 0; border-radius: 12px;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.008) 3px, rgba(255,255,255,0.008) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255,255,255,0.005) 3px, rgba(255,255,255,0.005) 4px);
+      pointer-events: none;
+    }
+    .ann-card::after { content: ''; position: absolute; inset: 8px; border-radius: 8px; border: 1px solid rgba(200,150,60,0.08); pointer-events: none; }
+
+    .ann-postmark { position: absolute; top: 20px; right: 28px; text-align: center; border: 1.5px solid rgba(200,150,60,0.35); border-radius: 3px; padding: 6px 12px; transform: rotate(6deg); z-index: 1; }
+    .ann-postmark-date { font-size: 0.62rem; color: rgba(200,160,80,0.7); letter-spacing: 1px; font-family: 'Courier New', monospace; font-weight: 700; }
+    .ann-postmark-location { font-size: 0.58rem; color: rgba(200,160,80,0.55); font-family: 'Courier New', monospace; letter-spacing: 0.5px; }
+
+    .ann-heading { text-align: center; margin-bottom: 28px; position: relative; z-index: 1; }
+    .ann-heading-sub { font-family: 'Lora', serif; font-size: 0.76rem; color: rgba(200,160,100,0.6); letter-spacing: 1px; margin-bottom: 8px; }
+    .ann-heading-title { font-family: 'Pinyon Script', cursive; font-size: 2.8rem; color: #e8c88a; line-height: 1; margin-bottom: 6px; text-shadow: 0 0 40px rgba(200,150,60,0.35), 0 0 80px rgba(200,150,60,0.15); }
+    .ann-heading-desc { font-family: 'Lora', serif; font-size: 0.78rem; color: rgba(180,140,90,0.55); font-style: italic; }
+
+    .ann-flourish { text-align: center; color: rgba(200,150,60,0.35); font-size: 1rem; letter-spacing: 8px; margin: 0 0 24px; position: relative; z-index: 1; }
+
+    .ann-envelope-wrap { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; margin-bottom: 28px; }
+    .ann-envelope { position: relative; width: 320px; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
+    .ann-env-body { width: 320px; height: 195px; background: linear-gradient(145deg, rgba(60,30,80,0.9), rgba(40,18,60,0.95)); border-radius: 6px; border: 1px solid rgba(200,150,60,0.2); position: relative; overflow: hidden; box-shadow: 3px 6px 24px rgba(0,0,0,0.5), inset 0 0 30px rgba(120,60,160,0.08); transition: box-shadow 0.3s, border-color 0.3s; }
+    .ann-envelope:hover .ann-env-body { box-shadow: 4px 8px 32px rgba(0,0,0,0.6), inset 0 0 30px rgba(200,150,60,0.06); border-color: rgba(200,150,60,0.3); }
+    .ann-flap { position: absolute; top: 0; left: 0; right: 0; height: 0; border-left: 160px solid transparent; border-right: 160px solid transparent; border-top: 95px solid rgba(50,25,70,0.95); transform-origin: top center; transition: transform 0.7s cubic-bezier(0.4,0,0.2,1), opacity 0.3s; z-index: 4; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4)); }
+    .ann-envelope.open .ann-flap { transform: rotateX(180deg); }
+    .ann-env-bl { position: absolute; bottom: 0; left: 0; width: 0; height: 0; border-bottom: 105px solid rgba(40,20,60,0.95); border-right: 160px solid transparent; z-index: 1; }
+    .ann-env-br { position: absolute; bottom: 0; right: 0; width: 0; height: 0; border-bottom: 105px solid rgba(35,15,55,0.95); border-left: 160px solid transparent; z-index: 1; }
+    .ann-wax-seal { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 48px; height: 48px; background: radial-gradient(circle at 38% 35%, #c0392b, #7b0e0e); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #f5c6c0; font-size: 1.1rem; box-shadow: 0 3px 12px rgba(0,0,0,0.5), 0 0 20px rgba(180,40,40,0.2), inset 0 -2px 4px rgba(0,0,0,0.3); z-index: 5; transition: opacity 0.4s 0.1s, transform 0.4s 0.1s; }
+    .ann-wax-seal::before { content: ''; position: absolute; inset: -3px; border-radius: 50%; border: 1px dashed rgba(192,57,43,0.4); }
+    .ann-envelope.open .ann-wax-seal { opacity: 0; transform: translate(-50%,-50%) scale(0.4); pointer-events: none; }
+    .ann-tap-hint { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font-family: 'Lora', serif; font-size: 0.66rem; font-style: italic; color: rgba(200,160,80,0.4); animation: hintPulse 2.5s ease-in-out infinite; z-index: 5; transition: opacity 0.3s; }
+    .ann-envelope.open .ann-tap-hint { opacity: 0; pointer-events: none; }
+    @keyframes hintPulse { 0%,100%{opacity:0.4;} 50%{opacity:0.75;} }
+
+    .ann-letter { width: 320px; background: linear-gradient(160deg, rgba(28,12,40,0.98), rgba(20,8,32,0.98)); border: 1px solid rgba(200,150,60,0.15); border-radius: 4px; padding: 20px 18px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); max-height: 0; overflow: hidden; opacity: 0; pointer-events: none; transition: max-height 0.7s 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.5s 0.5s ease, padding 0.4s ease; padding-top: 0; padding-bottom: 0; }
+    .ann-envelope.open + .ann-letter { max-height: 400px; opacity: 1; pointer-events: auto; padding-top: 20px; padding-bottom: 16px; }
+    .ann-letter-date { font-family: 'Courier New', monospace; font-size: 0.58rem; color: rgba(200,160,80,0.55); letter-spacing: 1px; margin-bottom: 10px; }
+    .ann-letter-salutation { font-family: 'Pinyon Script', cursive; font-size: 1.5rem; color: rgba(220,180,120,0.9); margin-bottom: 8px; line-height: 1.2; }
+    .ann-letter-body { font-family: 'Lora', serif; font-size: 0.78rem; line-height: 1.75; color: rgba(200,170,130,0.75); font-style: italic; margin-bottom: 12px; }
+    .ann-letter-sign { font-family: 'Pinyon Script', cursive; font-size: 1.15rem; color: rgba(220,160,100,0.85); text-align: right; }
+
+    .ann-countdown { position: relative; z-index: 1; text-align: center; border-top: 1px solid rgba(200,150,60,0.1); padding-top: 22px; }
+    .ann-countdown-label { font-family: 'Lora', serif; font-size: 0.72rem; font-style: italic; color: rgba(180,140,80,0.55); margin-bottom: 14px; letter-spacing: 0.5px; }
+    .ann-countdown-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .ann-cd-box { text-align: center; background: rgba(200,150,60,0.05); border: 1px solid rgba(200,150,60,0.12); border-radius: 8px; padding: 10px 14px; min-width: 62px; }
+    .ann-cd-num { font-family: 'Dancing Script', cursive; font-size: 1.7rem; color: #d4a860; line-height: 1; }
+    .ann-cd-unit { font-family: 'Lora', serif; font-size: 0.52rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(180,140,80,0.5); margin-top: 3px; }
+
+    .ann-corner-fold { position: absolute; bottom: 0; right: 0; width: 0; height: 0; border-style: solid; border-width: 0 0 28px 28px; border-color: transparent transparent rgba(200,150,60,0.12) transparent; }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <div class="design-label">Ann-Card Playground · V3</div>
+  <div class="design-title">Velvet Night</div>
+
+  <div class="ann-card">
+    <div class="ann-postmark">
+      <div class="ann-postmark-date">2026年 · 六月 · 6日</div>
+      <div class="ann-postmark-location">— 1 年 —</div>
+    </div>
+    <div class="ann-heading">
+      <div class="ann-heading-sub">我们的第一个纪念日</div>
+      <div class="ann-heading-title">给我们的信</div>
+      <div class="ann-heading-desc">A letter written from the heart — tap to open</div>
+    </div>
+    <div class="ann-flourish">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <div class="ann-envelope-wrap">
+      <div class="ann-envelope" onclick="this.classList.toggle('open')">
+        <div class="ann-env-body">
+          <div class="ann-flap"></div>
+          <div class="ann-env-bl"></div>
+          <div class="ann-env-br"></div>
+          <div class="ann-wax-seal"><i class="fas fa-heart"></i></div>
+          <div class="ann-tap-hint">— tap to open —</div>
+        </div>
+      </div>
+      <div class="ann-letter">
+        <div class="ann-letter-date">June 06, 2026 · 已经在一起一年</div>
+        <div class="ann-letter-salutation">挚爱地 阿庄,</div>
+        <div class="ann-letter-body">一年前，你成为我每天最美的一部分。<br>隔着我们之间每一英里的海洋，我都觉得你离我更近了<br>比任何东西。谢谢你的每一个早上，每一个深夜，</div>
+        <div class="ann-letter-sign">Yours, 阿康 ♡</div>
+      </div>
+    </div>
+    <div class="ann-countdown">
+      <div class="ann-countdown-label">Counting down to our next anniversary · May 5</div>
+      <div class="ann-countdown-row">
+        <div class="ann-cd-box"><div class="ann-cd-num" id="d">--</div><div class="ann-cd-unit">Days</div></div>
+        <div class="ann-cd-box"><div class="ann-cd-num" id="h">--</div><div class="ann-cd-unit">Hours</div></div>
+        <div class="ann-cd-box"><div class="ann-cd-num" id="m">--</div><div class="ann-cd-unit">Mins</div></div>
+        <div class="ann-cd-box"><div class="ann-cd-num" id="s">--</div><div class="ann-cd-unit">Secs</div></div>
+      </div>
+    </div>
+    <div class="ann-corner-fold"></div>
+  </div>
+
+  <script>
+    const sc = document.getElementById('stars');
+    for (let i = 0; i < 80; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = 0.5 + Math.random() * 1.5;
+      s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;opacity:${0.1+Math.random()*0.5};--d:${2+Math.random()*5}s`;
+      sc.appendChild(s);
+    }
+    for (let i = 0; i < 20; i++) {
+      const m = document.createElement('div');
+      m.className = 'mote';
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 30 + Math.random() * 80;
+      m.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${4+Math.random()*8}s;--delay:${Math.random()*6}s;--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist}px`;
+      document.body.appendChild(m);
+    }
+    function tick() {
+      const diff = new Date('2027-05-05T00:00:00') - new Date();
+      if (diff <= 0) return;
+      document.getElementById('d').textContent = Math.floor(diff / 86400000);
+      document.getElementById('h').textContent = Math.floor(diff / 3600000) % 24;
+      document.getElementById('m').textContent = Math.floor(diff / 60000) % 60;
+      document.getElementById('s').textContent = Math.floor(diff / 1000) % 60;
+    }
+    tick(); setInterval(tick, 1000);
+  </script>
+</body>
+</html>

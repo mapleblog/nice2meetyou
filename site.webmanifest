@@ -1,7 +1,7 @@
 {
-  "name": "Friendship Counter",
-  "short_name": "Friendship",
-  "description": "A beautiful counter for your special friendship",
+  "name": "Just Us",
+  "short_name": "Just Us",
+  "description": "A love page for just the two of us",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
