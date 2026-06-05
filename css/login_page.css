@@ -12,19 +12,16 @@ body {
 
 .petal {
   position: fixed;
-  top: -40px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50% 0 50% 0;
-  opacity: 0.8;
-  animation: fall linear infinite;
   pointer-events: none;
+  opacity: 0;
+  animation: fall var(--dur) ease-in var(--delay) infinite;
 }
 
 @keyframes fall {
-  0%   { transform: translateY(0)    rotate(0deg)   translateX(0);    opacity: 0.9; }
-  50%  { transform: translateY(50vh) rotate(180deg) translateX(40px); }
-  100% { transform: translateY(110vh) rotate(360deg) translateX(-20px); opacity: 0; }
+  0%   { transform: translateX(0) rotate(0deg); opacity: 0; top: -20px; }
+  5%   { opacity: var(--op); }
+  90%  { opacity: var(--op); }
+  100% { transform: translateX(var(--drift)) rotate(var(--spin)); opacity: 0; top: 108vh; }
 }
 
 .container {

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 1 — Blossom Pills</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #1a0a2e 0%, #3d1a5c 35%, #7a2d6b 65%, #c45e82 100%);
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px 80px;
+  }
+
+  /* Label badge */
+  .design-label {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    z-index: 100;
+  }
+
+  /* Main section card */
+  .features-section {
+    width: 100%;
+    max-width: 480px;
+    background: rgba(0, 0, 0, 0.28);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 420px;
+  }
+
+  /* Content panels */
+  .feature-content {
+    display: none;
+    padding: 24px 20px 20px;
+    flex: 1;
+    animation: fadeUp 0.35s ease;
+  }
+  .feature-content.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .content-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .content-title i { color: #f472b6; }
+
+  .mock-input {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.85rem;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .mock-textarea {
+    height: 70px;
+    resize: none;
+  }
+  .mock-btn {
+    background: linear-gradient(135deg, #c45e82, #f472b6);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 22px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .mock-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .mock-card {
+    background: rgba(255,255,255,0.07);
+    border-left: 3px solid #f472b6;
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.75);
+  }
+  .mock-card strong { color: #f9a8d4; display: block; margin-bottom: 3px; font-size: 0.78rem; }
+
+  /* ─── DESIGN 1: BLOSSOM PILLS ─── */
+  .bottom-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 12px;
+    /* frosted glass bar */
+    background: rgba(15, 5, 25, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    gap: 6px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 6px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.38);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    border-radius: 14px;
+    position: relative;
+    transition: color 0.25s ease;
+  }
+
+  .tab-btn i {
+    font-size: 1.3rem;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s ease;
+  }
+  .tab-btn span { position: relative; z-index: 1; }
+
+  /* The pill bubble behind active tab */
+  .tab-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(196,94,130,0.0), rgba(244,114,182,0.0));
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .tab-btn.active {
+    color: #fff;
+  }
+  .tab-btn.active::before {
+    background: linear-gradient(135deg, rgba(196,94,130,0.35), rgba(244,114,182,0.25));
+    box-shadow: 0 0 18px rgba(244,114,182,0.3), inset 0 0 0 1px rgba(244,114,182,0.25);
+  }
+  .tab-btn.active i {
+    transform: translateY(-4px) scale(1.2);
+    filter: drop-shadow(0 0 8px rgba(244,114,182,0.9));
+  }
+
+  .tab-btn:not(.active):hover {
+    color: rgba(255,255,255,0.7);
+  }
+  .tab-btn:not(.active):hover i {
+    transform: translateY(-2px);
+  }
+
+  /* Active dot indicator */
+  .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #f472b6;
+    box-shadow: 0 0 6px #f472b6;
+  }
+</style>
+</head>
+<body>
+
+<div class="design-label">Design 1 · Blossom Pills — frosted glass bubble + dot indicator</div>
+
+<section class="features-section">
+
+  <!-- Panel 1 -->
+  <div class="feature-content active" id="p-messages">
+    <div class="content-title"><i class="fas fa-comments"></i> 留言板</div>
+    <input class="mock-input" placeholder="您的昵称" readonly>
+    <textarea class="mock-input mock-textarea" placeholder="写下您想说的话..."></textarea>
+    <button class="mock-btn">发送</button>
+    <div class="mock-cards">
+      <div class="mock-card"><strong>啊庄 · 2025-06-01</strong>今天天气很好，想你了 🌸</div>
+      <div class="mock-card"><strong>啊康 · 2025-05-30</strong>等你来马来西亚！</div>
+    </div>
+  </div>
+
+  <!-- Panel 2 -->
+  <div class="feature-content" id="p-diary">
+    <div class="content-title"><i class="fas fa-book-open"></i> 心情日记</div>
+    <input class="mock-input" placeholder="日记标题" readonly>
+    <textarea class="mock-input mock-textarea" placeholder="写下今天的心情和感受..."></textarea>
+    <button class="mock-btn">保存日记</button>
+    <div class="mock-cards">
+      <div class="mock-card"><strong>开心 · 2025-06-02</strong>今天收到了你的礼物，超级开心！</div>
+    </div>
+  </div>
+
+  <!-- Panel 3 -->
+  <div class="feature-content" id="p-wishlist">
+    <div class="content-title"><i class="fas fa-star"></i> 愿望清单</div>
+    <input class="mock-input" placeholder="愿望标题" readonly>
+    <textarea class="mock-input mock-textarea" placeholder="描述您的愿望..."></textarea>
+    <button class="mock-btn">添加愿望</button>
+    <div class="mock-cards">
+      <div class="mock-card"><strong>✈️ 旅行</strong>一起去日本看樱花</div>
+      <div class="mock-card"><strong>🍜 美食</strong>学做越南河粉给你吃</div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="tab-btn active" data-target="p-messages">
+      <i class="fas fa-comments"></i>
+      <span>留言板</span>
+    </button>
+    <button class="tab-btn" data-target="p-diary">
+      <i class="fas fa-book-open"></i>
+      <span>心情日记</span>
+    </button>
+    <button class="tab-btn" data-target="p-wishlist">
+      <i class="fas fa-star"></i>
+      <span>愿望清单</span>
+    </button>
+  </nav>
+
+</section>
+
+<script>
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.feature-content').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById(this.dataset.target).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

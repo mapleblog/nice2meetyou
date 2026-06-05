@@ -39,7 +39,6 @@
     <link rel="stylesheet" href="css/love-tree.css">
     <link rel="stylesheet" href="css/stars-background.css">
     <link rel="stylesheet" href="css/heart-effects.css">
-    <link rel="stylesheet" href="css/lovecat.css">
     <link rel="stylesheet" href="css/feature-tabs-custom.css">
     <link rel="stylesheet" href="css/sakura-bg.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0" crossorigin="anonymous">
@@ -193,14 +192,6 @@
 
         <!-- 功能区域 -->
         <section class="features-section">
-            <div class="feature-tabs">
-                <div class="feature-tabs-container">
-                    <div class="feature-tab active" data-target="message-board-content">留言板</div>
-                    <div class="feature-tab" data-target="mood-diary-content">心情日记</div>
-                    <div class="feature-tab" data-target="wishlist-content">愿望清单</div>
-                </div>
-                <canvas width="600" height="554" id="lovecatCanvas"></canvas>
-            </div>
             
             <!-- 留言板区域 -->
             <div id="message-board-content" class="feature-content active">
@@ -358,8 +349,23 @@
                     </div>
                 </div>
             </div>
+            <!-- Bottom icon navigation -->
+            <nav class="feature-bottom-nav">
+                <button class="feature-tab active" data-target="message-board-content">
+                    <i class="fas fa-comments"></i>
+                    <span>留言板</span>
+                </button>
+                <button class="feature-tab" data-target="mood-diary-content">
+                    <i class="fas fa-book-open"></i>
+                    <span>心情日记</span>
+                </button>
+                <button class="feature-tab" data-target="wishlist-content">
+                    <i class="fas fa-star"></i>
+                    <span>愿望清单</span>
+                </button>
+            </nav>
         </section>
-        
+
         <footer class="footer">
             <p id="saved-message"></p>
             <p>Friendship is a single soul dwelling in two bodies. <i class="fas fa-heart"></i></p>
@@ -399,7 +405,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js" integrity="sha384-d+UOwmNNIC7V4izkTAKSXzWhjC2GxiS9PTykO1XdOPC3nc2z65UOS7SP6QdKPA70" crossorigin="anonymous"></script>
     <script src="js/stars-background.js"></script>
     <script src="js/heart-effects.js"></script>
-    <script src="js/lovecat.js"></script>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js" integrity="sha384-v3Z/Xdw1sCeo6M/geW7sn1Lt9obIm7MhAk8laVV+rvYFmzuWDELOiygx7dVte2dX" crossorigin="anonymous"></script>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 2 — Neon Rail</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #1a0a2e 0%, #3d1a5c 35%, #7a2d6b 65%, #c45e82 100%);
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px 80px;
+  }
+
+  .design-label {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    z-index: 100;
+    white-space: nowrap;
+  }
+
+  .features-section {
+    width: 100%;
+    max-width: 480px;
+    background: rgba(0,0,0,0.28);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 420px;
+  }
+
+  .feature-content {
+    display: none;
+    padding: 24px 20px 20px;
+    flex: 1;
+    animation: fadeUp 0.3s ease;
+  }
+  .feature-content.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .content-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* color per section */
+  #p-messages .content-title i { color: #f472b6; }
+  #p-diary    .content-title i { color: #a78bfa; }
+  #p-wishlist .content-title i { color: #fbbf24; }
+
+  .mock-input {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.85rem;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .mock-textarea { height: 70px; resize: none; }
+  .mock-btn {
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 22px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #p-messages .mock-btn { background: linear-gradient(135deg, #be185d, #f472b6); }
+  #p-diary    .mock-btn { background: linear-gradient(135deg, #6d28d9, #a78bfa); }
+  #p-wishlist .mock-btn { background: linear-gradient(135deg, #b45309, #fbbf24); }
+
+  .mock-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .mock-card {
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.72);
+  }
+  .mock-card strong { display: block; margin-bottom: 3px; font-size: 0.78rem; }
+  #p-messages .mock-card strong { color: #f9a8d4; }
+  #p-diary    .mock-card strong { color: #c4b5fd; }
+  #p-wishlist .mock-card strong { color: #fde68a; }
+
+  /* ─── DESIGN 2: NEON RAIL ─── */
+  .bottom-nav {
+    display: flex;
+    background: rgba(8, 2, 18, 0.72);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+  }
+
+  /* Sliding neon rail bar that moves under active tab */
+  .nav-rail {
+    position: absolute;
+    top: 0;
+    height: 2px;
+    width: calc(100% / 3);
+    left: 0;
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.35s ease;
+    border-radius: 0 0 2px 2px;
+  }
+  .nav-rail.pos-0 { left: 0; background: #f472b6; box-shadow: 0 0 12px #f472b6, 0 0 4px #f472b6; }
+  .nav-rail.pos-1 { left: calc(100% / 3); background: #a78bfa; box-shadow: 0 0 12px #a78bfa, 0 0 4px #a78bfa; }
+  .nav-rail.pos-2 { left: calc(200% / 3); background: #fbbf24; box-shadow: 0 0 12px #fbbf24, 0 0 4px #fbbf24; }
+
+  .tab-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 14px 8px 12px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.3);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: color 0.25s ease;
+  }
+
+  .tab-btn i {
+    font-size: 1.25rem;
+    transition: transform 0.3s ease, filter 0.3s ease, color 0.25s ease;
+  }
+
+  /* Color-coded active states */
+  .tab-btn[data-target="p-messages"].active { color: #f9a8d4; }
+  .tab-btn[data-target="p-messages"].active i {
+    color: #f472b6;
+    filter: drop-shadow(0 0 8px rgba(244,114,182,0.9));
+    transform: translateY(-3px) scale(1.15);
+  }
+
+  .tab-btn[data-target="p-diary"].active { color: #ddd6fe; }
+  .tab-btn[data-target="p-diary"].active i {
+    color: #a78bfa;
+    filter: drop-shadow(0 0 8px rgba(167,139,250,0.9));
+    transform: translateY(-3px) scale(1.15);
+  }
+
+  .tab-btn[data-target="p-wishlist"].active { color: #fde68a; }
+  .tab-btn[data-target="p-wishlist"].active i {
+    color: #fbbf24;
+    filter: drop-shadow(0 0 8px rgba(251,191,36,0.9));
+    transform: translateY(-3px) scale(1.15);
+  }
+
+  .tab-btn:not(.active):hover {
+    color: rgba(255,255,255,0.6);
+  }
+  .tab-btn:not(.active):hover i {
+    transform: translateY(-1px);
+  }
+</style>
+</head>
+<body>
+
+<div class="design-label">Design 2 · Neon Rail — sliding color rail + color-coded icons</div>
+
+<section class="features-section">
+
+  <div class="feature-content active" id="p-messages">
+    <div class="content-title"><i class="fas fa-comments"></i> 留言板</div>
+    <input class="mock-input" placeholder="您的昵称" readonly>
+    <textarea class="mock-input mock-textarea" placeholder="写下您想说的话..."></textarea>
+    <button class="mock-btn">发送</button>
+    <div class="mock-cards">
+      <div class="mock-card"><strong>啊庄 · 2025-06-01</strong>今天天气很好，想你了 🌸</div>
+      <div class="mock-card"><strong>啊康 · 2025-05-30</strong>等你来马来西亚！</div>
+    </div>
+  </div>
+
+  <div class="feature-content" id="p-diary">
+    <div class="content-title"><i class="fas fa-book-open"></i> 心情日记</div>
+    <input class="mock-input" placeholder="日记标题" readonly>
+    <textarea class="mock-input mock-textarea" placeholder="写下今天的心情和感受..."></textarea>
+    <button class="mock-btn">保存日记</button>
+    <div class="mock-cards">
+      <div class="mock-card"><strong>开心 · 2025-06-02</strong>今天收到了你的礼物，超级开心！</div>
+    </div>
+  </div>
+
+  <div class="feature-content" id="p-wishlist">
+    <div class="content-title"><i class="fas fa-star"></i> 愿望清单</div>
+    <input class="mock-input" placeholder="愿望标题" readonly>
+    <textarea class="mock-input mock-textarea" placeholder="描述您的愿望..."></textarea>
+    <button class="mock-btn">添加愿望</button>
+    <div class="mock-cards">
+      <div class="mock-card"><strong>✈️ 旅行</strong>一起去日本看樱花</div>
+      <div class="mock-card"><strong>🍜 美食</strong>学做越南河粉给你吃</div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-rail pos-0" id="rail"></div>
+    <button class="tab-btn active" data-target="p-messages" data-pos="0">
+      <i class="fas fa-comments"></i>
+      <span>留言板</span>
+    </button>
+    <button class="tab-btn" data-target="p-diary" data-pos="1">
+      <i class="fas fa-book-open"></i>
+      <span>心情日记</span>
+    </button>
+    <button class="tab-btn" data-target="p-wishlist" data-pos="2">
+      <i class="fas fa-star"></i>
+      <span>愿望清单</span>
+    </button>
+  </nav>
+
+</section>
+
+<script>
+  const rail = document.getElementById('rail');
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.feature-content').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById(this.dataset.target).classList.add('active');
+      // Move rail
+      rail.className = 'nav-rail pos-' + this.dataset.pos;
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,91 +1,90 @@
-/* 功能标签自定义布局 */
-.feature-tabs {
+/* Bottom nav — Blossom Pills (Design 1) */
+.feature-bottom-nav {
     display: flex;
-    justify-content: center;
     align-items: center;
-    position: relative;
-    padding: 15px 0;
-    margin-bottom: 20px;
-}
-
-/* 功能标签容器 */
-.feature-tabs-container {
-    display: flex;
     justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
+    padding: 10px 12px;
+    background: rgba(15, 5, 25, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0 0 16px 16px;
+    gap: 6px;
 }
 
-/* 单个功能标签样式 */
 .feature-tab {
-    padding: 12px 25px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.9);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 6px;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.38);
+    font-size: 0.68rem;
     font-weight: 600;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    border-radius: 14px;
     position: relative;
-    z-index: 2;
+    transition: color 0.25s ease;
 }
 
-.feature-tab:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.feature-tab i {
+    font-size: 1.3rem;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+}
+
+.feature-tab span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Pill bubble behind active tab */
+.feature-tab::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(196, 94, 130, 0.0), rgba(244, 114, 182, 0.0));
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-tab.active {
-    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
-    color: white;
-    box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
 }
 
-/* 确保lovecat canvas位置正确 */
-.feature-tabs #lovecatCanvas {
+.feature-tab.active::before {
+    background: linear-gradient(135deg, rgba(196, 94, 130, 0.35), rgba(244, 114, 182, 0.25));
+    box-shadow: 0 0 18px rgba(244, 114, 182, 0.3), inset 0 0 0 1px rgba(244, 114, 182, 0.25);
+}
+
+.feature-tab.active i {
+    transform: translateY(-4px) scale(1.2);
+    filter: drop-shadow(0 0 8px rgba(244, 114, 182, 0.9));
+}
+
+/* Dot indicator */
+.feature-tab.active::after {
+    content: '';
     position: absolute;
-    right: 0;
-    top: 45px; /* 将位置适当上移一点 */
-    z-index: 1;
-    transform: scale(0.2);
-    transform-origin: top right;
-    pointer-events: none;
-    max-width: 100%;
-    overflow: hidden;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #f472b6;
+    box-shadow: 0 0 6px #f472b6;
 }
 
-/* 响应式调整 */
-@media (max-width: 768px) {
-    .feature-tabs-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .feature-tab {
-        width: 80%;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-    
-    .feature-tabs #lovecatCanvas {
-        position: relative;
-        right: auto;
-        top: auto;
-        transform: scale(0.65); /* 再次增大手机端的缩放比例 */
-        transform-origin: center center;
-        display: block;
-        margin: 10px auto -30px; /* 减少上下留白空间 */
-    }
-    
-    .feature-tabs {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+.feature-tab:not(.active):hover {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.feature-tab:not(.active):hover i {
+    transform: translateY(-2px);
 }
