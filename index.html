@@ -230,6 +230,169 @@
         </div>
         <!-- End Anniversary Love Letter Capsule -->
 
+        <!-- Anniversary Map of Us -->
+        <div class="anniversary-capsule">
+          <div class="ann-section-label">
+            <span class="ann-section-label-inner">Two countries, one love</span>
+          </div>
+
+          <div class="ann-card">
+            <div class="ann-postmark">
+              <div class="ann-postmark-date">Malaysia ↔ Vietnam</div>
+              <div class="ann-postmark-location">~ 2,300 km</div>
+            </div>
+
+            <div class="ann-heading">
+              <div class="ann-heading-sub">Bridging every mile</div>
+              <div class="ann-heading-title">A Map of Us</div>
+              <div class="ann-heading-desc">Two countries, one beautiful bond</div>
+            </div>
+
+            <div class="ann-flourish">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+            <!-- SVG Map -->
+            <div class="ann-map-wrap" style="position:relative;z-index:1;">
+              <svg class="ann-map-svg" viewBox="0 0 580 380" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <radialGradient id="mapBgGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%"   stop-color="#2a1a1a"/>
+                    <stop offset="100%" stop-color="#140a08"/>
+                  </radialGradient>
+                  <filter id="mapGlow">
+                    <feGaussianBlur stdDeviation="3" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+
+                <!-- Ocean background -->
+                <rect width="580" height="380" fill="url(#mapBgGrad)" rx="8"/>
+
+                <!-- Ocean ripples -->
+                <ellipse cx="290" cy="190" rx="200" ry="140" fill="none" stroke="rgba(180,120,80,0.05)" stroke-width="1"/>
+                <ellipse cx="290" cy="190" rx="240" ry="170" fill="none" stroke="rgba(180,120,80,0.03)" stroke-width="1"/>
+
+                <!-- Vietnam landmass -->
+                <path d="M 390 40 C 410 50, 430 70, 440 100 C 450 130, 445 160, 430 185 C 415 210, 400 220, 395 240 C 390 260, 400 270, 410 285 C 395 295, 375 280, 365 260 C 355 235, 360 215, 370 195 C 380 175, 390 155, 385 130 C 380 100, 365 75, 370 55 Z"
+                      fill="rgba(180,100,140,0.3)" stroke="rgba(192,57,43,0.35)" stroke-width="1.5"/>
+
+                <!-- Malaysia peninsula -->
+                <path d="M 140 220 C 160 200, 200 195, 230 200 C 260 205, 280 215, 285 230 C 280 245, 255 255, 230 260 C 205 265, 170 258, 150 245 C 135 232, 132 224, 140 220 Z"
+                      fill="rgba(100,140,180,0.3)" stroke="rgba(80,120,160,0.35)" stroke-width="1.5"/>
+
+                <!-- Borneo -->
+                <path d="M 310 280 C 340 265, 390 270, 420 290 C 445 310, 445 340, 420 355 C 390 368, 340 360, 315 345 C 290 330, 288 300, 310 280 Z"
+                      fill="rgba(100,140,180,0.2)" stroke="rgba(80,120,160,0.2)" stroke-width="1"/>
+
+                <!-- Thailand (faint) -->
+                <path d="M 230 30 C 260 25, 295 35, 310 55 C 310 75, 295 80, 275 70 C 255 60, 235 55, 230 30 Z"
+                      fill="rgba(150,130,100,0.12)" stroke="rgba(180,160,120,0.12)" stroke-width="1"/>
+
+                <!-- Indonesia islands (faint) -->
+                <ellipse cx="220" cy="340" rx="80" ry="20" fill="rgba(150,130,100,0.1)" stroke="rgba(180,160,120,0.1)" stroke-width="1"/>
+
+                <!-- Visible flight path -->
+                <path id="ann-flight-route"
+                      d="M 215 225 Q 300 80 395 185"
+                      fill="none"
+                      stroke="rgba(192,57,43,0.45)"
+                      stroke-width="1.5"
+                      stroke-dasharray="12 6"
+                      class="ann-flight-path"/>
+
+                <!-- Return path (invisible, reversed — used only for motion reference) -->
+                <path id="ann-return-route"
+                      d="M 395 185 Q 300 80 215 225"
+                      fill="none" stroke="none"/>
+
+                <!-- Plane 1: Malaysia → Vietnam (active first half of cycle) -->
+                <g>
+                  <animateMotion dur="7s" repeatCount="indefinite" rotate="auto"
+                    keyPoints="0;0;1;1" keyTimes="0;0.07;0.43;1" calcMode="linear">
+                    <mpath href="#ann-flight-route"/>
+                  </animateMotion>
+                  <animate attributeName="opacity"
+                    values="0;1;1;0;0" keyTimes="0;0.05;0.43;0.47;1"
+                    dur="7s" repeatCount="indefinite"/>
+                  <text font-size="15" text-anchor="middle" dy="5" fill="rgba(180,140,100,0.85)">✈</text>
+                </g>
+
+                <!-- Plane 2: Vietnam → Malaysia (active second half of cycle) -->
+                <g>
+                  <animateMotion dur="7s" repeatCount="indefinite" rotate="auto"
+                    keyPoints="0;0;1;1" keyTimes="0;0.57;0.93;1" calcMode="linear">
+                    <mpath href="#ann-return-route"/>
+                  </animateMotion>
+                  <animate attributeName="opacity"
+                    values="0;0;1;1;0" keyTimes="0;0.53;0.57;0.93;1"
+                    dur="7s" repeatCount="indefinite"/>
+                  <text font-size="15" text-anchor="middle" dy="5" fill="rgba(180,140,100,0.85)">✈</text>
+                </g>
+
+                <!-- Malaysia pin -->
+                <circle class="ann-pin-pulse"  cx="215" cy="225" r="8" fill="none" stroke="rgba(80,140,200,0.5)" stroke-width="1.5"/>
+                <circle class="ann-pin-pulse2" cx="215" cy="225" r="8" fill="none" stroke="rgba(80,140,200,0.3)" stroke-width="1"/>
+                <circle cx="215" cy="225" r="8" fill="#4a7abf" filter="url(#mapGlow)"/>
+                <circle cx="215" cy="225" r="4" fill="white"/>
+                <text x="215" y="213" text-anchor="middle" font-family="'Courier New',monospace" font-size="7" fill="rgba(200,180,140,0.6)" letter-spacing="1">Malaysia</text>
+                <text x="200" y="248" font-family="'Dancing Script',cursive" font-size="13" fill="rgba(180,210,240,0.85)">啊康</text>
+
+                <!-- Vietnam pin -->
+                <circle class="ann-pin-pulse"  cx="400" cy="190" r="8" fill="none" stroke="rgba(192,57,43,0.5)" stroke-width="1.5"/>
+                <circle class="ann-pin-pulse2" cx="400" cy="190" r="8" fill="none" stroke="rgba(192,57,43,0.3)" stroke-width="1"/>
+                <circle cx="400" cy="190" r="8" fill="#a03040" filter="url(#mapGlow)"/>
+                <circle cx="400" cy="190" r="4" fill="white"/>
+                <text x="400" y="178" text-anchor="middle" font-family="'Courier New',monospace" font-size="7" fill="rgba(200,180,140,0.6)" letter-spacing="1">Vietnam</text>
+                <text x="412" y="210" font-family="'Dancing Script',cursive" font-size="13" fill="rgba(240,180,200,0.85)">啊庄</text>
+
+                <!-- Heart -->
+                <text x="300" y="165" text-anchor="middle" font-size="20" fill="#c0392b" filter="url(#mapGlow)" class="ann-map-heart">♥</text>
+
+                <!-- Distance label -->
+                <text x="300" y="128" text-anchor="middle" font-family="'Courier New',monospace" font-size="7" fill="rgba(180,140,100,0.4)" letter-spacing="2">~ 2,300 km apart</text>
+
+                <!-- Ocean dots -->
+                <circle cx="120" cy="300" r="1.5" fill="rgba(180,140,100,0.1)"/>
+                <circle cx="150" cy="320" r="1"   fill="rgba(180,140,100,0.08)"/>
+                <circle cx="470" cy="130" r="1.5" fill="rgba(180,140,100,0.1)"/>
+                <circle cx="80"  cy="160" r="1"   fill="rgba(180,140,100,0.08)"/>
+              </svg>
+            </div>
+
+            <!-- Info chips -->
+            <div class="ann-map-chips">
+              <div class="ann-map-chip">
+                <span>🇲🇾</span>
+                <span class="ann-map-chip-name">Dinh Khang</span>
+                <span class="ann-map-chip-sub">· Malaysia</span>
+              </div>
+              <div class="ann-map-chip ann-map-chip-mid">
+                <span>✈</span>
+                <span class="ann-map-chip-sub">~2,300 km</span>
+              </div>
+              <div class="ann-map-chip">
+                <span>🇻🇳</span>
+                <span class="ann-map-chip-name">Thuy Trang</span>
+                <span class="ann-map-chip-sub">· Vietnam</span>
+              </div>
+            </div>
+
+            <!-- Dream destinations -->
+            <div class="ann-map-wishes">
+              <div class="ann-map-wish-label">Places we dream of visiting together</div>
+              <div class="ann-map-wish-list">
+                <span class="ann-map-wish-item">🗼 Tokyo</span>
+                <span class="ann-map-wish-item">🌸 Kyoto</span>
+                <span class="ann-map-wish-item">🏝️ Bali</span>
+                <span class="ann-map-wish-item">🏙️ Singapore</span>
+                <span class="ann-map-wish-item">🌅 Đà Nẵng</span>
+              </div>
+            </div>
+
+            <div class="ann-corner-fold"></div>
+          </div>
+        </div>
+        <!-- End Anniversary Map of Us -->
+
         <section class="counter-section">
             <div class="days-label">Days of Us</div>
             <div class="days-sublabel">since May 5, 2025</div>

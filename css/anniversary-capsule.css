@@ -355,6 +355,117 @@
   margin-top: 3px;
 }
 
+/* ── Map of Us ── */
+.ann-map-wrap {
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: 2px 4px 16px rgba(0,0,0,0.2);
+}
+
+.ann-map-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Flight path draw-on animation */
+@keyframes annDashDraw {
+  from { stroke-dashoffset: 800; }
+  to   { stroke-dashoffset: 0; }
+}
+.ann-flight-path {
+  stroke-dashoffset: 800;
+  animation: annDashDraw 2.5s ease 0.5s forwards;
+}
+
+/* Plane motion is handled by SVG animateMotion — no CSS needed */
+
+/* Pin pulse rings */
+@keyframes annPulseRing {
+  0%   { r: 8;  opacity: 0.6; }
+  100% { r: 20; opacity: 0; }
+}
+.ann-pin-pulse  { animation: annPulseRing 2s ease-out infinite; }
+.ann-pin-pulse2 { animation: annPulseRing 2s ease-out 1s infinite; }
+
+/* Floating heart */
+@keyframes annHeartFloat {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+.ann-map-heart { animation: annHeartFloat 3s ease-in-out infinite; }
+
+/* Info chips row */
+.ann-map-chips {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 1;
+}
+.ann-map-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(200,160,80,0.07);
+  border: 1px solid rgba(180,140,80,0.18);
+  border-radius: 30px;
+  padding: 8px 14px;
+  font-size: 0.78rem;
+}
+.ann-map-chip-mid {
+  background: rgba(192,57,43,0.06);
+  border-color: rgba(192,57,43,0.15);
+}
+.ann-map-chip-name {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1rem;
+  color: #5c3010;
+}
+.ann-map-chip-sub {
+  font-family: 'Lora', serif;
+  font-size: 0.72rem;
+  color: #9a8060;
+  font-style: italic;
+}
+
+/* Dream destinations */
+.ann-map-wishes {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid rgba(180,140,80,0.2);
+  padding-top: 18px;
+}
+.ann-map-wish-label {
+  font-family: 'Lora', serif;
+  font-size: 0.7rem;
+  font-style: italic;
+  color: #8a7050;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.ann-map-wish-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.ann-map-wish-item {
+  font-family: 'Lora', serif;
+  font-size: 0.76rem;
+  color: #7a5030;
+  font-style: italic;
+  background: rgba(200,160,80,0.07);
+  border: 1px solid rgba(180,140,80,0.18);
+  border-radius: 20px;
+  padding: 5px 12px;
+}
+
 /* Corner fold matches parent card */
 .ann-corner-fold {
   position: absolute;
