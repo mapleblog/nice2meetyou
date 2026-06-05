@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V4 — Photo Booth Strip</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 50% 0%, #1a0a2e 0%, #0d0816 60%, #060410 100%);
+      font-family: 'Lora', serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px 80px;
+      color: #e8d0ff;
+      overflow-x: hidden;
+    }
+
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .star {
+      position: absolute; border-radius: 50%; background: white;
+      animation: twinkle var(--d) ease-in-out infinite alternate;
+    }
+    @keyframes twinkle { to { opacity: 0.05; transform: scale(0.5); } }
+
+    /* Header */
+    .header {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 48px;
+    }
+    .header-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: rgba(255,180,220,0.45);
+      margin-bottom: 10px;
+    }
+    .header-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3.2rem;
+      color: #ffd6e8;
+      text-shadow: 0 0 30px rgba(255,150,200,0.5);
+      margin-bottom: 8px;
+    }
+    .header-sub {
+      font-size: 0.82rem;
+      font-style: italic;
+      color: rgba(220,180,255,0.5);
+    }
+
+    /* Stage */
+    .stage {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Film strip */
+    .film-strip {
+      background: #0a0510;
+      border-radius: 8px;
+      padding: 14px 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,150,200,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+
+    /* Sprocket holes */
+    .sprockets {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0;
+    }
+    .sprockets.left  { left: 4px; }
+    .sprockets.right { right: 4px; }
+    .sprocket-hole {
+      width: 8px; height: 8px;
+      background: #1a0a2e;
+      border-radius: 2px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Photo frame */
+    .photo-frame {
+      position: relative;
+      margin-bottom: 0;
+      border-bottom: 2px solid rgba(255,255,255,0.04);
+      padding: 10px 0 14px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .photo-frame:last-child { border-bottom: none; }
+    .photo-frame:hover { transform: scale(1.02); }
+
+    .photo-slot {
+      width: 200px;
+      height: 160px;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+      background: rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,150,200,0.1);
+    }
+
+    /* Placeholder gradient for photos */
+    .photo-slot::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 4px;
+    }
+    .photo-frame:nth-child(1) .photo-slot::before {
+      background: linear-gradient(135deg, #2a0a1e 0%, #4a1a38 50%, #2a1030 100%);
+    }
+    .photo-frame:nth-child(2) .photo-slot::before {
+      background: linear-gradient(135deg, #0a1a2e 0%, #1a2a4a 50%, #0a1828 100%);
+    }
+    .photo-frame:nth-child(3) .photo-slot::before {
+      background: linear-gradient(135deg, #1a0a0a 0%, #3a1a1a 50%, #201010 100%);
+    }
+    .photo-frame:nth-child(4) .photo-slot::before {
+      background: linear-gradient(135deg, #0a1a0a 0%, #1a3a1a 50%, #102010 100%);
+    }
+
+    /* Photo placeholder icon */
+    .photo-placeholder {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      color: rgba(255,255,255,0.15);
+    }
+    .photo-placeholder .ph-icon { font-size: 2.5rem; margin-bottom: 8px; display: block; }
+    .photo-placeholder .ph-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Pink overlay tint */
+    .photo-tint {
+      position: absolute;
+      inset: 0;
+      background: rgba(180,60,100,0.08);
+      mix-blend-mode: overlay;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Caption */
+    .photo-caption {
+      margin-top: 8px;
+      font-family: 'Dancing Script', cursive;
+      font-size: 0.95rem;
+      color: rgba(255,200,225,0.65);
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+
+    /* Side notes panel */
+    .side-notes {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      max-width: 240px;
+      margin-top: 20px;
+    }
+    .note-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,150,200,0.1);
+      border-radius: 12px;
+      padding: 16px;
+      animation: fadeUp 0.6s ease both;
+    }
+    .note-card:nth-child(1) { animation-delay: 0.1s; }
+    .note-card:nth-child(2) { animation-delay: 0.2s; }
+    .note-card:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .note-emoji { font-size: 1.4rem; margin-bottom: 8px; display: block; }
+    .note-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.1rem;
+      color: #ffd6e8;
+      margin-bottom: 6px;
+    }
+    .note-body {
+      font-size: 0.78rem;
+      font-style: italic;
+      color: rgba(220,180,255,0.55);
+      line-height: 1.6;
+    }
+
+    /* Strip label */
+    .strip-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.5rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.15);
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="header">
+  <div class="header-label">Anniversary · Section Idea #4</div>
+  <div class="header-title">Photo Booth Strip</div>
+  <div class="header-sub">Our favourite moments, framed in film</div>
+</div>
+
+<div class="stage">
+  <!-- Film strip -->
+  <div>
+    <div class="film-strip">
+      <div class="sprockets left">
+        <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      </div>
+      <div class="sprockets right">
+        <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      </div>
+
+      <div class="photo-frame">
+        <div class="photo-slot">
+          <div class="photo-placeholder">
+            <span class="ph-icon">🌸</span>
+            <div class="ph-text">May 5, 2025</div>
+          </div>
+          <div class="photo-tint"></div>
+        </div>
+        <div class="photo-caption">The beginning ♡</div>
+      </div>
+
+      <div class="photo-frame">
+        <div class="photo-slot">
+          <div class="photo-placeholder">
+            <span class="ph-icon">🌙</span>
+            <div class="ph-text">Late Night Calls</div>
+          </div>
+          <div class="photo-tint"></div>
+        </div>
+        <div class="photo-caption">2am and still talking</div>
+      </div>
+
+      <div class="photo-frame">
+        <div class="photo-slot">
+          <div class="photo-placeholder">
+            <span class="ph-icon">✈️</span>
+            <div class="ph-text">First Meeting</div>
+          </div>
+          <div class="photo-tint"></div>
+        </div>
+        <div class="photo-caption">Finally, face to face</div>
+      </div>
+
+      <div class="photo-frame">
+        <div class="photo-slot">
+          <div class="photo-placeholder">
+            <span class="ph-icon">❤️</span>
+            <div class="ph-text">One Year</div>
+          </div>
+          <div class="photo-tint"></div>
+        </div>
+        <div class="photo-caption">365 days of us</div>
+      </div>
+
+    </div>
+    <div class="strip-label">Thuy Trang & Dinh Khang · 2025–2026</div>
+  </div>
+
+  <!-- Side notes -->
+  <div class="side-notes">
+    <div class="note-card">
+      <span class="note-emoji">📸</span>
+      <div class="note-title">How it works</div>
+      <div class="note-body">Replace the placeholder frames with your real photos — each one a frozen moment from your story together.</div>
+    </div>
+    <div class="note-card">
+      <span class="note-emoji">🎞️</span>
+      <div class="note-title">Film aesthetic</div>
+      <div class="note-body">Each photo gets a soft rose-tinted overlay and a handwritten caption, giving everything a warm, nostalgic feel.</div>
+    </div>
+    <div class="note-card">
+      <span class="note-emoji">🌸</span>
+      <div class="note-title">Expandable</div>
+      <div class="note-body">Add as many frames as you like — the strip grows naturally with every new memory you make together.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;top:${Math.random()*100}%;
+      --d:${(Math.random()*3+2).toFixed(1)}s;
+      opacity:${(Math.random()*0.4+0.15).toFixed(2)};
+    `;
+    starsEl.appendChild(s);
+  }
+</script>
+</body>
+</html>

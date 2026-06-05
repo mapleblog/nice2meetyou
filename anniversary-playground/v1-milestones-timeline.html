@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V1 — Milestones & Memories Timeline</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 50% 0%, #1a0a2e 0%, #0d0816 60%, #060410 100%);
+      font-family: 'Lora', serif;
+      overflow-x: hidden;
+      padding: 60px 20px 80px;
+      color: #e8d0ff;
+    }
+
+    /* Sakura petals */
+    .petal {
+      position: fixed;
+      pointer-events: none;
+      font-size: 1rem;
+      animation: petalFall linear infinite;
+      opacity: 0.5;
+      z-index: 0;
+    }
+    @keyframes petalFall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 0.6; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* Stars */
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .star {
+      position: absolute; border-radius: 50%; background: white;
+      animation: twinkle var(--d) ease-in-out infinite alternate;
+    }
+    @keyframes twinkle { to { opacity: 0.1; transform: scale(0.5); } }
+
+    /* Page header */
+    .page-header {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 60px;
+    }
+    .page-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: rgba(255,180,220,0.5);
+      margin-bottom: 12px;
+    }
+    .page-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3.2rem;
+      color: #ffd6e8;
+      text-shadow: 0 0 30px rgba(255,150,200,0.5);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .page-subtitle {
+      font-style: italic;
+      font-size: 0.9rem;
+      color: rgba(220,180,255,0.55);
+    }
+
+    /* Timeline wrapper */
+    .timeline {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* Vertical thread */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom,
+        transparent,
+        rgba(255,150,200,0.4) 10%,
+        rgba(255,150,200,0.4) 90%,
+        transparent
+      );
+      transform: translateX(-50%);
+    }
+
+    /* Each milestone */
+    .milestone {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      margin-bottom: 52px;
+      position: relative;
+      animation: fadeUp 0.6s ease both;
+    }
+    .milestone:nth-child(odd)  { flex-direction: row; }
+    .milestone:nth-child(even) { flex-direction: row-reverse; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .milestone:nth-child(1) { animation-delay: 0.1s; }
+    .milestone:nth-child(2) { animation-delay: 0.2s; }
+    .milestone:nth-child(3) { animation-delay: 0.3s; }
+    .milestone:nth-child(4) { animation-delay: 0.4s; }
+    .milestone:nth-child(5) { animation-delay: 0.5s; }
+    .milestone:nth-child(6) { animation-delay: 0.6s; }
+
+    /* Center dot */
+    .milestone-dot {
+      position: absolute;
+      left: 50%;
+      top: 24px;
+      transform: translateX(-50%);
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffb3d9, #e06090);
+      box-shadow: 0 0 12px rgba(255,100,180,0.7);
+      z-index: 2;
+    }
+
+    /* Card */
+    .milestone-card {
+      width: calc(50% - 32px);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,150,200,0.15);
+      border-radius: 12px;
+      padding: 18px 20px;
+      backdrop-filter: blur(6px);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: default;
+      position: relative;
+    }
+    .milestone:nth-child(odd)  .milestone-card { margin-right: 32px; }
+    .milestone:nth-child(even) .milestone-card { margin-left: 32px; }
+    .milestone-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(255,100,180,0.2);
+      border-color: rgba(255,150,200,0.35);
+    }
+
+    /* Washi tape */
+    .tape {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 50px; height: 18px;
+      background: rgba(255,200,230,0.25);
+      border-radius: 2px;
+    }
+    .milestone:nth-child(even) .tape { transform: translateX(-50%) rotate(2deg); }
+
+    .milestone-icon {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .milestone-date {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,150,200,0.6);
+      margin-bottom: 6px;
+    }
+    .milestone-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.35rem;
+      color: #ffd6e8;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+    .milestone-note {
+      font-size: 0.82rem;
+      font-style: italic;
+      color: rgba(220,200,255,0.65);
+      line-height: 1.5;
+    }
+
+    /* Divider */
+    .end-heart {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      margin-top: 10px;
+      font-size: 1.4rem;
+      color: #e06090;
+      text-shadow: 0 0 16px rgba(255,100,180,0.6);
+      animation: heartPulse 2s ease-in-out infinite;
+    }
+    @keyframes heartPulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.15); }
+    }
+
+    @media (max-width: 540px) {
+      .timeline::before { left: 20px; }
+      .milestone, .milestone:nth-child(even) { flex-direction: column; padding-left: 46px; }
+      .milestone-card, .milestone:nth-child(odd) .milestone-card,
+      .milestone:nth-child(even) .milestone-card { width: 100%; margin: 0; }
+      .milestone-dot { left: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="page-header">
+  <div class="page-label">Anniversary · Section Idea #1</div>
+  <div class="page-title">Milestones & Memories</div>
+  <div class="page-subtitle">Every chapter of our story, pinned in time</div>
+</div>
+
+<div class="timeline">
+
+  <div class="milestone">
+    <div class="milestone-dot"></div>
+    <div class="milestone-card">
+      <div class="tape"></div>
+      <span class="milestone-icon">💌</span>
+      <div class="milestone-date">Day 1 · May 5, 2025</div>
+      <div class="milestone-title">The First Hello</div>
+      <div class="milestone-note">The moment two strangers became something more — a message that changed everything.</div>
+    </div>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-dot"></div>
+    <div class="milestone-card">
+      <div class="tape"></div>
+      <span class="milestone-icon">📞</span>
+      <div class="milestone-date">Day 7</div>
+      <div class="milestone-title">First Voice Call</div>
+      <div class="milestone-note">Hearing your voice for the first time. Hours felt like minutes.</div>
+    </div>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-dot"></div>
+    <div class="milestone-card">
+      <div class="tape"></div>
+      <span class="milestone-icon">🌙</span>
+      <div class="milestone-date">Day 30</div>
+      <div class="milestone-title">Late-Night Talks</div>
+      <div class="milestone-note">When midnight didn't feel late enough and we had so much left to say.</div>
+    </div>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-dot"></div>
+    <div class="milestone-card">
+      <div class="tape"></div>
+      <span class="milestone-icon">✈️</span>
+      <div class="milestone-date">Coming Soon</div>
+      <div class="milestone-title">First Meeting</div>
+      <div class="milestone-note">Malaysia ↔ Vietnam — the flight that closes the distance between us.</div>
+    </div>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-dot"></div>
+    <div class="milestone-card">
+      <div class="tape"></div>
+      <span class="milestone-icon">🌸</span>
+      <div class="milestone-date">Day 365 · May 5, 2026</div>
+      <div class="milestone-title">One Year Together</div>
+      <div class="milestone-note">365 days of good mornings, late nights, and endless reasons to smile.</div>
+    </div>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-dot"></div>
+    <div class="milestone-card">
+      <div class="tape"></div>
+      <span class="milestone-icon">♾️</span>
+      <div class="milestone-date">Forever</div>
+      <div class="milestone-title">Every Day After</div>
+      <div class="milestone-note">The story is still being written — and every page is my favourite.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="end-heart">❤</div>
+
+<script>
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%; top:${Math.random()*100}%;
+      --d:${(Math.random()*3+2).toFixed(1)}s;
+      --min-op:${(Math.random()*0.3+0.1).toFixed(2)};
+      opacity:${(Math.random()*0.5+0.2).toFixed(2)};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // Petals
+  const petals = ['🌸','🌺','✿','❀'];
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = petals[Math.floor(Math.random()*petals.length)];
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      animation-duration:${(Math.random()*8+6).toFixed(1)}s;
+      animation-delay:${(Math.random()*10).toFixed(1)}s;
+      font-size:${(Math.random()*0.6+0.7).toFixed(1)}rem;
+    `;
+    document.body.appendChild(p);
+  }
+</script>
+</body>
+</html>

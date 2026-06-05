@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anniversary Section — Playgrounds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 50% 0%, #1a0a2e 0%, #0d0816 60%, #060410 100%);
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px 80px;
+      color: #e8d0ff;
+    }
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .star {
+      position: absolute; border-radius: 50%; background: white;
+      animation: twinkle var(--d) ease-in-out infinite alternate;
+    }
+    @keyframes twinkle { to { opacity: 0.05; transform: scale(0.5); } }
+
+    .header { text-align: center; position: relative; z-index: 1; margin-bottom: 52px; }
+    .header-label {
+      font-size: 0.6rem; letter-spacing: 5px; text-transform: uppercase;
+      color: rgba(255,180,220,0.45); margin-bottom: 12px;
+    }
+    .header-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3.4rem; color: #ffd6e8;
+      text-shadow: 0 0 30px rgba(255,150,200,0.5); margin-bottom: 8px;
+    }
+    .header-sub { font-size: 0.82rem; color: rgba(220,180,255,0.5); font-style: italic; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 860px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,150,200,0.13);
+      border-radius: 16px;
+      padding: 24px 22px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      animation: cardIn 0.5s ease both;
+      display: block;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(255,100,180,0.2);
+      border-color: rgba(255,150,200,0.3);
+    }
+    .card:nth-child(1) { animation-delay: 0.06s; }
+    .card:nth-child(2) { animation-delay: 0.12s; }
+    .card:nth-child(3) { animation-delay: 0.18s; }
+    .card:nth-child(4) { animation-delay: 0.24s; }
+    .card:nth-child(5) { animation-delay: 0.30s; }
+    .card:nth-child(6) { animation-delay: 0.36s; }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-num {
+      font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(255,150,200,0.4); margin-bottom: 10px;
+    }
+    .card-icon { font-size: 2.2rem; margin-bottom: 12px; display: block; }
+    .card-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem; color: #ffd6e8; margin-bottom: 8px; line-height: 1.2;
+    }
+    .card-desc { font-size: 0.78rem; color: rgba(220,180,255,0.55); line-height: 1.6; font-style: italic; }
+    .card-cta {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,150,200,0.5);
+    }
+    .card:hover .card-cta { color: rgba(255,150,200,0.8); }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="header">
+  <div class="header-label">Thuy Trang & Dinh Khang · May 5, 2025</div>
+  <div class="header-title">Anniversary Section</div>
+  <div class="header-sub">6 design ideas — pick your favourite</div>
+</div>
+
+<div class="grid">
+  <a class="card" href="v1-milestones-timeline.html">
+    <div class="card-num">Idea 01</div>
+    <span class="card-icon">🧵</span>
+    <div class="card-title">Milestones & Memories Timeline</div>
+    <div class="card-desc">A vertical thread of relationship milestones — each pinned as a letter card with washi tape and a note.</div>
+    <span class="card-cta">View →</span>
+  </a>
+
+  <a class="card" href="v2-love-letter-capsule.html">
+    <div class="card-num">Idea 02</div>
+    <span class="card-icon">💌</span>
+    <div class="card-title">Love Letter Capsule</div>
+    <div class="card-desc">A sealed envelope that opens on tap, revealing a heartfelt letter — with a live countdown to the next anniversary.</div>
+    <span class="card-cta">View →</span>
+  </a>
+
+  <a class="card" href="v3-year-in-numbers.html">
+    <div class="card-num">Idea 03</div>
+    <span class="card-icon">✨</span>
+    <div class="card-title">Our Year in Numbers</div>
+    <div class="card-desc">Spotify Wrapped-style cards with animated counters — days, good mornings, hours on call, and ∞ reasons.</div>
+    <span class="card-cta">View →</span>
+  </a>
+
+  <a class="card" href="v4-photo-booth-strip.html">
+    <div class="card-num">Idea 04</div>
+    <span class="card-icon">🎞️</span>
+    <div class="card-title">Photo Booth Strip</div>
+    <div class="card-desc">A vintage film strip of your favourite photos with a rose-tinted overlay and handwritten captions.</div>
+    <span class="card-cta">View →</span>
+  </a>
+
+  <a class="card" href="v5-map-of-us.html">
+    <div class="card-num">Idea 05</div>
+    <span class="card-icon">🗺️</span>
+    <div class="card-title">A Map of Us</div>
+    <div class="card-desc">An illustrated Southeast Asia map with animated flight path, pulsing pins on Malaysia & Vietnam, and dream destinations.</div>
+    <span class="card-cta">View →</span>
+  </a>
+
+  <a class="card" href="v6-love-jar.html">
+    <div class="card-num">Idea 06</div>
+    <span class="card-icon">🫙</span>
+    <div class="card-title">Things I Love About You Jar</div>
+    <div class="card-desc">A glass jar full of paper notes. Tap to shake it — a different reason surfaces every time. 15 hidden notes inside.</div>
+    <span class="card-cta">View →</span>
+  </a>
+</div>
+
+<script>
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 140; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;top:${Math.random()*100}%;
+      --d:${(Math.random()*3+2).toFixed(1)}s;
+      opacity:${(Math.random()*0.4+0.15).toFixed(2)};
+    `;
+    starsEl.appendChild(s);
+  }
+</script>
+</body>
+</html>

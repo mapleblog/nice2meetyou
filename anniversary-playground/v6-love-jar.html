@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V6 — Things I Love About You Jar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 50% 0%, #1a0a2e 0%, #0d0816 60%, #060410 100%);
+      font-family: 'Lora', serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px 80px;
+      color: #e8d0ff;
+      overflow-x: hidden;
+    }
+
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .star {
+      position: absolute; border-radius: 50%; background: white;
+      animation: twinkle var(--d) ease-in-out infinite alternate;
+    }
+    @keyframes twinkle { to { opacity: 0.05; transform: scale(0.5); } }
+
+    /* Petals */
+    .petal {
+      position: fixed; pointer-events: none;
+      animation: petalFall linear infinite; opacity: 0.4; z-index: 0;
+    }
+    @keyframes petalFall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 0.5; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    .scene {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+    }
+
+    .header-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: rgba(255,180,220,0.45);
+      margin-bottom: 10px;
+    }
+    .header-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3rem;
+      color: #ffd6e8;
+      text-shadow: 0 0 30px rgba(255,150,200,0.5);
+      margin-bottom: 8px;
+    }
+    .header-sub {
+      font-size: 0.82rem;
+      font-style: italic;
+      color: rgba(220,180,255,0.5);
+      margin-bottom: 44px;
+    }
+
+    /* ── Jar ── */
+    .jar-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .jar-container {
+      position: relative;
+      width: 200px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Shake animation */
+    @keyframes jarShake {
+      0%,100% { transform: rotate(0deg); }
+      20%      { transform: rotate(-5deg); }
+      40%      { transform: rotate(5deg); }
+      60%      { transform: rotate(-4deg); }
+      80%      { transform: rotate(3deg); }
+    }
+    .jar-container.shaking { animation: jarShake 0.5s ease; }
+
+    /* Jar SVG glow */
+    .jar-svg { width: 200px; height: auto; filter: drop-shadow(0 8px 24px rgba(255,100,180,0.25)); }
+
+    /* Notes floating inside jar */
+    .jar-notes {
+      position: absolute;
+      bottom: 30px;
+      left: 20px; right: 20px;
+      height: 120px;
+      overflow: hidden;
+    }
+    .note-bit {
+      position: absolute;
+      font-family: 'Dancing Script', cursive;
+      font-size: 0.65rem;
+      color: rgba(255,180,220,0.7);
+      padding: 3px 7px;
+      background: rgba(255,220,235,0.12);
+      border-radius: 3px;
+      white-space: nowrap;
+      animation: noteFloat var(--dur) ease-in-out infinite alternate;
+    }
+    @keyframes noteFloat {
+      from { transform: translateY(0) rotate(var(--rot)); }
+      to   { transform: translateY(-8px) rotate(calc(var(--rot) * -1)); }
+    }
+
+    /* Reveal card */
+    .reveal-card {
+      background: rgba(255,240,248,0.06);
+      border: 1px solid rgba(255,150,200,0.2);
+      border-radius: 16px;
+      padding: 26px 28px;
+      width: 100%;
+      max-width: 380px;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s;
+      backdrop-filter: blur(8px);
+    }
+
+    .reveal-note {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.55rem;
+      color: #ffd6e8;
+      text-align: center;
+      margin-bottom: 8px;
+      line-height: 1.4;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.4s 0.1s;
+    }
+    .reveal-note.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .reveal-from {
+      font-size: 0.7rem;
+      font-style: italic;
+      color: rgba(255,150,200,0.45);
+      opacity: 0;
+      transition: opacity 0.4s 0.3s;
+    }
+    .reveal-from.show { opacity: 1; }
+
+    .empty-hint {
+      font-style: italic;
+      font-size: 0.85rem;
+      color: rgba(255,180,220,0.35);
+    }
+
+    /* Tap hint */
+    .tap-hint {
+      font-size: 0.75rem;
+      color: rgba(255,180,220,0.38);
+      font-style: italic;
+      margin-top: -12px;
+      animation: hintPulse 2.5s ease-in-out infinite;
+    }
+    @keyframes hintPulse { 0%,100%{opacity:0.38;} 50%{opacity:0.65;} }
+
+    /* Counter badge */
+    .counter-badge {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,150,200,0.4);
+      margin-top: -12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="scene">
+  <div class="header-label">Anniversary · Section Idea #6</div>
+  <div class="header-title">Things I Love About You</div>
+  <div class="header-sub">Shake the jar — let a reason fall out</div>
+
+  <div class="jar-wrap">
+
+    <!-- Jar -->
+    <div class="jar-container" id="jarContainer" onclick="shakeJar()">
+      <svg class="jar-svg" viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="jarGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="rgba(255,200,230,0.18)"/>
+            <stop offset="40%"  stop-color="rgba(255,220,240,0.32)"/>
+            <stop offset="100%" stop-color="rgba(200,150,180,0.15)"/>
+          </linearGradient>
+          <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="rgba(255,200,230,0.4)"/>
+            <stop offset="100%" stop-color="rgba(200,140,170,0.25)"/>
+          </linearGradient>
+          <clipPath id="jarClip">
+            <path d="M 30 80 C 20 80, 14 90, 14 102 L 14 230 C 14 243, 24 253, 37 253 L 163 253 C 176 253, 186 243, 186 230 L 186 102 C 186 90, 180 80, 170 80 Z"/>
+          </clipPath>
+        </defs>
+
+        <!-- Jar body -->
+        <path d="M 30 80 C 20 80, 14 90, 14 102 L 14 230 C 14 243, 24 253, 37 253 L 163 253 C 176 253, 186 243, 186 230 L 186 102 C 186 90, 180 80, 170 80 Z"
+              fill="url(#jarGrad)" stroke="rgba(255,200,230,0.25)" stroke-width="1.5"/>
+
+        <!-- Glass shine -->
+        <path d="M 26 95 C 26 85, 30 82, 36 82 L 50 82 L 50 240 C 38 238, 26 232, 26 220 Z"
+              fill="rgba(255,255,255,0.06)"/>
+
+        <!-- Jar neck -->
+        <rect x="55" y="58" width="90" height="24" rx="6"
+              fill="rgba(200,150,180,0.2)" stroke="rgba(255,200,230,0.2)" stroke-width="1"/>
+
+        <!-- Lid -->
+        <rect x="44" y="42" width="112" height="22" rx="8"
+              fill="url(#lidGrad)" stroke="rgba(255,200,230,0.3)" stroke-width="1.5"/>
+        <rect x="54" y="46" width="92" height="10" rx="4"
+              fill="rgba(255,255,255,0.06)"/>
+
+        <!-- Label band -->
+        <rect x="20" y="148" width="160" height="52" rx="4"
+              fill="rgba(255,240,248,0.06)" stroke="rgba(255,200,230,0.12)" stroke-width="1"/>
+        <text x="100" y="169" text-anchor="middle"
+              font-family="'Dancing Script',cursive" font-size="13"
+              fill="rgba(255,200,225,0.55)">Things I Love</text>
+        <text x="100" y="187" text-anchor="middle"
+              font-family="'Dancing Script',cursive" font-size="11"
+              fill="rgba(255,180,220,0.4)">About You ♡</text>
+
+        <!-- Notes inside jar (clipped) -->
+        <g clip-path="url(#jarClip)">
+          <rect x="40"  y="185" width="48" height="14" rx="2" fill="rgba(255,150,200,0.15)" transform="rotate(-5,64,192)"/>
+          <rect x="100" y="178" width="55" height="14" rx="2" fill="rgba(200,150,255,0.15)" transform="rotate(3,127,185)"/>
+          <rect x="30"  y="210" width="52" height="14" rx="2" fill="rgba(255,200,150,0.12)" transform="rotate(7,56,217)"/>
+          <rect x="110" y="205" width="58" height="14" rx="2" fill="rgba(150,200,255,0.12)" transform="rotate(-4,139,212)"/>
+          <rect x="55"  y="225" width="45" height="14" rx="2" fill="rgba(255,150,200,0.1)"  transform="rotate(2,77,232)"/>
+          <rect x="120" y="228" width="40" height="14" rx="2" fill="rgba(200,150,255,0.1)"  transform="rotate(-6,140,235)"/>
+        </g>
+
+        <!-- Heart decoration on lid -->
+        <text x="100" y="58" text-anchor="middle" font-size="12" fill="rgba(255,150,200,0.6)">♥</text>
+      </svg>
+    </div>
+
+    <div class="tap-hint" id="tapHint">— tap the jar to shake it —</div>
+    <div class="counter-badge" id="counterBadge">0 notes revealed</div>
+
+    <!-- Reveal card -->
+    <div class="reveal-card" id="revealCard">
+      <div class="reveal-note" id="revealNote">
+        <div class="empty-hint">Shake the jar to reveal a reason ♡</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const reasons = [
+    { text: "Your laugh — it fills the room even through a screen.", from: "from 啊康" },
+    { text: "The way you remember everything I say.", from: "from 啊康" },
+    { text: "How you make midnight feel like an adventure.", from: "from 啊康" },
+    { text: "Your voice. Always.", from: "from 啊康" },
+    { text: "The way you say my name.", from: "from 啊康" },
+    { text: "How you chase your dreams without apology.", from: "from 啊康" },
+    { text: "Your warmth, even across thousands of kilometres.", from: "from 啊康" },
+    { text: "The notes you leave me when you know I'm sad.", from: "from 啊康" },
+    { text: "How you love so completely.", from: "from 啊康" },
+    { text: "Every good morning you sent, without exception.", from: "from 啊康" },
+    { text: "The way you see the world — and the way you've changed mine.", from: "from 啊康" },
+    { text: "That you chose me, even knowing the distance.", from: "from 啊康" },
+    { text: "Your patience. Your kindness. Your you-ness.", from: "from 啊康" },
+    { text: "How home feels like wherever you are.", from: "from 啊康" },
+    { text: "Everything. Absolutely everything.", from: "from 啊康" },
+  ];
+
+  let count = 0;
+  let lastIdx = -1;
+
+  function shakeJar() {
+    const jar = document.getElementById('jarContainer');
+    jar.classList.remove('shaking');
+    void jar.offsetWidth;
+    jar.classList.add('shaking');
+
+    setTimeout(() => {
+      let idx;
+      do { idx = Math.floor(Math.random() * reasons.length); } while (idx === lastIdx);
+      lastIdx = idx;
+      count++;
+
+      const note = document.getElementById('revealNote');
+      note.classList.remove('show');
+
+      setTimeout(() => {
+        const r = reasons[idx];
+        note.innerHTML = `<span style="font-size:1.55rem;color:#ffd6e8;display:block;margin-bottom:8px;">"${r.text}"</span><span style="font-size:0.7rem;font-style:italic;color:rgba(255,150,200,0.45);">${r.from}</span>`;
+        note.classList.add('show');
+        document.getElementById('tapHint').style.display = 'none';
+        document.getElementById('counterBadge').textContent = `${count} note${count === 1 ? '' : 's'} revealed`;
+      }, 180);
+
+    }, 250);
+  }
+
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;top:${Math.random()*100}%;
+      --d:${(Math.random()*3+2).toFixed(1)}s;
+      opacity:${(Math.random()*0.4+0.15).toFixed(2)};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // Petals
+  for (let i = 0; i < 10; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = ['🌸','✿','❀'][Math.floor(Math.random()*3)];
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      font-size:${(Math.random()*0.5+0.7).toFixed(1)}rem;
+      animation-duration:${(Math.random()*8+6).toFixed(1)}s;
+      animation-delay:${(Math.random()*12).toFixed(1)}s;
+    `;
+    document.body.appendChild(p);
+  }
+</script>
+</body>
+</html>

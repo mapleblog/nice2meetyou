@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V3 — Our Year in Numbers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 50% 0%, #1a0a2e 0%, #0d0816 60%, #060410 100%);
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px 80px;
+      overflow: hidden;
+      color: #e8d0ff;
+    }
+
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .star {
+      position: absolute; border-radius: 50%; background: white;
+      animation: twinkle var(--d) ease-in-out infinite alternate;
+    }
+    @keyframes twinkle { to { opacity: 0.05; transform: scale(0.5); } }
+
+    /* Aurora glow */
+    .aurora {
+      position: fixed;
+      top: -20%; left: -10%; width: 120%; height: 50%;
+      background: radial-gradient(ellipse at 50% 50%, rgba(200,50,120,0.08), transparent 70%);
+      pointer-events: none;
+      animation: aurShift 12s ease-in-out infinite alternate;
+    }
+    @keyframes aurShift {
+      from { transform: translateX(-5%); }
+      to   { transform: translateX(5%); }
+    }
+
+    .scene {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 580px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 44px;
+    }
+    .header-label {
+      font-size: 0.58rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: rgba(255,180,220,0.45);
+      margin-bottom: 10px;
+    }
+    .header-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3.2rem;
+      color: #ffd6e8;
+      text-shadow: 0 0 30px rgba(255,150,200,0.5);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .header-sub {
+      font-size: 0.78rem;
+      color: rgba(220,180,255,0.5);
+      font-style: italic;
+      letter-spacing: 1px;
+    }
+
+    /* Card grid */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .grid .stat-card.wide { grid-column: span 2; }
+
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,150,200,0.13);
+      border-radius: 16px;
+      padding: 22px 20px;
+      text-align: center;
+      backdrop-filter: blur(8px);
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      animation: cardIn 0.6s ease both;
+    }
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(255,100,180,0.18);
+      border-color: rgba(255,150,200,0.3);
+    }
+    .stat-card:nth-child(1) { animation-delay: 0.05s; }
+    .stat-card:nth-child(2) { animation-delay: 0.12s; }
+    .stat-card:nth-child(3) { animation-delay: 0.19s; }
+    .stat-card:nth-child(4) { animation-delay: 0.26s; }
+    .stat-card:nth-child(5) { animation-delay: 0.33s; }
+    .stat-card:nth-child(6) { animation-delay: 0.40s; }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .stat-emoji { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+
+    .stat-num {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffb3d9, #c97fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .wide .stat-num { font-size: 3rem; }
+
+    .stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(220,180,255,0.5);
+    }
+    .stat-sub {
+      font-size: 0.7rem;
+      color: rgba(255,150,200,0.45);
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    /* Progress bar (for wide card) */
+    .progress-wrap {
+      margin-top: 12px;
+      height: 4px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #e0609090, #c97fff90);
+      border-radius: 4px;
+      width: 0%;
+      transition: width 1.8s 0.5s ease;
+    }
+
+    /* Footer quote */
+    .footer-quote {
+      text-align: center;
+      margin-top: 28px;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.35rem;
+      color: rgba(255,180,220,0.55);
+    }
+
+    @media (max-width: 420px) {
+      .grid { grid-template-columns: 1fr; }
+      .grid .stat-card.wide { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="aurora"></div>
+
+<div class="scene">
+  <div class="header">
+    <div class="header-label">Anniversary · Section Idea #3</div>
+    <div class="header-title">Our Year in Numbers</div>
+    <div class="header-sub">May 5, 2025 → May 5, 2026</div>
+  </div>
+
+  <div class="grid">
+
+    <div class="stat-card wide">
+      <span class="stat-emoji">🌸</span>
+      <div class="stat-num" data-target="365">0</div>
+      <div class="stat-label">Days of Us</div>
+      <div class="stat-sub">one beautiful year</div>
+      <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-emoji">🌅</span>
+      <div class="stat-num" data-target="365">0</div>
+      <div class="stat-label">Good Mornings</div>
+      <div class="stat-sub">never missed one</div>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-emoji">🌙</span>
+      <div class="stat-num" data-target="365">0</div>
+      <div class="stat-label">Good Nights</div>
+      <div class="stat-sub">always the last message</div>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-emoji">📞</span>
+      <div class="stat-num" data-target="1460">0</div>
+      <div class="stat-label">Hours on Call</div>
+      <div class="stat-sub">distance = just a number</div>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-emoji">💌</span>
+      <div class="stat-num" data-target="10000">0</div>
+      <div class="stat-label">Messages</div>
+      <div class="stat-sub">and counting</div>
+    </div>
+
+    <div class="stat-card wide">
+      <span class="stat-emoji">♾️</span>
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Reasons I Love You</div>
+      <div class="stat-sub">no counter big enough</div>
+    </div>
+
+  </div>
+
+  <div class="footer-quote">"Every number is a story — and every story is ours."</div>
+</div>
+
+<script>
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;top:${Math.random()*100}%;
+      --d:${(Math.random()*3+2).toFixed(1)}s;
+      opacity:${(Math.random()*0.4+0.15).toFixed(2)};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // Animated counters
+  function animateCount(el, target, duration = 1800) {
+    const start = performance.now();
+    const update = (now) => {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(ease * target).toLocaleString();
+      if (t < 1) requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+  }
+
+  // IntersectionObserver to trigger when in view
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const nums = document.querySelectorAll('[data-target]');
+      nums.forEach(el => {
+        const target = parseInt(el.dataset.target);
+        animateCount(el, target);
+      });
+      // progress bar
+      setTimeout(() => {
+        document.getElementById('progressBar').style.width = '100%';
+      }, 100);
+      observer.disconnect();
+    });
+  }, { threshold: 0.3 });
+
+  observer.observe(document.querySelector('.grid'));
+</script>
+</body>
+</html>

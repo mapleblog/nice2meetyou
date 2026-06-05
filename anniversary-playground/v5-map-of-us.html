@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V5 — A Map of Us</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 50% 0%, #1a0a2e 0%, #0d0816 60%, #060410 100%);
+      font-family: 'Lora', serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px 80px;
+      color: #e8d0ff;
+      overflow-x: hidden;
+    }
+
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .star {
+      position: absolute; border-radius: 50%; background: white;
+      animation: twinkle var(--d) ease-in-out infinite alternate;
+    }
+    @keyframes twinkle { to { opacity: 0.05; transform: scale(0.5); } }
+
+    .scene {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 640px;
+      text-align: center;
+    }
+
+    .header-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: rgba(255,180,220,0.45);
+      margin-bottom: 10px;
+    }
+    .header-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3.2rem;
+      color: #ffd6e8;
+      text-shadow: 0 0 30px rgba(255,150,200,0.5);
+      margin-bottom: 8px;
+    }
+    .header-sub {
+      font-size: 0.82rem;
+      font-style: italic;
+      color: rgba(220,180,255,0.5);
+      margin-bottom: 48px;
+    }
+
+    /* Map card */
+    .map-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,150,200,0.12);
+      border-radius: 20px;
+      padding: 32px 28px;
+      backdrop-filter: blur(8px);
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* SVG map */
+    .map-svg {
+      width: 100%;
+      max-width: 560px;
+      height: auto;
+    }
+
+    /* Country labels */
+    .country-pin {
+      display: inline-block;
+    }
+
+    /* Animated flight path */
+    @keyframes dashDraw {
+      from { stroke-dashoffset: 800; }
+      to   { stroke-dashoffset: 0; }
+    }
+    .flight-path {
+      stroke-dasharray: 12 6;
+      stroke-dashoffset: 800;
+      animation: dashDraw 2.5s ease 0.5s forwards;
+    }
+
+    /* Plane along path */
+    @keyframes flyPlane {
+      0%   { offset-distance: 0%; opacity: 0; }
+      5%   { opacity: 1; }
+      95%  { opacity: 1; }
+      100% { offset-distance: 100%; opacity: 0; }
+    }
+    .plane-icon {
+      offset-path: path('M 100 280 Q 300 80 480 200');
+      animation: flyPlane 2.8s ease 0.5s infinite;
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    /* Pulse rings on pins */
+    @keyframes pulseRing {
+      0%   { r: 8; opacity: 0.7; }
+      100% { r: 22; opacity: 0; }
+    }
+    .pin-pulse {
+      animation: pulseRing 2s ease-out infinite;
+    }
+    .pin-pulse2 {
+      animation: pulseRing 2s ease-out 1s infinite;
+    }
+
+    /* Heart on path */
+    @keyframes heartFloat {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+
+    /* Info row */
+    .info-row {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .info-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,150,200,0.12);
+      border-radius: 40px;
+      padding: 10px 18px;
+      font-size: 0.8rem;
+      color: rgba(220,200,255,0.7);
+      font-style: italic;
+    }
+    .info-chip .chip-icon { font-size: 1rem; }
+    .info-chip .chip-label {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1rem;
+      color: #ffd6e8;
+      font-style: normal;
+    }
+
+    /* Wishlist note */
+    .wish-section {
+      margin-top: 28px;
+    }
+    .wish-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,150,200,0.4);
+      margin-bottom: 14px;
+    }
+    .wish-list {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .wish-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,150,200,0.1);
+      border-radius: 30px;
+      padding: 8px 16px;
+      font-size: 0.78rem;
+      color: rgba(220,180,255,0.6);
+      font-style: italic;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="scene">
+  <div class="header-label">Anniversary · Section Idea #5</div>
+  <div class="header-title">A Map of Us</div>
+  <div class="header-sub">Two countries, one love — bridging every mile</div>
+
+  <div class="map-card">
+    <!-- SVG Map: Southeast Asia simplified, focused on Malaysia & Vietnam -->
+    <svg class="map-svg" viewBox="0 0 580 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#1a1035"/>
+          <stop offset="100%" stop-color="#080412"/>
+        </radialGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Ocean background -->
+      <rect width="580" height="380" fill="url(#bgGrad)" rx="12"/>
+
+      <!-- Ocean ripples -->
+      <ellipse cx="290" cy="190" rx="200" ry="140" fill="none" stroke="rgba(100,150,255,0.04)" stroke-width="1"/>
+      <ellipse cx="290" cy="190" rx="240" ry="170" fill="none" stroke="rgba(100,150,255,0.03)" stroke-width="1"/>
+
+      <!-- Vietnam landmass (simplified S-curve shape) -->
+      <path d="M 390 40 C 410 50, 430 70, 440 100 C 450 130, 445 160, 430 185 C 415 210, 400 220, 395 240 C 390 260, 400 270, 410 285 C 395 295, 375 280, 365 260 C 355 235, 360 215, 370 195 C 380 175, 390 155, 385 130 C 380 100, 365 75, 370 55 Z"
+            fill="rgba(180,100,140,0.25)" stroke="rgba(255,150,200,0.3)" stroke-width="1.5"/>
+
+      <!-- Malaysia peninsula (simplified) -->
+      <path d="M 140 220 C 160 200, 200 195, 230 200 C 260 205, 280 215, 285 230 C 280 245, 255 255, 230 260 C 205 265, 170 258, 150 245 C 135 232, 132 224, 140 220 Z"
+            fill="rgba(100,150,200,0.25)" stroke="rgba(150,200,255,0.3)" stroke-width="1.5"/>
+
+      <!-- Borneo (east Malaysia, simplified blob) -->
+      <path d="M 310 280 C 340 265, 390 270, 420 290 C 445 310, 445 340, 420 355 C 390 368, 340 360, 315 345 C 290 330, 288 300, 310 280 Z"
+            fill="rgba(100,150,200,0.18)" stroke="rgba(150,200,255,0.2)" stroke-width="1"/>
+
+      <!-- Thailand (top, faint) -->
+      <path d="M 230 30 C 260 25, 295 35, 310 55 C 310 75, 295 80, 275 70 C 255 60, 235 55, 230 30 Z"
+            fill="rgba(150,150,180,0.1)" stroke="rgba(200,200,220,0.12)" stroke-width="1"/>
+
+      <!-- Indonesia top islands (faint) -->
+      <ellipse cx="220" cy="340" rx="80" ry="20" fill="rgba(150,150,180,0.1)" stroke="rgba(200,200,220,0.1)" stroke-width="1"/>
+
+      <!-- ── Flight path ── -->
+      <path d="M 215 225 Q 300 80 395 185"
+            fill="none"
+            stroke="rgba(255,150,200,0.5)"
+            stroke-width="1.5"
+            class="flight-path"/>
+
+      <!-- Plane label (HTML positioned via foreignObject or just emoji text) -->
+      <text class="plane-icon" x="295" y="140" text-anchor="middle" font-size="18" style="animation: flyPlane 2.8s ease 0.5s infinite;">✈</text>
+
+      <!-- ── Malaysia pin ── -->
+      <circle class="pin-pulse"  cx="215" cy="225" r="8"  fill="none" stroke="rgba(150,200,255,0.5)" stroke-width="1.5"/>
+      <circle class="pin-pulse2" cx="215" cy="225" r="8"  fill="none" stroke="rgba(150,200,255,0.3)" stroke-width="1"/>
+      <circle cx="215" cy="225" r="8" fill="#4a9eff" filter="url(#glow)"/>
+      <circle cx="215" cy="225" r="4" fill="white"/>
+      <!-- MY label -->
+      <text x="215" y="215" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="8" fill="rgba(255,255,255,0.4)" letter-spacing="1">Malaysia</text>
+      <text x="205" y="249" font-family="'Dancing Script',cursive" font-size="13" fill="rgba(180,220,255,0.8)">啊康</text>
+
+      <!-- ── Vietnam pin ── -->
+      <circle class="pin-pulse"  cx="400" cy="190" r="8"  fill="none" stroke="rgba(255,150,200,0.5)" stroke-width="1.5"/>
+      <circle class="pin-pulse2" cx="400" cy="190" r="8"  fill="none" stroke="rgba(255,150,200,0.3)" stroke-width="1"/>
+      <circle cx="400" cy="190" r="8" fill="#e0609090" filter="url(#glow)"/>
+      <circle cx="400" cy="190" r="4" fill="white"/>
+      <!-- VN label -->
+      <text x="400" y="180" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="8" fill="rgba(255,255,255,0.4)" letter-spacing="1">Vietnam</text>
+      <text x="410" y="210" font-family="'Dancing Script',cursive" font-size="13" fill="rgba(255,180,220,0.8)">啊庄</text>
+
+      <!-- Center heart -->
+      <text x="300" y="165" text-anchor="middle" font-size="20" fill="#e06090" filter="url(#glow)" style="animation: heartFloat 3s ease-in-out infinite;">♥</text>
+
+      <!-- Distance label -->
+      <text x="300" y="130" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" fill="rgba(255,180,220,0.35)" letter-spacing="2">~ 2,300 km apart</text>
+
+      <!-- Ocean dots decoration -->
+      <circle cx="120" cy="300" r="1.5" fill="rgba(255,255,255,0.08)"/>
+      <circle cx="150" cy="320" r="1"   fill="rgba(255,255,255,0.06)"/>
+      <circle cx="470" cy="130" r="1.5" fill="rgba(255,255,255,0.08)"/>
+      <circle cx="500" cy="150" r="1"   fill="rgba(255,255,255,0.06)"/>
+      <circle cx="80"  cy="160" r="1"   fill="rgba(255,255,255,0.06)"/>
+    </svg>
+  </div>
+
+  <!-- Info chips -->
+  <div class="info-row">
+    <div class="info-chip">
+      <span class="chip-icon">🇲🇾</span>
+      <span class="chip-label">Dinh Khang</span>
+      <span>· Malaysia</span>
+    </div>
+    <div class="info-chip">
+      <span class="chip-icon">✈️</span>
+      <span>~2,300 km</span>
+    </div>
+    <div class="info-chip">
+      <span class="chip-icon">🇻🇳</span>
+      <span class="chip-label">Thuy Trang</span>
+      <span>· Vietnam</span>
+    </div>
+  </div>
+
+  <!-- Dream destinations -->
+  <div class="wish-section">
+    <div class="wish-label">Places we dream of visiting together</div>
+    <div class="wish-list">
+      <div class="wish-item">🗼 Tokyo</div>
+      <div class="wish-item">🌸 Kyoto</div>
+      <div class="wish-item">🏝️ Bali</div>
+      <div class="wish-item">🏙️ Singapore</div>
+      <div class="wish-item">🌅 Đà Nẵng</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;top:${Math.random()*100}%;
+      --d:${(Math.random()*3+2).toFixed(1)}s;
+      opacity:${(Math.random()*0.4+0.15).toFixed(2)};
+    `;
+    starsEl.appendChild(s);
+  }
+</script>
+</body>
+</html>
